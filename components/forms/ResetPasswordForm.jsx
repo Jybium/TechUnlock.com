@@ -1,3 +1,5 @@
+/* eslint-disable no-undef */
+/* eslint-disable react/no-unescaped-entities */
 "use client";
 
 import { ToastAction } from "@/components/ui/toast";
@@ -29,12 +31,12 @@ import {
 import { Checkbox } from "@/components/ui/checkbox";
 import { Input } from "@/components/ui/input";
 import Link from "next/link";
-import formSchema from "@/schema/Forgot";
+import formSchema from "@/schema/Signin";
 import Logo from "@/components/reusables/Logo";
 import LoadingSpinner from "@/components/reusables/LoadingSpinner";
 import { ArrowLeft } from "lucide-react";
 
-export default function ForgotPasswordForm() {
+export default function ResetPasswordForm() {
   const [isLoading, setIsLoading] = useState(false);
   const [isOnline, setIsOnline] = useState(true);
   const { toast } = useToast();
@@ -56,11 +58,11 @@ export default function ForgotPasswordForm() {
     useForm({})
 
   const onSubmit = async (values) => {
-    if (values.email.length < 5) {
+    if (values.password.length < 5) {
       toast({
         variant: "destructive",
-        title: "Email validation failed",
-        description: "Email address must be more than 5 characters",
+        title: "Password validation failed",
+        description: "Password must be more than 5 characters",
       });
       return;
     }
@@ -80,23 +82,21 @@ export default function ForgotPasswordForm() {
       setIsLoading(true);
 
       // Simulate network request
-    //   await new Promise((resolve) => setTimeout(resolve, 3000));
-
-    
+      await new Promise((resolve) => setTimeout(resolve, 3000));
 
       toast({
         variant: "success",
-        title: "Email validation successful",
-        description: `Proceed to reset password, ${values.email}`,
+        title: "Password changed successfully",
+        description: `You can now login with your new password!`,
       });
 
-      router.push("/reset-password");
+      router.push("/dashboard");
     } catch (error) {
       toast({
         variant: "destructive",
         title: "Submission failed",
         description:
-          "There was an error submitting your email. Please try again.",
+          "There was an error resetting your password. Please try again.",
       });
     } finally {
       setIsLoading(false);
@@ -112,7 +112,7 @@ export default function ForgotPasswordForm() {
         animate={{ opacity: 1, y: 0 }}
         transition={{ duration: 0.5 }}
       >
-        <Card className="shadow-none drop-shadow-none rounded-none mx-auto space-y-1 border-0 m-0 p-0">
+        <Card className="shadow-none drop-shadow-none rounded-none mx-auto space-y-3 border-0 m-0 p-0">
           <CardHeader className="m-0 p-0">
             <motion.div
               animate={{ y: [0, -20, 0] }}
@@ -122,18 +122,18 @@ export default function ForgotPasswordForm() {
               <Logo />
             </motion.div>
           </CardHeader>
-          <CardContent className="m-0 p-0">
+          <CardContent className="shadow-none drop-shadow-none rounded-none mx-auto space-y-1 border-0 m-0 p-0">
             <Form {...form}>
               <motion.form
                 onSubmit={form.handleSubmit(onSubmit)}
-                className="space-y-3"
+                className="space-y-4"
                 initial={{ opacity: 0 }}
                 animate={{ opacity: 1 }}
                 transition={{ duration: 0.3, staggerChildren: 0.3 }}
               >
                 <FormField
                   control={form.control}
-                  name="email"
+                  name="password"
                   render={({ field }) => (
                     <motion.div
                       initial={{ opacity: 0, y: 10 }}
@@ -141,11 +141,35 @@ export default function ForgotPasswordForm() {
                       transition={{ duration: 0.3 }}
                     >
                       <FormItem>
-                        <FormLabel>Email address</FormLabel>
+                        <FormLabel>Enter new paswword</FormLabel>
                         <FormControl>
                           <Input
-                            type="email"
-                            placeholder="Enter your email"
+                            type="password"
+                            placeholder="Enter password"
+                            {...field}
+                          />
+                        </FormControl>
+                        <FormMessage />
+                      </FormItem>
+                    </motion.div>
+                  )}
+                />
+
+                <FormField
+                  control={form.control}
+                  name="confirm_password"
+                  render={({ field }) => (
+                    <motion.div
+                      initial={{ opacity: 0, y: 10 }}
+                      animate={{ opacity: 1, y: 0 }}
+                      transition={{ duration: 0.3 }}
+                    >
+                      <FormItem>
+                        <FormLabel>Confirm paswword</FormLabel>
+                        <FormControl>
+                          <Input
+                            type="password"
+                            placeholder="Confirm password"
                             {...field}
                           />
                         </FormControl>
@@ -160,7 +184,7 @@ export default function ForgotPasswordForm() {
                     className="w-1/3 bg-primary text-white flex self-center mt-3"
                     type="submit"
                   >
-                    Submit
+                    Confirm
                   </Button>
 
                   <p
