@@ -9,7 +9,7 @@ const page = () => {
         title="Create your account"
         message="Already have an account?"
         action="Sign in"
-        to="sign-in"
+        to="login"
       >
         <SignUpForm />
       </AuthLayout>

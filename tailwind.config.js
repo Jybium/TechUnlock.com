@@ -11,6 +11,7 @@ const config = {
   theme: {
     colors: {
       white: "#ffff",
+      black: "#000000",
       primary: "#2FB3E3",
       pri1: "#EAF7FC",
       pri9: "#1C6B88",

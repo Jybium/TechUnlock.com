@@ -287,7 +287,7 @@ export default function SignUpForm() {
                   Create account
                 </Button>
 
-                <p className="flex gap-x-2 items-center text-primary">
+                <p className="flex gap-x-2 items-center text-primary"onClick={()=> router.back()}>
                   <ArrowLeft size={16}/> <span className="">Go back</span>
                 </p>
                 </div>
