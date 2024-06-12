@@ -9,17 +9,6 @@ const config = {
   ],
   prefix: "",
   theme: {
-    colors: {
-      white: "#ffff",
-      black: "#000000",
-      primary: "#2FB3E3",
-      pri1: "#EAF7FC",
-      pri9: "#1C6B88",
-      sec10: "#06212B",
-      darkblue: "#1A6884",
-      background:
-        "linear-gradient(90deg, rgba(47,179,227,1) 0%, rgba(26,104,132,1) 100%",
-    },
     container: {
       center: true,
       padding: "2rem",
@@ -28,6 +17,21 @@ const config = {
       },
     },
     extend: {
+      backgroundImage: {
+        "header-img": "url('./assets/images/headerbg.svg')",
+      },
+      colors: {
+        white: "#ffff",
+        "first-primary": "#1A637D",
+        black: "#000000",
+        primary: "#2FB3E3",
+        pri1: "#EAF7FC",
+        pri9: "#1C6B88",
+        sec10: "#06212B",
+        darkblue: "#1A6884",
+        background:
+          "linear-gradient(90deg, rgba(47,179,227,1) 0%, rgba(26,104,132,1) 100%",
+      },
       keyframes: {
         "accordion-down": {
           from: { height: "0" },

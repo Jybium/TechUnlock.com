@@ -1,13 +1,14 @@
-/* eslint-disable @next/next/no-img-element */
+
+import Image from "next/image";
 import FooterImage from "@/assets/images/footer-logo.svg";
 
 const Footer = () => {
   return (
-    <footer className="text-white py-8 bg-sky-500 relative w-full">
+    <footer className="text-white relative w-full">
       <div className="absolute inset-0 bg-gradient-to-r from-sky-500 to-sky-800 opacity-50"></div>
-      <section className="mx-auto z-10 px-4 py-8 flex flex-col md:flex-row justify-between items-center md:items-start">
+      <section className="mx-auto z-10 px-4 flex flex-col md:flex-row justify-between items-center md:items-start py-8 bg-[#1886AD] h-[50vh]">
         <div className="z-10 pl-10 mb-6 md:mb-0 md:w-2/5 flex justify-center md:justify-start">
-          <img src={FooterImage} alt="Logo" className="w-38" />
+          <Image src={FooterImage} alt="Logo" className="w-38" />
         </div>
         <div className="w-full md:w-3/5 flex z-10 flex-col md:flex-row justify-between">
           <div className="mb-6 md:mb-0 md:w-1/3 text-center md:text-left">
@@ -35,17 +36,27 @@ const Footer = () => {
             <ul>
               <li>
                 <a href="#" className="hover:underline">
-                  Program 1
+                  Cybersecurity
                 </a>
               </li>
               <li>
                 <a href="#" className="hover:underline">
-                  Program 2
+                  Design
                 </a>
               </li>
               <li>
                 <a href="#" className="hover:underline">
-                  Program 3
+                  Artificial Intelligence
+                </a>
+              </li>
+              <li>
+                <a href="#" className="hover:underline">
+                  Digital Marketing
+                </a>
+              </li>
+              <li>
+                <a href="#" className="hover:underline">
+                  Web Development
                 </a>
               </li>
             </ul>
@@ -77,7 +88,7 @@ const Footer = () => {
           </div>
         </div>
       </section>
-      <section className="mx-auto z-10 p-6 bg-darkblue relative">
+      <section className="mx-auto z-10 p-6 bg-[#0A3747] relative">
         <ul className="flex justify-center items-center">
           <li>
             <a href="#" className="hover:underline">
