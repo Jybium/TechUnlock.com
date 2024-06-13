@@ -1,7 +1,8 @@
 "use client";
 
 import React, { useState } from "react";
-import { Mor } from "../Links";
+import { Mor } from "@/data/Links";
+import { ChevronUp } from "lucide-react";
 
 const More = () => {
   const [heading, setHeading] = useState("");
@@ -18,12 +19,12 @@ const More = () => {
               }}
             >
               {link.name}
-              <span className="text-xl md:mt-1 md:ml-2 inline group-hover:rotate-180 group-hover:-mt-2">
-                <i className="bx bx-chevron-up"></i>
+              <span className="text-lg md:mt-1 md:ml-2 inline group-hover:rotate-180 group-hover:">
+                <ChevronUp />
               </span>
             </h1>
             {link.submenu && heading === link.name && (
-              <div className="absolute top-20 z-20 hidden group-hover:block hover:block">
+              <div className="absolute top-16 z-20 hidden group-hover:block hover:block">
                 <div className="py-3">
                   <div className="w-4 h-4 left-3 absolute mt-1 bg-white rotate-45"></div>
                 </div>

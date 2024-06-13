@@ -1,4 +1,4 @@
-import firstImage from "@/assets/images/testimonyImage.jpeg"
+import firstImage from "@/assets/landing-page/testimonyImage.jpeg"
 
 
 const testimony = [
