@@ -1,7 +1,7 @@
 import React from "react";
 import Image from "next/image";
-import logo from "@/assets/logo.svg";
-import image from "@/assets/authImage.png";
+import logo from "@/assets/images/logo.svg";
+import image from "@/assets/landing-page/authImage.png";
 import Link from "next/link";
 
 const footerLinks = [

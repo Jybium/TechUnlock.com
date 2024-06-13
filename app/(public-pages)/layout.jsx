@@ -1,5 +1,5 @@
 import Footer from '@/components/reusables/Footer'
-import Header from '@/components/reusables/Header'
+import Header from '@/components/reusables/landingPage/Header'
 import React from 'react'
 
 const layout = ({children}) => {

@@ -4,21 +4,21 @@
   
 
 .header-img{
-  background-image: url('../assets/images/headerbg.svg');
+  background-image: url('../assets/landing-page/headerbg.svg');
   background-position: center;
   background-size: cover;
 }
 
 
 .find-connect{
-  background-image: url('../assets/images/findAndConnect.svg');
+  background-image: url('../assets/landing-page/findAndConnect.svg');
   background-position: center;
   background-size: cover;
 }
 
 
 .metrics{
-  background-image: url('../assets/metricsBg.png');
+  background-image: url('../assets/landing-page/metricsBg.png');
   background-position: center;
   background-size: cover;
 }

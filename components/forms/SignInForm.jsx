@@ -37,7 +37,6 @@ import { ArrowLeft } from "lucide-react";
 export default function SignUpForm() {
   const [isLoading, setIsLoading] = useState(false);
   const [isOnline, setIsOnline] = useState(true);
-  const [passwordStrength, setPasswordStrength] = useState(0);
   const { toast } = useToast();
 
   const router = useRouter();
@@ -53,7 +52,12 @@ export default function SignUpForm() {
     };
   }, []);
 
-  const form = useForm({});
+  const form = useForm({
+    defaultValues:{
+      email: "",
+      password: "",
+    }
+  });
 
   const onSubmit = async (values) => {
     if (values.email.length < 5) {
