@@ -2,3 +2,88 @@
   @tailwind components;
   @tailwind utilities;
   
+
+.header-img{
+  background-image: url('../assets/landing-page/headerbg.svg');
+  background-position: center;
+  background-size: cover;
+}
+
+
+.find-connect{
+  background-image: url('../assets/landing-page/findAndConnect.svg');
+  background-position: center;
+  background-size: cover;
+}
+
+
+.metrics{
+  background-image: url('../assets/landing-page/metricsBg.png');
+  background-position: center;
+  background-size: cover;
+}
+
+
+.about{
+  background-image: url('../assets/about-page/about.svg');
+  background-position: center;
+  background-size: cover;
+}
+
+
+.whoweare{
+  background-image: url('../assets/about-page/lock.svg');
+  background-position: center;
+  background-size: cover;
+}
+
+
+li{
+  margin: 3px 0;
+}
+
+@keyframes fadeIn {
+  0% {
+    opacity: 0;
+    transform: translateY(20px);
+  }
+  100% {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+@keyframes slideIn {
+  0% {
+    transform: translateX(100%);
+  }
+  100% {
+    transform: translateX(0);
+  }
+}
+
+@keyframes backgroundPan {
+  0% {
+    background-position: 0% 50%;
+  }
+  100% {
+    background-position: 100% 50%;
+  }
+}
+
+.header-img {
+  animation: backgroundPan 10s linear infinite alternate;
+}
+
+.header-content {
+  animation: fadeIn 2s ease-out;
+}
+
+.header-image {
+  animation: slideIn 2s ease-out;
+}
+
+.header-button {
+  animation: fadeIn 3s ease-out;
+  animation-delay: 1s;
+}
