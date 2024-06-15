@@ -14,9 +14,9 @@ const OurPartner = () => {
             alt="line"
             className="absolute left-[42%] top-9 w-[16%] mx-auto"
           />
-          <h2 className="text-center text-3xl font-semibold text-first-primary">
+          <span className="text-center text-3xl font-semibold text-first-primary">
             Our Partners
-          </h2>
+          </span>
         </p>
       </div>
 

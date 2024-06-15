@@ -23,9 +23,9 @@ const ProgramsOffered = () => {
             alt="line"
             className="absolute left-[39%] top-9 w-[22%] mx-auto"
           />
-          <h2 className="text-center text-3xl font-semibold text-first-primary">
+          <span className="text-center text-3xl font-semibold text-first-primary">
             Programs Offered
-          </h2>
+          </span>
         </p>
       </div>
 

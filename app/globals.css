@@ -24,6 +24,20 @@
 }
 
 
+.about{
+  background-image: url('../assets/about-page/about.svg');
+  background-position: center;
+  background-size: cover;
+}
+
+
+.whoweare{
+  background-image: url('../assets/about-page/lock.svg');
+  background-position: center;
+  background-size: cover;
+}
+
+
 li{
   margin: 3px 0;
 }
