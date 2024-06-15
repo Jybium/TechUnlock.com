@@ -1,12 +1,10 @@
 "use client";
 
-import { ToastAction } from "@/components/ui/toast";
 import { useEffect, useState } from "react";
 import { useRouter } from "next/navigation";
 import { useToast } from "@/components/ui/use-toast";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { useForm } from "react-hook-form";
-import { z } from "zod";
 import { motion } from "framer-motion";
 
 import { Button } from "@/components/ui/button";
@@ -21,18 +19,13 @@ import {
 import {
   Card,
   CardContent,
-  CardDescription,
-  CardFooter,
-  CardHeader,
-  CardTitle,
 } from "@/components/ui/card";
-import { Checkbox } from "@/components/ui/checkbox";
 import { Input } from "@/components/ui/input";
-import Link from "next/link";
 import formSchema from "@/schema/Forgot";
-import Logo from "@/components/reusables/Logo";
 import LoadingSpinner from "@/components/reusables/LoadingSpinner";
 import { ArrowLeft } from "lucide-react";
+import { showErrorToast, showSuccessToast } from "@/helpers/taostUtil";
+import { forgotPassword } from "@/services/authentication";
 
 export default function ForgotPasswordForm() {
   const [isLoading, setIsLoading] = useState(false);
@@ -53,55 +46,37 @@ export default function ForgotPasswordForm() {
   }, []);
 
   const form =
-    useForm({})
-
-  const onSubmit = async (values) => {
-    if (values.email.length < 5) {
-      toast({
-        variant: "destructive",
-        title: "Email validation failed",
-        description: "Email address must be more than 5 characters",
-      });
-      return;
+    useForm({  
+    resolver: zodResolver(formSchema),
+    defaultValues:{
+      email: ""
     }
+  });
 
-    if (!isOnline) {
-      toast({
-        variant: "destructive",
-        title: "Ohh no! Network error",
-        description:
-          "You are currently offline. Please check your internet connection.",
-        action: <ToastAction altText="Try again">Try again</ToastAction>,
-      });
-      return;
-    }
+const onSubmit = async (values) => {
+  if (!isOnline) {
+    showErrorToast("You are offline. Please check your network connection.");
+    return;
+  }
 
-    try {
-      setIsLoading(true);
+  try {
+    setIsLoading(true);
 
-      // Simulate network request
-    //   await new Promise((resolve) => setTimeout(resolve, 3000));
+    const result = await forgotPassword(values);
+    console.log(result);
 
-    
+    showSuccessToast(result.message || "Please check your email for further instructions");
 
-      toast({
-        variant: "success",
-        title: "Email validation successful",
-        description: `Proceed to reset password, ${values.email}`,
-      });
-
-      router.push("/reset-password");
-    } catch (error) {
-      toast({
-        variant: "destructive",
-        title: "Submission failed",
-        description:
-          "There was an error submitting your email. Please try again.",
-      });
-    } finally {
-      setIsLoading(false);
-    }
-  };
+    setTimeout(() => {
+      
+      router.push("/success");
+    }, 3000);
+  } catch (error) {
+    showErrorToast(error.message || "An error occurred. Please try again.");
+  } finally {
+    setIsLoading(false);
+  }
+};
 
   return (
     <div className="">
@@ -113,15 +88,7 @@ export default function ForgotPasswordForm() {
         transition={{ duration: 0.5 }}
       >
         <Card className="shadow-none drop-shadow-none rounded-none mx-auto space-y-1 border-0 m-0 p-0">
-          <CardHeader className="m-0 p-0">
-            <motion.div
-              animate={{ y: [0, -20, 0] }}
-              transition={{ repeat: Infinity, duration: 1.5 }}
-              className="flex justify-center mb-3 lg:hidden"
-            >
-              <Logo />
-            </motion.div>
-          </CardHeader>
+          
           <CardContent className="m-0 p-0">
             <Form {...form}>
               <motion.form
@@ -157,7 +124,7 @@ export default function ForgotPasswordForm() {
 
                 <div className="flex flex-col justify-center text-white space-y-6">
                   <Button
-                    className="w-1/3 bg-primary text-white flex self-center mt-3"
+                    className="lg:w-1/3 bg-primary text-white flex self-center mt-3"
                     type="submit"
                   >
                     Submit

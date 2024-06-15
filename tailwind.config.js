@@ -9,20 +9,9 @@ const config = {
   ],
   prefix: "",
   theme: {
-    container: {
-      center: true,
-      padding: "2rem",
-      screens: {
-        "2xl": "1400px",
-      },
-    },
     extend: {
-      backgroundImage: {
-        "header-img": "url('./assets/images/headerbg.svg')",
-      },
       colors: {
         white: "#ffff",
-        "first-primary": "#1A637D",
         black: "#000000",
         primary: "#2FB3E3",
         pri1: "#EAF7FC",
@@ -31,6 +20,13 @@ const config = {
         darkblue: "#1A6884",
         background:
           "linear-gradient(90deg, rgba(47,179,227,1) 0%, rgba(26,104,132,1) 100%",
+      },
+      container: {
+        center: true,
+        padding: "2rem",
+        screens: {
+          "2xl": "1400px",
+        },
       },
       keyframes: {
         "accordion-down": {
