@@ -1,5 +1,5 @@
-import Banner from '@/components/reusables/aboutPage/Banner'
 import React from 'react'
+import Banner from '@/components/reusables/aboutPage/Banner'
 
 const AboutPage = () => {
   return (
