@@ -2,19 +2,6 @@ import { z } from "zod";
 
 const formSchema = z
   .object({
-    first_name: z
-      .string()
-      .min(2, { message: "First name must be less than 2 characters long" }),
-    last_name: z
-      .string()
-      .min(2, { message: "Last name must be less than 2 characters long" }),
-    email: z
-      .string()
-      .email({ message: "Invalid email address" })
-      .max(50, { message: "Email must be less than 50 characters long" }),
-    terms: z.boolean().refine((val) => val === true, {
-      message: "You must agree to the terms of use",
-    }),
     password: z
       .string()
       .min(12, { message: "Password must be at least 12 characters long" })

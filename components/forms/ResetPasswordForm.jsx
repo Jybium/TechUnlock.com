@@ -2,13 +2,11 @@
 /* eslint-disable react/no-unescaped-entities */
 "use client";
 
-import { ToastAction } from "@/components/ui/toast";
 import { useEffect, useState } from "react";
 import { useRouter } from "next/navigation";
-import { useToast } from "@/components/ui/use-toast";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { useForm } from "react-hook-form";
-import { z } from "zod";
+
 import { motion } from "framer-motion";
 
 import { Button } from "@/components/ui/button";
@@ -23,23 +21,20 @@ import {
 import {
   Card,
   CardContent,
-  CardDescription,
-  CardFooter,
-  CardHeader,
-  CardTitle,
+
 } from "@/components/ui/card";
-import { Checkbox } from "@/components/ui/checkbox";
+
 import { Input } from "@/components/ui/input";
-import Link from "next/link";
-import formSchema from "@/schema/Signin";
-import Logo from "@/components/reusables/Logo";
+import formSchema from "@/schema/Reset";
 import LoadingSpinner from "@/components/reusables/LoadingSpinner";
 import { ArrowLeft } from "lucide-react";
+import { showErrorToast, showSuccessToast } from "@/helpers/taostUtil";
+import { resetPassword } from "@/services/authentication";
 
-export default function ResetPasswordForm() {
+export default function ResetPasswordForm({id}) {
   const [isLoading, setIsLoading] = useState(false);
   const [isOnline, setIsOnline] = useState(true);
-  const { toast } = useToast();
+
 
   const router = useRouter();
 
@@ -55,53 +50,38 @@ export default function ResetPasswordForm() {
   }, []);
 
   const form =
-    useForm({})
+    useForm({
+      resolver: zodResolver(formSchema),
+      defaultValues:{
+        password: "",
+        confirm_password: "",
+      }
+    })
 
-  const onSubmit = async (values) => {
-    if (values.password.length < 5) {
-      toast({
-        variant: "destructive",
-        title: "Password validation failed",
-        description: "Password must be more than 5 characters",
-      });
-      return;
-    }
+const onSubmit = async (values) => {
 
-    if (!isOnline) {
-      toast({
-        variant: "destructive",
-        title: "Ohh no! Network error",
-        description:
-          "You are currently offline. Please check your internet connection.",
-        action: <ToastAction altText="Try again">Try again</ToastAction>,
-      });
-      return;
-    }
+  const data = {...values, userId: id}
 
-    try {
-      setIsLoading(true);
+  if (!isOnline) {
+    showErrorToast("You are offline. Please check your network connection.");
+    return;
+  }
 
-      // Simulate network request
-      await new Promise((resolve) => setTimeout(resolve, 3000));
+  try {
+    setIsLoading(true);
 
-      toast({
-        variant: "success",
-        title: "Password changed successfully",
-        description: `You can now login with your new password!`,
-      });
+    const result = await resetPassword(data);
+    console.log(result);
 
-      router.push("/dashboard");
-    } catch (error) {
-      toast({
-        variant: "destructive",
-        title: "Submission failed",
-        description:
-          "There was an error resetting your password. Please try again.",
-      });
-    } finally {
-      setIsLoading(false);
-    }
-  };
+    showSuccessToast(result.message || "Password reset successfully.");
+
+    router.push("/dashboard");
+  } catch (error) {
+    showErrorToast(error.message || "An error occurred. Please try again.");
+  } finally {
+    setIsLoading(false);
+  }
+};
 
   return (
     <div className="">
@@ -113,15 +93,7 @@ export default function ResetPasswordForm() {
         transition={{ duration: 0.5 }}
       >
         <Card className="shadow-none drop-shadow-none rounded-none mx-auto space-y-3 border-0 m-0 p-0">
-          <CardHeader className="m-0 p-0">
-            <motion.div
-              animate={{ y: [0, -20, 0] }}
-              transition={{ repeat: Infinity, duration: 1.5 }}
-              className="flex justify-center mb-3 lg:hidden"
-            >
-              <Logo />
-            </motion.div>
-          </CardHeader>
+          
           <CardContent className="shadow-none drop-shadow-none rounded-none mx-auto space-y-1 border-0 m-0 p-0">
             <Form {...form}>
               <motion.form
@@ -149,7 +121,7 @@ export default function ResetPasswordForm() {
                             {...field}
                           />
                         </FormControl>
-                        <FormMessage />
+                        <FormMessage className="text-red-500" />
                       </FormItem>
                     </motion.div>
                   )}
@@ -181,7 +153,7 @@ export default function ResetPasswordForm() {
 
                 <div className="flex flex-col justify-center text-white space-y-6">
                   <Button
-                    className="w-1/3 bg-primary text-white flex self-center mt-3"
+                    className="lg:w-1/3 bg-primary text-white flex self-center mt-3"
                     type="submit"
                   >
                     Confirm
