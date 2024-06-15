@@ -1,7 +1,8 @@
 import { Sora } from "next/font/google";
 import "./globals.css";
 import NotFoundBoundary from "@/components/reusables/NotFoundErrorBoundary";
-import { Toaster } from "react-hot-toast";
+import { SpeedInsights } from "@vercel/speed-insights/next";
+import { Analytics } from "@vercel/analytics/react";
 import ToastProvider from "@/components/reusables/Layout/ToastProvider";
 
 
@@ -23,6 +24,8 @@ export default function RootLayout({ children }) {
 
 
         {children}
+        <Analytics />
+        <SpeedInsights />
      </ToastProvider>
         {/* <Toaster/> */}
      {/* </NotFoundBoundary> */}

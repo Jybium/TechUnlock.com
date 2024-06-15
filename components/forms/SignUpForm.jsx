@@ -1,12 +1,12 @@
 "use client";
 
-import { ToastAction } from "@/components/ui/toast";
-import { useEffect, useState } from "react";
+import React, { useEffect, useState, useCallback } from "react";
 import { useRouter } from "next/navigation";
 import { useToast } from "@/components/ui/use-toast";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { useForm } from "react-hook-form";
 import { motion } from "framer-motion";
+import dynamic from "next/dynamic";
 
 import { Button } from "@/components/ui/button";
 import {
@@ -17,11 +17,7 @@ import {
   FormLabel,
   FormMessage,
 } from "@/components/ui/form";
-import {
-  Card,
-  CardContent,
-  CardHeader,
-} from "@/components/ui/card";
+import { Card, CardContent } from "@/components/ui/card";
 import { Checkbox } from "@/components/ui/checkbox";
 import { Input } from "@/components/ui/input";
 import formSchema from "@/schema/Signup";
@@ -31,12 +27,11 @@ import { ArrowLeft } from "lucide-react";
 import { signUp } from "@/services/authentication";
 import { showErrorToast, showSuccessToast } from "@/helpers/taostUtil";
 
-export default function SignUpForm() {
+const SignUpForm = () => {
   const [isLoading, setIsLoading] = useState(false);
   const [isOnline, setIsOnline] = useState(true);
 
   const { toast } = useToast();
-
   const router = useRouter();
 
   useEffect(() => {
@@ -50,43 +45,40 @@ export default function SignUpForm() {
     };
   }, []);
 
- const form = useForm({
-   resolver: zodResolver(formSchema),
-   defaultValues: {
-     first_name: "",
-     last_name: "",
-     email: "",
-     password: "",
-     confirm_password: "",
-     terms: false,
-   }
- });
+  const form = useForm({
+    resolver: zodResolver(formSchema),
+    defaultValues: {
+      first_name: "",
+      last_name: "",
+      email: "",
+      password: "",
+      confirm_password: "",
+      terms: false,
+    },
+  });
 
- 
-const onSubmit = async (values) => {
-  if (!isOnline) {
-    showErrorToast("You are offline. Please check your network connection.");
-    return;
-  }
+  const onSubmit = useCallback(
+    async (values) => {
+      if (!isOnline) {
+        showErrorToast(
+          "You are offline. Please check your network connection."
+        );
+        return;
+      }
 
-  try {
-    setIsLoading(true);
-
-    const result = await signUp(values);
-    console.log(result);
-
-    showSuccessToast(result.message || "Account login successfully.");
-
-    router.push("/dashboard");
-  } catch (error) {
-    showErrorToast(error.message || "An error occurred. Please try again.");
-  } finally {
-    setIsLoading(false);
-  }
-};
-
-
-
+      try {
+        setIsLoading(true);
+        const result = await signUp(values);
+        showSuccessToast(result.message || "Account login successfully.");
+        router.push("/dashboard");
+      } catch (error) {
+        showErrorToast(error.message || "An error occurred. Please try again.");
+      } finally {
+        setIsLoading(false);
+      }
+    },
+    [isOnline, router]
+  );
 
   return (
     <div className="">
@@ -199,7 +191,6 @@ const onSubmit = async (values) => {
                             }}
                           />
                         </FormControl>
-
                         <FormMessage className="text-red-500" />
                       </FormItem>
                     </motion.div>
@@ -227,7 +218,6 @@ const onSubmit = async (values) => {
                             }}
                           />
                         </FormControl>
-
                         <FormMessage className="text-red-500" />
                       </FormItem>
                     </motion.div>
@@ -261,7 +251,6 @@ const onSubmit = async (values) => {
                             </FormLabel>
                           </div>
                         </div>
-
                         <FormMessage className="text-red-500" />
                       </FormItem>
                     )}
@@ -274,7 +263,6 @@ const onSubmit = async (values) => {
                   >
                     Create account
                   </Button>
-
                   <p
                     className="flex gap-x-2 items-center text-primary"
                     onClick={() => router.back()}
@@ -289,4 +277,6 @@ const onSubmit = async (values) => {
       </motion.div>
     </div>
   );
-}
+};
+
+export default SignUpForm;

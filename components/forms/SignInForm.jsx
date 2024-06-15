@@ -1,12 +1,11 @@
 "use client";
 
-import { ToastAction } from "@/components/ui/toast";
-import { useEffect, useState } from "react";
+import React, { useEffect, useState, useCallback } from "react";
 import { useRouter } from "next/navigation";
-import { useToast } from "@/components/ui/use-toast";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { useForm } from "react-hook-form";
 import { motion } from "framer-motion";
+import dynamic from "next/dynamic";
 
 import { Button } from "@/components/ui/button";
 import {
@@ -17,25 +16,25 @@ import {
   FormLabel,
   FormMessage,
 } from "@/components/ui/form";
-import {
-  Card,
-  CardContent,
-  CardHeader,
-} from "@/components/ui/card";
+import { Card, CardContent } from "@/components/ui/card";
 import { Input } from "@/components/ui/input";
 import Link from "next/link";
 import formSchema from "@/schema/Signin";
-import Logo from "@/components/reusables/Logo";
-import LoadingSpinner from "@/components/reusables/LoadingSpinner";
 import { ArrowLeft } from "lucide-react";
 import { signIn } from "@/services/authentication";
 import { showErrorToast, showSuccessToast } from "@/helpers/taostUtil";
 
-export default function SignUpForm() {
+// Dynamically import LoadingSpinner
+const LoadingSpinner = dynamic(
+  () => import("@/components/reusables/LoadingSpinner"),
+  {
+    loading: () => <p>Loading...</p>,
+  }
+);
+
+const SignInForm = () => {
   const [isLoading, setIsLoading] = useState(false);
   const [isOnline, setIsOnline] = useState(true);
-  const { toast } = useToast();
-
   const router = useRouter();
 
   useEffect(() => {
@@ -54,34 +53,31 @@ export default function SignUpForm() {
     defaultValues: {
       email: "",
       password: "",
-    }
+    },
   });
 
-const onSubmit = async (values) => {
-  if (!isOnline) {
+  const onSubmit = useCallback(
+    async (values) => {
+      if (!isOnline) {
         showErrorToast(
           "You are offline. Please check your network connection."
         );
+        return;
+      }
 
-    return;
-  }
-
-  try {
-    setIsLoading(true);
-
-    const result = await signIn(values);
-    console.log(result);
-
-    showSuccessToast(result.message || "Account login successfully.");
-
-    router.push("/dashboard");
-  } catch (error) {
-    showErrorToast(error.message || "An error occurred. Please try again.");
-  } finally {
-    setIsLoading(false);
-  }
-};
-
+      try {
+        setIsLoading(true);
+        const result = await signIn(values);
+        showSuccessToast(result.message || "Account login successfully.");
+        router.push("/dashboard");
+      } catch (error) {
+        showErrorToast(error.message || "An error occurred. Please try again.");
+      } finally {
+        setIsLoading(false);
+      }
+    },
+    [isOnline, router]
+  );
 
   return (
     <div className="">
@@ -93,7 +89,6 @@ const onSubmit = async (values) => {
         transition={{ duration: 0.5 }}
       >
         <Card className="shadow-none drop-shadow-none rounded-none mx-auto border-0 m-0 p-0">
-          
           <CardContent className="m-0 p-0">
             <Form {...form}>
               <motion.form
@@ -143,12 +138,8 @@ const onSubmit = async (values) => {
                             type="password"
                             placeholder="Enter your password"
                             {...field}
-                            onChange={(e) => {
-                              field.onChange(e);
-                            }}
                           />
                         </FormControl>
-
                         <FormMessage className="text-red-500" />
                       </FormItem>
                     </motion.div>
@@ -180,7 +171,7 @@ const onSubmit = async (values) => {
                   </Button>
 
                   <p
-                    className="flex gap-x-2 items-center text-primary"
+                    className="flex gap-x-2 items-center text-primary cursor-pointer"
                     onClick={() => router.back()}
                   >
                     <ArrowLeft size={16} />{" "}
@@ -194,4 +185,6 @@ const onSubmit = async (values) => {
       </motion.div>
     </div>
   );
-}
+};
+
+export default React.memo(SignInForm);

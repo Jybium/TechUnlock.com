@@ -1,7 +1,7 @@
 import React from "react";
 import Image from "next/image";
 import Link from "next/link";
-import logo from "@/assets/logo.svg";
+import logo from "@/assets/images/logo.svg";
 import { footerLinks } from "@/components/reusables/Layout/AuthLayout";
 import { ArrowLeft } from "lucide-react";
 

@@ -1,11 +1,12 @@
 "use client";
 
-import { useEffect, useState } from "react";
+import React, { useEffect, useState, useCallback } from "react";
 import { useRouter } from "next/navigation";
 import { useToast } from "@/components/ui/use-toast";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { useForm } from "react-hook-form";
 import { motion } from "framer-motion";
+import dynamic from "next/dynamic";
 
 import { Button } from "@/components/ui/button";
 import {
@@ -16,22 +17,25 @@ import {
   FormLabel,
   FormMessage,
 } from "@/components/ui/form";
-import {
-  Card,
-  CardContent,
-} from "@/components/ui/card";
+import { Card, CardContent } from "@/components/ui/card";
 import { Input } from "@/components/ui/input";
 import formSchema from "@/schema/Forgot";
-import LoadingSpinner from "@/components/reusables/LoadingSpinner";
 import { ArrowLeft } from "lucide-react";
 import { showErrorToast, showSuccessToast } from "@/helpers/taostUtil";
 import { forgotPassword } from "@/services/authentication";
 
-export default function ForgotPasswordForm() {
+// Dynamically import LoadingSpinner
+const LoadingSpinner = dynamic(
+  () => import("@/components/reusables/LoadingSpinner"),
+  {
+    loading: () => <p>Loading...</p>,
+  }
+);
+
+const ForgotPasswordForm = () => {
   const [isLoading, setIsLoading] = useState(false);
   const [isOnline, setIsOnline] = useState(true);
   const { toast } = useToast();
-
   const router = useRouter();
 
   useEffect(() => {
@@ -45,38 +49,40 @@ export default function ForgotPasswordForm() {
     };
   }, []);
 
-  const form =
-    useForm({  
+  const form = useForm({
     resolver: zodResolver(formSchema),
-    defaultValues:{
-      email: ""
-    }
+    defaultValues: {
+      email: "",
+    },
   });
 
-const onSubmit = async (values) => {
-  if (!isOnline) {
-    showErrorToast("You are offline. Please check your network connection.");
-    return;
-  }
+  const onSubmit = useCallback(
+    async (values) => {
+      if (!isOnline) {
+        showErrorToast(
+          "You are offline. Please check your network connection."
+        );
+        return;
+      }
 
-  try {
-    setIsLoading(true);
+      try {
+        setIsLoading(true);
+        const result = await forgotPassword(values);
+        showSuccessToast(
+          result.message || "Please check your email for further instructions"
+        );
 
-    const result = await forgotPassword(values);
-    console.log(result);
-
-    showSuccessToast(result.message || "Please check your email for further instructions");
-
-    setTimeout(() => {
-      
-      router.push("/success");
-    }, 3000);
-  } catch (error) {
-    showErrorToast(error.message || "An error occurred. Please try again.");
-  } finally {
-    setIsLoading(false);
-  }
-};
+        setTimeout(() => {
+          router.push("/success");
+        }, 3000);
+      } catch (error) {
+        showErrorToast(error.message || "An error occurred. Please try again.");
+      } finally {
+        setIsLoading(false);
+      }
+    },
+    [isOnline, router]
+  );
 
   return (
     <div className="">
@@ -88,7 +94,6 @@ const onSubmit = async (values) => {
         transition={{ duration: 0.5 }}
       >
         <Card className="shadow-none drop-shadow-none rounded-none mx-auto space-y-1 border-0 m-0 p-0">
-          
           <CardContent className="m-0 p-0">
             <Form {...form}>
               <motion.form
@@ -131,7 +136,7 @@ const onSubmit = async (values) => {
                   </Button>
 
                   <p
-                    className="flex gap-x-2 items-center text-primary"
+                    className="flex gap-x-2 items-center text-primary cursor-pointer"
                     onClick={() => router.back()}
                   >
                     <ArrowLeft size={16} /> <span className="">Go back</span>
@@ -144,4 +149,6 @@ const onSubmit = async (values) => {
       </motion.div>
     </div>
   );
-}
+};
+
+export default React.memo(ForgotPasswordForm);
