@@ -13,6 +13,7 @@ const config = {
       colors: {
         white: "#ffff",
         pri10: "#13485B",
+        ash: "#667085",
         "first-primary": "#1A637D",
         black: "#000000",
         primary: "#2FB3E3",
