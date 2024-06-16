@@ -1,44 +1,46 @@
 @tailwind base;
-  @tailwind components;
-  @tailwind utilities;
-  
+@tailwind components;
+@tailwind utilities;
 
-.header-img{
-  background-image: url('../assets/landing-page/headerbg.svg');
+.header-img {
+  background-image: url("../assets/landing-page/headerbg.svg");
+  background-repeat: no-repeat;
   background-position: center;
   background-size: cover;
 }
 
-
-.find-connect{
-  background-image: url('../assets/landing-page/findAndConnect.svg');
+.find-connect {
+  background-image: url("../assets/landing-page/findAndConnect.svg");
   background-position: center;
+  background-repeat: no-repeat;
+
   background-size: cover;
 }
 
-
-.metrics{
-  background-image: url('../assets/landing-page/metricsBg.png');
+.metrics {
+  background-image: url("../assets/landing-page/metricsBg.png");
   background-position: center;
+  background-repeat: no-repeat;
+
   background-size: cover;
 }
 
-
-.about{
-  background-image: url('../assets/about-page/about.svg');
+.about {
+  background-image: url("../assets/about-page/about.svg");
   background-position: center;
+  background-repeat: no-repeat;
+
   background-size: cover;
 }
 
-
-.whoweare{
-  background-image: url('../assets/about-page/lock.svg');
+.whoweare {
+  background-image: url("../assets/about-page/lock.svg");
   background-position: center;
-  background-size: cover;
+  background-repeat: no-repeat;
+  background-size: contain;
 }
 
-
-li{
+li {
   margin: 3px 0;
 }
 
