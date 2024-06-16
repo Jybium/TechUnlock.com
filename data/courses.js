@@ -1,8 +1,8 @@
-import cybersecurity from "@/assets/landing-page/security.svg"
-import AI from "@/assets/landing-page/AI.svg"
-import DM from "@/assets/landing-page/DM.svg"
-import WD from "@/assets/landing-page/WD.svg"
-import PD from "@/assets/landing-page/PD.svg"
+import cybersecurity from "@/assets/landing-page/security.svg";
+import AI from "@/assets/landing-page/AI.svg";
+import DM from "@/assets/landing-page/DM.svg";
+import WD from "@/assets/landing-page/WD.svg";
+import PD from "@/assets/landing-page/PD.svg";
 
 const courses = [
   {
@@ -47,6 +47,11 @@ const courses = [
   },
 ];
 
-
+export const course = [
+  { id: 1, name: "Frontend Development" },
+  { id: 2, name: "Backend Development" },
+  { id: 3, name: "Full Stack Development" },
+  { id: 4, name: "Data Science" },
+];
 
 export default courses;
