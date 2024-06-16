@@ -2,7 +2,10 @@ import React from "react";
 import AuthLayout from "@/components/reusables/Layout/AuthLayout";
 import ResetPasswordForm from "@/components/forms/ResetPasswordForm";
 
-const page = () => {
+const page = ({params}) => {
+
+  const Id = params.Id
+
   return (
     <main className="">
       <AuthLayout
@@ -11,7 +14,7 @@ const page = () => {
         action=""
         to=""
       >
-        <ResetPasswordForm />
+        <ResetPasswordForm id={Id} />
       </AuthLayout>
     </main>
   );

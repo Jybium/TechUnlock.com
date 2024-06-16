@@ -1,13 +1,12 @@
 "use client";
 
-import { ToastAction } from "@/components/ui/toast";
-import { useEffect, useState } from "react";
+import React, { useEffect, useState, useCallback } from "react";
 import { useRouter } from "next/navigation";
 import { useToast } from "@/components/ui/use-toast";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { useForm } from "react-hook-form";
-import { z } from "zod";
 import { motion } from "framer-motion";
+import dynamic from "next/dynamic";
 
 import { Button } from "@/components/ui/button";
 import {
@@ -18,28 +17,21 @@ import {
   FormLabel,
   FormMessage,
 } from "@/components/ui/form";
-import {
-  Card,
-  CardContent,
-  CardDescription,
-  CardFooter,
-  CardHeader,
-  CardTitle,
-} from "@/components/ui/card";
+import { Card, CardContent } from "@/components/ui/card";
 import { Checkbox } from "@/components/ui/checkbox";
 import { Input } from "@/components/ui/input";
-import Link from "next/link";
 import formSchema from "@/schema/Signup";
 import Logo from "@/components/reusables/Logo";
 import LoadingSpinner from "@/components/reusables/LoadingSpinner";
 import { ArrowLeft } from "lucide-react";
+import { signUp } from "@/services/authentication";
+import { showErrorToast, showSuccessToast } from "@/helpers/taostUtil";
 
-export default function SignUpForm() {
+const SignUpForm = () => {
   const [isLoading, setIsLoading] = useState(false);
   const [isOnline, setIsOnline] = useState(true);
-  const [passwordStrength, setPasswordStrength] = useState(0);
-  const { toast } = useToast();
 
+  const { toast } = useToast();
   const router = useRouter();
 
   useEffect(() => {
@@ -53,51 +45,40 @@ export default function SignUpForm() {
     };
   }, []);
 
- const form = useForm({});
+  const form = useForm({
+    resolver: zodResolver(formSchema),
+    defaultValues: {
+      first_name: "",
+      last_name: "",
+      email: "",
+      password: "",
+      confirm_password: "",
+      terms: false,
+    },
+  });
 
-  const onSubmit = async (values) => {
-    if (values.email.length < 5) {
-      toast({
-        variant: "destructive",
-        title: "Account verification failed",
-        description: "Make sure the provided details are correct",
-      });
-      return;
-    }
+  const onSubmit = useCallback(
+    async (values) => {
+      if (!isOnline) {
+        showErrorToast(
+          "You are offline. Please check your network connection."
+        );
+        return;
+      }
 
-    if (!isOnline) {
-      toast({
-        variant: "destructive",
-        title: "Ohh no! Network error",
-        description:
-          "You are currently offline. Please check your internet connection.",
-        action: <ToastAction altText="Try again">Try again</ToastAction>,
-      });
-      return;
-    }
-
-    try {
-      setIsLoading(true);
-
-      toast({
-        variant: "success",
-        title: "Pharmacy validation successful",
-        description: `Welcome back, ${values.email}`,
-      });
-
-      router.push("/dashboard");
-    } catch (error) {
-      toast({
-        variant: "destructive",
-        title: "Submission failed",
-        description: "There was an error signing in. Please try again.",
-      });
-    } finally {
-      setIsLoading(false);
-    }
-  };
-
-
+      try {
+        setIsLoading(true);
+        const result = await signUp(values);
+        showSuccessToast(result.message || "Account login successfully.");
+        router.push("/dashboard");
+      } catch (error) {
+        showErrorToast(error.message || "An error occurred. Please try again.");
+      } finally {
+        setIsLoading(false);
+      }
+    },
+    [isOnline, router]
+  );
 
   return (
     <div className="">
@@ -109,17 +90,7 @@ export default function SignUpForm() {
         transition={{ duration: 0.5 }}
       >
         <Card className="shadow-none drop-shadow-none rounded-none mx-auto border-0 m-0 p-0">
-          <CardHeader className="text-center m-0 p-0">
-            <motion.div
-              animate={{ y: [0, -20, 0] }}
-              transition={{ repeat: Infinity, duration: 1.5 }}
-              className="flex justify-center mb-3 lg:hidden"
-            >
-              <Logo />
-            </motion.div>
-          
-          </CardHeader>
-          <CardContent className='m-0 p-0'>
+          <CardContent className="m-0 p-0">
             <Form {...form}>
               <motion.form
                 onSubmit={form.handleSubmit(onSubmit)}
@@ -146,7 +117,7 @@ export default function SignUpForm() {
                             {...field}
                           />
                         </FormControl>
-                        <FormMessage />
+                        <FormMessage className="text-red-500" />
                       </FormItem>
                     </motion.div>
                   )}
@@ -169,7 +140,7 @@ export default function SignUpForm() {
                             {...field}
                           />
                         </FormControl>
-                        <FormMessage />
+                        <FormMessage className="text-red-500" />
                       </FormItem>
                     </motion.div>
                   )}
@@ -193,7 +164,7 @@ export default function SignUpForm() {
                             {...field}
                           />
                         </FormControl>
-                        <FormMessage />
+                        <FormMessage className="text-red-500" />
                       </FormItem>
                     </motion.div>
                   )}
@@ -220,8 +191,7 @@ export default function SignUpForm() {
                             }}
                           />
                         </FormControl>
-                  
-                        <FormMessage />
+                        <FormMessage className="text-red-500" />
                       </FormItem>
                     </motion.div>
                   )}
@@ -248,8 +218,7 @@ export default function SignUpForm() {
                             }}
                           />
                         </FormControl>
-                  
-                        <FormMessage />
+                        <FormMessage className="text-red-500" />
                       </FormItem>
                     </motion.div>
                   )}
@@ -261,35 +230,45 @@ export default function SignUpForm() {
                   animate={{ opacity: 1, y: 0 }}
                   transition={{ duration: 0.3 }}
                 >
-
                   <FormField
                     control={form.control}
-                    name="terms_condition"
+                    name="terms"
                     render={({ field }) => (
-                      <FormItem className="flex flex-row items-center space-x-2 space-y-0">
-                        <FormControl>
-                          <Checkbox
-                            checked={field.value}
-                            onCheckedChange={field.onChange}
-                          />
-                        </FormControl>
-                        <div className="space-y-1 leading-none text-sm font-thin">
-                          <FormLabel>I agree to the <span className="text-primary font-medium">terms and conditions</span></FormLabel>
+                      <FormItem className="">
+                        <div className="flex flex-row items-center space-x-2 space-y-0">
+                          <FormControl>
+                            <Checkbox
+                              checked={field.value}
+                              onCheckedChange={field.onChange}
+                            />
+                          </FormControl>
+                          <div className="space-y-1 leading-none text-sm font-thin">
+                            <FormLabel>
+                              I agree to the{" "}
+                              <span className="text-primary font-medium">
+                                terms and conditions
+                              </span>
+                            </FormLabel>
+                          </div>
                         </div>
+                        <FormMessage className="text-red-500" />
                       </FormItem>
                     )}
                   />
-                 
                 </motion.div>
                 <div className="flex flex-col justify-center text-white space-y-6">
-
-                <Button className="w-1/3 bg-primary text-white flex self-center mt-3" type="submit">
-                  Create account
-                </Button>
-
-                <p className="flex gap-x-2 items-center text-primary"onClick={()=> router.back()}>
-                  <ArrowLeft size={16}/> <span className="">Go back</span>
-                </p>
+                  <Button
+                    className="lg:w-1/3 bg-primary text-white flex self-center mt-3"
+                    type="submit"
+                  >
+                    Create account
+                  </Button>
+                  <p
+                    className="flex gap-x-2 items-center text-primary"
+                    onClick={() => router.back()}
+                  >
+                    <ArrowLeft size={16} /> <span className="">Go back</span>
+                  </p>
                 </div>
               </motion.form>
             </Form>
@@ -298,4 +277,6 @@ export default function SignUpForm() {
       </motion.div>
     </div>
   );
-}
+};
+
+export default SignUpForm;
