@@ -12,6 +12,8 @@ const config = {
     extend: {
       colors: {
         white: "#ffff",
+        pri10: "#13485B",
+        "first-primary": "#1A637D",
         black: "#000000",
         primary: "#2FB3E3",
         pri1: "#EAF7FC",
@@ -42,7 +44,6 @@ const config = {
         "accordion-down": "accordion-down 0.2s ease-out",
         "accordion-up": "accordion-up 0.2s ease-out",
       },
-      
     },
   },
   plugins: [require("tailwindcss-animate")],

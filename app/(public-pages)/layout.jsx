@@ -1,11 +1,11 @@
 import Footer from '@/components/reusables/Footer'
-import Header from '@/components/reusables/landingPage/Header'
+import Navbar from '@/components/reusables/Navbar'
 import React from 'react'
 
 const layout = ({children}) => {
   return (
     <main className=''>
-        <Header/>
+        <Navbar/>
         <section className='relative h-full w-full'>
             {children}
         </section>

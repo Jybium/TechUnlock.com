@@ -5,12 +5,12 @@ import founder from "@/assets/about-page/founder.svg";
 const Founder = () => {
   return (
     <div className="w-full h-full">
-      <div className="flex justify-between w-5/6 mx-auto">
-        <div className="w-2/3">
-          <h3 className="">
-            Meet the Founder of <span className="">TechUnlock</span>
+      <div className="lg:flex lg:justify-between items-center w-[90%] mx-auto mb-[7.5rem] mt-[3rem]">
+        <div className="lg:w-3/5">
+          <h3 className="text-gray-900 font-semibold text-4xl">
+            Meet the Founder of <span className="text-primary">TechUnlock</span>
           </h3>
-          <p className="">
+          <p className="mt-[2.70rem] text-2xl font-thin">
             t Duis aute irure dolor in reprehenderit in voluptate velit esse
             cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat
             cupidatat non proident, sunt in culpa qui officia deserunt mollit
@@ -20,16 +20,18 @@ const Founder = () => {
             exercitation ullamco laboris nisi ut aliquip ex ea commodo
             consequat.
           </p>
-          <p className="">David</p>
+          <p className="mt-2 flex justify-end text-darkblue font-semibold text-2xl">
+            David
+          </p>
         </div>
 
-        <div className="w-1/3">
+        <div className="lg:w-[30%]">
           <Image
             src={founder}
             alt="founder"
             width={400}
             height={400}
-            className="w-full h-full object-cover block"
+            className="w-[75%] h-full object-cover block"
           />
         </div>
       </div>
