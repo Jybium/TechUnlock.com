@@ -1,12 +1,13 @@
 "use client";
 
 import React from "react";
-import { useRouter, useSearchParams } from "next/navigation";
+import { useRouter, useSearchParams, usePathname } from "next/navigation";
 import { Button } from "@/components/ui/button";
 
 const FilterBar = () => {
   const router = useRouter();
   const searchParams = useSearchParams();
+  const path = usePathname();
 
   const featureFilter = searchParams.get("feature") || "all";
   const difficultyFilter = searchParams.get("difficulty") || "all";
@@ -14,7 +15,7 @@ const FilterBar = () => {
   const handleFilterChange = (filterType, filterValue) => {
     const params = new URLSearchParams(searchParams.toString());
     params.set(filterType, filterValue);
-    router.push(`${router.pathname}?${params.toString()}`);
+    router.push(`${path}?${params.toString()}`);
   };
 
   return (
