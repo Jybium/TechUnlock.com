@@ -1,6 +1,6 @@
 import React from "react";
 import Image from "next/image";
-import customercare from "@/assets/contact-page/image.svg";
+import customercare from "@/assets/contact-page/Image.svg";
 import ContactUsForm from "@/components/forms/ContactForm";
 
 const ContactUs = () => {
