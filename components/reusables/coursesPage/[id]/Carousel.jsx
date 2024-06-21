@@ -19,7 +19,7 @@ const ImageContainer = styled.div`
   ${({ image }) => `
     background-image: url(${image});
   `}
-  @apply w-1/2 h-full bg-center bg-cover transition-opacity duration-500 ease-in-out bg-transparent;
+  @apply w-1/2 h-full bg-center bg-cover bg-primary transition-opacity duration-500 ease-in-out bg-transparent;
   opacity: ${({ isActive }) => (isActive ? 1 : 0)};
   position: absolute;
   top: 0;

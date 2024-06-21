@@ -12,6 +12,7 @@ const config = {
     extend: {
       colors: {
         white: "#ffff",
+        error: "#F97066",
         pri10: "#13485B",
         ash: "#667085",
         "first-primary": "#1A637D",

@@ -6,7 +6,6 @@ import { useToast } from "@/components/ui/use-toast";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { useForm } from "react-hook-form";
 import { motion } from "framer-motion";
-import dynamic from "next/dynamic";
 
 import { Button } from "@/components/ui/button";
 import {
