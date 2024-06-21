@@ -89,3 +89,15 @@ li {
   animation: fadeIn 3s ease-out;
   animation-delay: 1s;
 }
+
+/* Custom CSS to hide scrollbar */
+.scrollbar-hide {
+  /* Hide scrollbar for Firefox */
+  scrollbar-width: none; /* Firefox */
+  -ms-overflow-style: none; /* Internet Explorer 10+ */
+
+  /* Hide scrollbar for WebKit/Blink browsers */
+  &::-webkit-scrollbar {
+    display: none;
+  }
+}
