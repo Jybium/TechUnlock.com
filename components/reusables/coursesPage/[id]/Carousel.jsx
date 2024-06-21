@@ -6,7 +6,7 @@ import styled from "styled-components";
 
 const CarouselContainer = styled.div.attrs({
   className:
-    "relative flex flex-col items-center gap-x-5 justify-center w-full max-w-4xl mx-auto bg-transparent",
+    "relative flex flex-col items-center gap-x-5 py-[2rem] justify-center w-full max-w-4xl mx-auto bg-transparent",
 })``;
 
 const SlideContainer = styled.div.attrs({
@@ -49,12 +49,18 @@ const Button = styled.button.attrs({
 
 const DotsContainer = styled.div.attrs({
   className:
-    "absolute bottom-0 flex items-center self-center space-x-2 bg-white",
+    "absolute bottom-0 flex z-20 rounded-xl h-4 w-[10%] p-3 items-center justify-center space-x-2 bg-white",
 })``;
 
 const Dot = styled.div`
-  @apply w-3 h-3 bg-gray-500 rounded-full cursor-pointer;
-  ${({ active }) => active && "background-color: #3b82f6;"}
+  width: 0.75rem; /* 3px */
+  height: 0.75rem; /* 3px */
+  background-color: ${({ active }) =>
+    active
+      ? "#101828"
+      : "#d1d5db"}; /* bg-primary when active, bg-gray-400 when inactive */
+  border-radius: 9999px; /* full rounded */
+  cursor: pointer;
 `;
 
 const Carousel = ({ slides }) => {

@@ -95,11 +95,11 @@ const DynamicCard = () => {
 
       // Change background color based on progress
       if (progress > 0) {
-        scrollbar.classList.add("bg-primary");
-        scrollbar.classList.remove("bg-gray-600");
+        scrollbar.classList.add("bg-pri10");
+        scrollbar.classList.remove("bg-gray-200");
       } else {
-        scrollbar.classList.remove("bg-primary");
-        scrollbar.classList.add("bg-gray-600");
+        scrollbar.classList.remove("bg-pri10");
+        scrollbar.classList.add("bg-gray-200");
       }
     }
   };
@@ -112,7 +112,7 @@ const DynamicCard = () => {
           <p className="text-lg">{selectedItem.content}</p>
         </div>
       </div>
-      <div className="w-1/2 p-8 bg-transparent relative">
+      <div className="w-1/2 px-8 bg-transparent relative">
         <div
           ref={itemsContainerRef}
           className="max-h-full overflow-y-auto scrollbar-hide"
@@ -130,12 +130,14 @@ const DynamicCard = () => {
             ))}
           </ul>
         </div>
-        <div
-          ref={scrollbarRef}
-          className="absolute top-0 right-0 h-full bg-gray-600 w-3 cursor-pointer"
-          style={{ height: `${scrollProgress}%` }}
-          onMouseDown={handleDragStart}
-        ></div>
+        <div className="bg-gray-200 w-3 h-full">
+          <div
+            ref={scrollbarRef}
+            className="absolute top-0 right-0 h-full w-3 cursor-pointer"
+            style={{ height: `${scrollProgress}%` }}
+            onMouseDown={handleDragStart}
+          ></div>
+        </div>
       </div>
     </div>
   );

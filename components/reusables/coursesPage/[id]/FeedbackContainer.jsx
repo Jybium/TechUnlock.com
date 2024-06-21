@@ -7,8 +7,8 @@ import angleDown from "@/assets/course-page/ColouredDownAngle.svg";
 
 const FeedbackContainer = () => {
   return (
-    <div className="relative h-[80vh] mb-[6rem]">
-      <div className="absolute -top-1/3 left-0 w-1/5 h-[80vh] overflow-hidden ">
+    <div className="relative h-[80vh] mb-[5rem]">
+      <div className="absolute -top-1/4 left-0 w-1/5 h-[80vh] overflow-hidden ">
         <Image
           src={angleDown}
           alt="Decorative angle"
@@ -18,14 +18,14 @@ const FeedbackContainer = () => {
         />
       </div>
 
-         <div className="relative my-3">
+      <div className="relative mb-10 ml-16">
         <p className="relative grid">
           <Image
             src={line}
             alt="line"
-            className="absolute left-[39%] top-9 w-[10%] mx-auto"
+            className="absolute left-0 top-9 w-[14%] mx-auto"
           />
-          <span className="text-left text-3xl font-semibold text-darkblue">
+          <span className="text-left text-3xl font-semibold text-pri10">
             Feedbacks
           </span>
         </p>

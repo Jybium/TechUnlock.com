@@ -4,6 +4,7 @@ import Description from "@/components/reusables/coursesPage/[id]/Description";
 import Curriculum from "@/components/reusables/coursesPage/[id]/Curriculum";
 import CourseAddOn from "@/components/reusables/coursesPage/[id]/CourseAddOn";
 import FeedbackContainer from "@/components/reusables/coursesPage/[id]/FeedbackContainer";
+import PromotionBanner from "@/components/reusables/coursesPage/[id]/PromotionBanner";
 
 const SpecificCoursePage = () => {
   return (
@@ -13,6 +14,7 @@ const SpecificCoursePage = () => {
       <Curriculum />
       <CourseAddOn />
       <FeedbackContainer />
+      <PromotionBanner />
     </div>
   );
 };
