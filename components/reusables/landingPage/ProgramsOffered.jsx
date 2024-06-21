@@ -15,8 +15,8 @@ const ProgramsOffered = () => {
           alt="side-image"
           className="absolute left-0 -top-[11%] w-[15%] -z-10"
         />
-      <div className="relative">
 
+      <div className="relative">
         <p className="relative grid justify-center content-center">
           <Image
             src={line}
