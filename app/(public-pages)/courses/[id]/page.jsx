@@ -1,5 +1,5 @@
 import React from "react";
-import SpecificCoursePage from "@/pages/SpecificCoursePage";
+import SpecificCoursePage from "@/page/SpecificCoursePage";
 
 const page = () => {
   return (
