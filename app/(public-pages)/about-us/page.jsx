@@ -1,13 +1,12 @@
-import React from 'react'
-import AboutPage from '@/pages/AboutPage'
-
+import React from "react";
+import AboutPage from "@/page/AboutPage";
 
 const page = () => {
   return (
     <div className="">
-        <AboutPage/>
+      <AboutPage />
     </div>
-  )
-}
+  );
+};
 
-export default page
+export default page;

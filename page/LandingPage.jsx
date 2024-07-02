@@ -42,8 +42,8 @@ const LandingPage = () => {
         <FindConnect />
         <div className="relative">
           <Metrics />
-          <div className="absolute -top-5 left-0 right-0 h-20 bg-gradient-to-b from-primary/20 via-primary/40 to-transparent pointer-events-none"></div>
-          <div className="absolute -bottom-5 left-0 right-0 h-20 bg-gradient-to-t from-primary/20 via-primary/40 to-transparent pointer-events-none"></div>
+          <div className="absolute -top-5 left-0 right-0 h-20 bg-gradient-to-b from-white via-primary/20 to-primary/40 pointer-events-none"></div>
+          <div className="absolute -bottom-5 left-0 right-0 h-20 bg-gradient-to-t from-white via-primary/20 to-primary/40 pointer-events-none"></div>
         </div>
 
         <ProgramsOffered />
