@@ -5,7 +5,7 @@ import Navigation from "./Navigation";
 
 const Sidebar = () => {
   return (
-    <div className="w-1/5 h-full bg-sec10 flex items-center text-pri1">
+    <div className="fixed w-1/5 h-full bg-sec10 flex items-center text-pri1">
       <div className="w-5/6 mx-auto h-5/6 flex flex-col justify-between">
         <div className="grid gap-y-10">
           {/* the logo part */}

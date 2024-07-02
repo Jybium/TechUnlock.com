@@ -5,15 +5,15 @@ import SearchBar from "./SearchBar";
 import { ChevronDown, ChevronUp } from "lucide-react";
 
 const Header = () => {
-  const [data, setData] = useState(null); // Initialize with null for better type consistency
-  const [profileOpen, setProfileOpen] = useState(false); // Initialize with false for clarity
+  const [data, setData] = useState(null);
+  const [profileOpen, setProfileOpen] = useState(false);
 
   const handleDropDown = () => {
     setProfileOpen(!profileOpen);
   };
 
   return (
-    <div className="fixed w-full md:w-4/5 bg-pri1 pr-8">
+    <div className="fixed w-full md:w-4/5 bg-pri1 pr-8 z-20">
       <div className="flex justify-between w-full">
         <div className="w-3/5 flex justify-end items-center ml-auto">
           <SearchBar setData={setData} />
