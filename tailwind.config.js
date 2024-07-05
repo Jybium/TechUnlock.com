@@ -20,6 +20,8 @@ const config = {
         primary: "#2FB3E3",
         pri1: "#EAF7FC",
         pri9: "#1C6B88",
+        pri10: "#13485B",
+        pri7: "#2FB3E3",
         sec10: "#06212B",
         darkblue: "#1A6884",
         background:

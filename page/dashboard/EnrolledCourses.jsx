@@ -1,12 +1,19 @@
+import CourseContent from "@/components/reusables/dashboard/CourseContent";
+import { EnrolledIcon } from "@/components/svgs";
 import React from "react";
 
-const EnrolledCourses = () => {
-  return (
-    <div className="">
-      {/* JUST WRITE THE COMPONENTS HERE, NO NEED TO IMPORT DASHBOARD LAYOUT AGAIN. */}
-      {/* THEN IN YOUR ROUTE FOLDER, JUST IMPORT THIS FILE INSTEAD. */}
-    </div>
-  );
-};
+const EnrolledCourses =
+  () => {
+    return (
+      <div className="h-full">
+        <CourseContent
+          courseIcon= {<EnrolledIcon />}
+          title="Enrolled courses"
+          mainMessage="You are yet to enroll for a course."
+          subMessage="Enroll now."
+        />
+      </div>
+    );
+  };
 
 export default EnrolledCourses;

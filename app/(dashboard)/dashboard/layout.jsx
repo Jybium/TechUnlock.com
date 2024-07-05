@@ -3,7 +3,7 @@ import DashboardLayout from "@/components/reusables/Layout/DashboardLayout";
 
 const layout = ({ children }) => {
   return (
-    <div className="">
+    <div className="h-full">
       <DashboardLayout>{children}</DashboardLayout>
     </div>
   );
