@@ -31,14 +31,16 @@ const CourseCard = ({ item }) => {
         <div className=" grid gap-y-3 p-3">
           <h1 className="text-xl text-[#2FB3E3] font-semibold">{item?.name}</h1>
           <div className="text-[#1C6B88]">
-            <p className="line-clamp-2 font-semibold">{item?.description}</p>
+            <p className="line-clamp-2 font-semibold text-sm">
+              {item?.description}
+            </p>
           </div>
 
-          <p className="flex gap-x-3 font-semibold items-center text-[#1C6B88]">
+          <p className="flex gap-x-3 font-semibold items-center text-[#1C6B88] text-sm">
             <span>{item?.rating}.0</span> <Rating rating={5} />
           </p>
 
-          <div className="grid grid-cols-1 gap-3 text-darkblue font-semibold">
+          <div className="grid grid-cols-1 gap-3 text-pri10 font-semibold text-sm">
             <p className="flex items-center gap-x-3">
               <TimeIcon />{" "}
               <span className="">Duration: {item.details.duration}</span>

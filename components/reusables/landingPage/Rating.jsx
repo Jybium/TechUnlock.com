@@ -25,7 +25,7 @@ const Rating = ({ rating }) => {
     return stars;
   };
 
-  return <div className="flex items-center">{getStars(rating)}</div>;
+  return <span className="flex items-center">{getStars(rating)}</span>;
 };
 
 export default Rating;
