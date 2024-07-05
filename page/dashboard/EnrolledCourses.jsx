@@ -5,7 +5,7 @@ import React from "react";
 const EnrolledCourses =
   () => {
     return (
-      <div>
+      <div className="h-full">
         <CourseContent
           courseIcon= {<EnrolledIcon />}
           title="Enrolled courses"

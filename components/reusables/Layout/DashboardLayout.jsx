@@ -10,7 +10,7 @@ const DashboardLayout = ({ children }) => {
         <div className="w-4/5 ml-auto bg-[#FCFCFD]">
           <Header />
 
-          <div className="relative p-4 w-full top-20 overflow-auto">
+          <div className="relative p-5 w-full h-[calc(100vh-80px)] top-20 bg-[#FCFCFD] overflow-auto">
             {children}
           </div>
         </div>
