@@ -33,7 +33,6 @@ const SelectCourse = ({ courses }) => {
     form.setValue("course", value);
 
     try {
-      // Perform the API call here
       const response = await fetch("/api/course", {
         method: "POST",
         headers: {
@@ -61,7 +60,7 @@ const SelectCourse = ({ courses }) => {
       transition={{ duration: 0.5 }}
     >
       <Form {...form}>
-        <form className="space-y-4">
+        <form className="space-y-4 w-5/6 mx-auto">
           <FormField
             control={form.control}
             name="course"
