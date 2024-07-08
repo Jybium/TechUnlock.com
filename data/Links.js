@@ -4,15 +4,15 @@ export const Prog = [
     submenu: true,
     sublink: [
       {
-        name: "Training Courses",
+        name: "Online training",
         url: "/courses",
       },
       {
-        name: "Physical Classes Enrollment ",
+        name: "Physical Classes",
         url: "/physical-classes",
       },
       {
-        name: "Bootcamp",
+        name: "Learn at your pace",
         url: "/bootcamp",
       },
     ],

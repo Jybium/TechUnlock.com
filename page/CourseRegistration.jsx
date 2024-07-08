@@ -5,7 +5,7 @@ import FormContainer from "@/components/reusables/coursesPage/[id]/register/Form
 const CourseRegistration = () => {
   return (
     <div className="">
-      <Banner />
+      {/* <Banner /> */}
       <FormContainer />
     </div>
   );

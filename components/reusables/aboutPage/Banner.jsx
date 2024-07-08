@@ -9,26 +9,26 @@ const Banner = () => {
       <div className="absolute inset-0 bg-gradient-to-r from-[#C0E8F6] to-[#89B3C1] opacity-30"></div>
 
       <div className="relative h-full w-full flex justify-center items-center z-20">
-        <div className="flex flex-col justify-between items-center p-8 rounded-lg max-w-4xl text-justify">
-          <h1 className="relative text-6xl font-bold text-primary leading-[1.1] tracking-tight">
+        <div className="flex flex-col justify-between items-center p-8 rounded-lg max-w-3xl text-justify">
+          <h1 className="relative text-5xl font-bold text-primary leading-[1.05] tracking-tight">
             TechUnlock{" "}
             <span className="text-5xl text-pri10 font-semibold">
               the fastest growing tech space for newbies
             </span>
-            <span className="absolute w-8 h-8 rounded-full bg-gradient-to-b from-[#101828] to-[#2FB3E3] drop-shadow-2xl inset-0 left-[90%] top-0"></span>
+            <span className="absolute w-8 h-8 rounded-full bg-gradient-to-b from-[#101828] to-[#2FB3E3] drop-shadow-2xl inset-0 left-[89%] -top-3"></span>
           </h1>
+          <p className="text-gray-900 mt-6 text-lg">
+            With over 4000 trainees and a fast growing tech community,
+            TechUnlock Nigeria is positioned to give you the advantage you need
+            in your tech career. We believe that training is beyond the detailed
+            course work or the most relevant curriculum. Training is holistic
+            and the community you choose to grow with, determines your direction
+            and growth.
+          </p>
           <p className="text-gray-900 mt-4 text-lg">
-            Duis aute irure dolor in reprehenderit in voluptate velit esse
-            cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat
-            cupidatat non proident, sunt in culpa qui officia deserunt mollit
-            anim id est laborum. Lorem ipsum dolor sit amet, consectetur
-            adipiscing elit, sed do eiusmod tempor incididunt ut labore et
-            dolore magna aliqua. Ut enim ad minim veniam, quis nostrud
-            exercitation ullamco laboris nisi ut aliquip ex ea commodo
-            consequat. Duis aute irure dolor in reprehenderit in voluptate velit
-            esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat
-            cupidatat non proident, sunt in culpa qui officia deserunt mollit
-            anim id est laborum.
+            We go beyond the expected training, we develop you to take on real
+            time projects and build your portfolio and we prepare you for the
+            job market or entrepreneurship.
           </p>
           <div className="flex justify-center mt-6">
             <Link href="/courses">

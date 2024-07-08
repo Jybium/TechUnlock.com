@@ -5,11 +5,11 @@ import OfferCard from "./OfferCard";
 const Offers = () => {
   return (
     <div className="relative bg-white z-20">
-      <div className="w-[95%] mx-auto my-[5rem]">
+      <div className="w-[95%] mx-auto my-[4rem]">
         <span className="">
-          <p className="text-pri10 text-4xl font-semibold">
+          <p className="text-pri10 text-3xl font-semibold">
             Journey with us at{" "}
-            <span className="text-6xl text-primary">TechUnlock </span> <br />
+            <span className="text-5xl text-primary">TechUnlock </span> <br />
             as we provide you with
           </p>
         </span>
