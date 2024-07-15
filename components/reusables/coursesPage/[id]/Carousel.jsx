@@ -20,7 +20,7 @@ const ImageContainer = styled.div`
     background-image: url(${image});
   `}
   @apply w-1/2 h-full bg-center bg-cover bg-primary transition-opacity duration-500 ease-in-out bg-transparent;
-  opacity: ${({ isActive }) => (isActive ? 1 : 0)};
+  opacity: ${({ isactive }) => (isactive ? 1 : 0)};
   position: absolute;
   top: 0;
   left: 0;
@@ -30,7 +30,7 @@ const ContentContainer = styled.div.attrs({
   className:
     "w-1/2 flex flex-col justify-between p-4 bg-transparent transition-opacity duration-500 ease-in-out",
 })`
-  opacity: ${({ isActive }) => (isActive ? 1 : 0)};
+  opacity: ${({ isactive }) => (isactive ? 1 : 0)};
   transition: opacity 0.5s ease-in-out;
 `;
 
@@ -87,10 +87,10 @@ const Carousel = ({ slides }) => {
           <ImageContainer
             key={index}
             image={slide.image}
-            isActive={index === currentSlide}
+            isactive={index === currentSlide}
           />
         ))}
-        <ContentContainer isActive={true}>
+        <ContentContainer isactive={true}>
           <TextContent>
             <h1 className="text-4xl font-semibold">Course add-ons</h1>
             <div className="grid gap-y-1">
