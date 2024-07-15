@@ -3,6 +3,7 @@ import "./globals.css";
 import { SpeedInsights } from "@vercel/speed-insights/next";
 import { Analytics } from "@vercel/analytics/react";
 import ToastProvider from "@/components/reusables/Layout/ToastProvider";
+import { ModalProvider } from "@/Context/modal";
 
 
 
@@ -17,18 +18,19 @@ export default function RootLayout({ children }) {
   return (
     <html lang="en">
       <body className={inter.className}>
+        <ModalProvider>
+          <ToastProvider>
 
-     <ToastProvider>
+
+
+            {children}
+            <Analytics />
+            <SpeedInsights />
+          </ToastProvider>
+        </ModalProvider>
 
 
 
-        {children}
-        <Analytics />
-        <SpeedInsights />
-     </ToastProvider>
-
-        
-        
       </body>
     </html>
   );
