@@ -127,7 +127,6 @@ const CourseForm = () => {
 
   const onSubmit = async (data) => {
     console.log(data);
-    // console.log(typeof data.cover_image);
 
     const formData = new FormData();
 
@@ -139,32 +138,23 @@ const CourseForm = () => {
     formData.append("is_certificate", data.is_certificate);
     formData.append("instructor_name", data.instructor_name);
     formData.append("price", data.price);
-
-    // Append course skills as individual items
-    data.course_skills.forEach((skill, index) => {
-      formData.append(`course_skills[${index}]["name"]`, skill.name);
-    });
-
-    // Append cover image binary data
     formData.append("cover_image", data.cover_image);
 
-    // Append modules
-    data.modules.forEach((module, index) => {
-      formData.append(
-        `modules[${index}]["title"]`,
-        `${module.selectModule}: ${module.title}`
-      );
-      formData.append(`modules[${index}][description]`, module.description);
-    });
+    // formData.append("course_skills", []);
+    formData.append("course_skills", JSON.stringify(data.course_skills));
 
-    // Append add-ons
-    data.addon.forEach((addon, index) => {
-      formData.append(`addon[${index}]["title"]`, addon.title);
-      formData.append(`addon[${index}][description]`, addon.description);
-      formData.append(`addon[${index}][add_on_image]`, addon.add_on_image);
-    });
+    formData.append("modules", []);
+    formData.set("modules", Array.from(data.modules));
+    const newModules = data.modules.map((module) => JSON.stringify(module));
+    // const modules = JSON.stringify(data.modules)
+    // formData.append("modules", newModules);
+    // formData.append("modules", [...data.modules]);
 
-    // console.log(formData);
+    // formData.append("addon", []);
+    formData.append("addon", JSON.stringify(data.addon));
+
+    // console.log(formData.getAll("modules"));
+    console.log(typeof [Array.from(data.modules)]);
 
     // Handle offline state
     if (!isOnline) {
@@ -176,7 +166,7 @@ const CourseForm = () => {
       setIsLoading(true);
       const result = await addCourse(formData);
       showSuccessToast(result.message || "Course created successfully.");
-      router.push("/courses/payment");
+      // router.push("/courses/payment");
     } catch (error) {
       showErrorToast(error.message || "An error occurred. Please try again.");
     } finally {
