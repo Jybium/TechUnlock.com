@@ -3,9 +3,6 @@ import { fetchToken } from "./getToken";
 
 const apiClient = axios.create({
   baseURL: "https://techunlock.pythonanywhere.com",
-  headers: {
-    "Content-Type": "application/json",
-  },
 });
 
 let cachedToken;

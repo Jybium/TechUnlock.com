@@ -1,22 +1,33 @@
 import { apiClient } from "@/helpers/apiClient";
-import courseSchema from "@/schema/AddCourse";
 
+/**
+ * This function sends a request to add a new course to the server.
+ *
+ * @param {Object} data - The data for the new course to be added.
+ * @param {string} data.courseName - The name of the course.
+ * @param {string} data.courseDescription - The description of the course.
+ * @param {number} data.courseDuration - The duration of the course in hours.
+ * @param {string} data.courseInstructor - The instructor of the course.
+ * @param {string} data.courseCategory - The category of the course.
+ * @param {string} data.courseLanguage - The language of the course.
+ * @param {string} data.courseLevel - The level of the course.
+ * @param {string} data.courseImage - The image URL of the course.
+ * @param {string} data.courseVideo - The video URL of the course.
+ * @param {string} data.courseCertificate - The certificate URL of the course.
+ * @param {string} data.courseSyllabus - The syllabus URL of the course.
+ * @param {string} data.courseStatus - The status of the course.
+ *
+ * @returns {Promise<Object>} - A promise that resolves with the server response data.
+ * @throws {Error} - Throws an error if the request fails or encounters validation errors.
+ */
 export async function addCourse(data) {
   try {
-    // Implement authentication or authorization logic here before making the API request
-    // Add any necessary authentication or authorization logic here before making the API request
-    console.log("Validating data for adding course...");
-
-    // Validate data against schema
-    // courseSchema.parse(data);
+    // console.log("Validating data for adding course...");
 
     console.log("Data validated. Sending add course request...");
 
-    const response = await apiClient.post(`/course/add-courses/`, data, {
-      headers: {
-        "Content-Type": "multipart/form-data",
-      },
-    });
+    const response = await apiClient.post(`/course/add-courses/`, data);
+
     console.log("Add course response received:", response.data);
 
     // Handle response to check for errors

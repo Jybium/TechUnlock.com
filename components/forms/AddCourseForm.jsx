@@ -20,44 +20,6 @@ import LoadingSpinner from "../reusables/LoadingSpinner";
 import { useRouter } from "next/navigation";
 import { Button } from "../ui/button";
 
-const schema = z.object({
-  title: z.string().nonempty({ message: "Title is required" }),
-  category: z.string().nonempty({ message: "Category is required" }),
-  cover_image: z.string().optional(),
-  description: z.string().nonempty({ message: "Description is required" }),
-  difficulty: z.string().nonempty({ message: "Difficulty is required" }),
-  duration: z.string().nonempty({ message: "Duration is required" }),
-  is_certificate: z.string().nonempty({ message: "Certificate is required" }),
-  instructor_name: z
-    .string()
-    .nonempty({ message: "Instructor name is required" }),
-  price: z
-    .number()
-    .nonnegative({ message: "Price must be a non-negative number" }),
-  modules: z
-    .array(
-      z.object({
-        selectModule: z.string().nonempty({ message: "Module is required" }),
-        title: z.string().nonempty({ message: "Module title is required" }),
-        description: z
-          .string()
-          .nonempty({ message: "Module description is required" }),
-      })
-    )
-    .optional(),
-  addon: z
-    .array(
-      z.object({
-        title: z.string().nonempty({ message: "Addon title is required" }),
-        add_on_image: z.string().optional(),
-        description: z
-          .string()
-          .nonempty({ message: "Addon description is required" }),
-      })
-    )
-    .optional(),
-});
-
 const skillSuggestions = [
   { value: "JavaScript", label: "JavaScript" },
   { value: "React", label: "React" },
@@ -128,34 +90,6 @@ const CourseForm = () => {
   const onSubmit = async (data) => {
     console.log(data);
 
-    const formData = new FormData();
-
-    formData.append("title", data.title);
-    formData.append("category", data.category);
-    formData.append("description", data.description);
-    formData.append("difficulty", data.difficulty);
-    formData.append("duration", data.duration);
-    formData.append("is_certificate", data.is_certificate);
-    formData.append("instructor_name", data.instructor_name);
-    formData.append("price", data.price);
-    formData.append("cover_image", data.cover_image);
-
-    // formData.append("course_skills", []);
-    formData.append("course_skills", JSON.stringify(data.course_skills));
-
-    formData.append("modules", []);
-    formData.set("modules", Array.from(data.modules));
-    const newModules = data.modules.map((module) => JSON.stringify(module));
-    // const modules = JSON.stringify(data.modules)
-    // formData.append("modules", newModules);
-    // formData.append("modules", [...data.modules]);
-
-    // formData.append("addon", []);
-    formData.append("addon", JSON.stringify(data.addon));
-
-    // console.log(formData.getAll("modules"));
-    console.log(typeof [Array.from(data.modules)]);
-
     // Handle offline state
     if (!isOnline) {
       showErrorToast("You are offline. Please check your network connection.");
@@ -164,9 +98,20 @@ const CourseForm = () => {
 
     try {
       setIsLoading(true);
-      const result = await addCourse(formData);
+
+      const addon = data.addon.map((item) => {
+        return {
+          title: item.title,
+          description: item.description,
+        };
+      });
+
+      delete data.cover_image;
+      data.addon = addon;
+
+      const result = await addCourse(data);
       showSuccessToast(result.message || "Course created successfully.");
-      // router.push("/courses/payment");
+      reset();
     } catch (error) {
       showErrorToast(error.message || "An error occurred. Please try again.");
     } finally {
