@@ -5,6 +5,7 @@ import forgotFormSchema from "@/schema/Forgot";
 import axios from "axios";
 import { z } from "zod";
 
+
 const BASE_URL = "https://techunlock.pythonanywhere.com";
 
 /**
@@ -21,7 +22,7 @@ export async function signUp(data) {
     formSchema.parse(data);
   
 
-    const response = await axios.post(`${BASE_URL}/account/sign-up/`, data);
+    const response = await apiClient.post(`${BASE_URL}/account/sign-up/`, data);
 
 
     // Handle successful response
@@ -70,7 +71,17 @@ export async function signIn(data) {
     if (response.data && response.data.error) {
       throw new Error(response.data.error); // Assuming the error message is in response.data.error
     }
+  const apiResponse = await fetch("/api/set-cookie", {
+    method: "POST",
+    headers: {
+      "Content-Type": "application/json",
+    },
+    body: JSON.stringify({ response?.data?.access_token }),
+  });
 
+  if (!apiResponse.ok) {
+    throw new Error("Failed to set cookie");
+  }
     // Handle successful response
     return response.data;
   } catch (error) {
