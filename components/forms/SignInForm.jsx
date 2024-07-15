@@ -22,7 +22,7 @@ import Link from "next/link";
 import formSchema from "@/schema/Signin";
 import { ArrowLeft } from "lucide-react";
 import { signIn } from "@/services/authentication";
-import { showErrorToast, showSuccessToast } from "@/helpers/taostUtil";
+import { showErrorToast, showSuccessToast } from "@/helpers/toastUtil";
 
 // Dynamically import LoadingSpinner
 const LoadingSpinner = dynamic(

@@ -1,27 +1,19 @@
 import React from "react";
 import { Input } from "@/components/ui/input";
 import { Button } from "@/components/ui/button";
-import { useForm } from "react-hook-form";
 
 const SearchBar = ({ setData }) => {
-  const { register, handleSubmit, reset } = useForm();
-
-  const onSubmit = (data) => {
-    console.log(data);
-    setData(data.searchQuery);
-    reset();
+  const handleInputChange = (event) => {
+    setData(event.target.value);
   };
 
   return (
     <div className="max-w-xl lg:max-w-3xl w-full mx-auto my-4">
-      <form
-        onSubmit={handleSubmit(onSubmit)}
-        className="flex items-center justify-between gap-x-4 rounded border border-gray-900 w-5/6 lg:w-4/6 mx-auto p-1"
-      >
+      <div className="flex items-center justify-between gap-x-4 rounded border border-gray-900 w-5/6 lg:w-4/6 mx-auto p-1">
         <Input
           type="text"
           placeholder="Search for courses..."
-          {...register("searchQuery", { required: true })}
+          onChange={handleInputChange}
           className="flex-1 border-0 outline-0 rounded-l-md p-2 focus:ring-0"
         />
         <Button
@@ -30,7 +22,7 @@ const SearchBar = ({ setData }) => {
         >
           Search
         </Button>
-      </form>
+      </div>
     </div>
   );
 };

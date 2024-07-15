@@ -21,7 +21,7 @@ import { Card, CardContent } from "@/components/ui/card";
 import { Input } from "@/components/ui/input";
 import formSchema from "@/schema/Forgot";
 import { ArrowLeft } from "lucide-react";
-import { showErrorToast, showSuccessToast } from "@/helpers/taostUtil";
+import { showErrorToast, showSuccessToast } from "@/helpers/toastUtil";
 import { forgotPassword } from "@/services/authentication";
 
 // Dynamically import LoadingSpinner

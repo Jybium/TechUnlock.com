@@ -24,7 +24,7 @@ import Logo from "@/components/reusables/Logo";
 import LoadingSpinner from "@/components/reusables/LoadingSpinner";
 import { ArrowLeft } from "lucide-react";
 import { signUp } from "@/services/authentication";
-import { showErrorToast, showSuccessToast } from "@/helpers/taostUtil";
+import { showErrorToast, showSuccessToast } from "@/helpers/toastUtil";
 
 const SignUpForm = () => {
   const [isLoading, setIsLoading] = useState(false);

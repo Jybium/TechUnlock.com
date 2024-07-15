@@ -28,7 +28,7 @@ import {
 } from "@/components/ui/select";
 import LoadingSpinner from "@/components/reusables/LoadingSpinner";
 import { signUp } from "@/services/authentication";
-import { showErrorToast, showSuccessToast } from "@/helpers/taostUtil";
+import { showErrorToast, showSuccessToast } from "@/helpers/toastUtil";
 import courseRegistrationSchema from "@/schema/courseRegistration";
 import { course } from "@/data/courses";
 
