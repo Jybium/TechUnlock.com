@@ -27,7 +27,7 @@ const Navigation = () => {
               <Link
                 href={link.to}
                 className="flex items-center no-underline"
-                activeClassName="font-bold"
+                activeclassname="font-bold"
               >
                 <link.iconActive className="mr-2" />
                 {link.name}
@@ -49,7 +49,7 @@ const Navigation = () => {
                     <Link
                       href={child.to}
                       className="flex items-center no-underline"
-                      activeClassName="font-bold"
+                      activeclassname="font-bold"
                     >
                       <child.iconActive className="mr-2" />
                       {child.name}

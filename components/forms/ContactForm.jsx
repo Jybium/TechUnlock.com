@@ -18,7 +18,7 @@ import { Checkbox } from "@/components/ui/checkbox";
 import { Input } from "@/components/ui/input";
 import { Textarea } from "@/components/ui/textarea";
 import { contactSchema } from "@/schema/Contact";
-import { showErrorToast, showSuccessToast } from "@/helpers/taostUtil";
+import { showErrorToast, showSuccessToast } from "@/helpers/toastUtil";
 import LoadingSpinner from "../reusables/LoadingSpinner";
 
 const ContactUsForm = () => {

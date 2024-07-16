@@ -18,23 +18,18 @@ import {
   FormLabel,
   FormMessage,
 } from "@/components/ui/form";
-import {
-  Card,
-  CardContent,
-
-} from "@/components/ui/card";
+import { Card, CardContent } from "@/components/ui/card";
 
 import { Input } from "@/components/ui/input";
 import formSchema from "@/schema/Reset";
 import LoadingSpinner from "@/components/reusables/LoadingSpinner";
 import { ArrowLeft } from "lucide-react";
-import { showErrorToast, showSuccessToast } from "@/helpers/taostUtil";
+import { showErrorToast, showSuccessToast } from "@/helpers/toastUtil";
 import { resetPassword } from "@/services/authentication";
 
-export default function ResetPasswordForm({id}) {
+export default function ResetPasswordForm({ id }) {
   const [isLoading, setIsLoading] = useState(false);
   const [isOnline, setIsOnline] = useState(true);
-
 
   const router = useRouter();
 
@@ -49,39 +44,37 @@ export default function ResetPasswordForm({id}) {
     };
   }, []);
 
-  const form =
-    useForm({
-      resolver: zodResolver(formSchema),
-      defaultValues:{
-        password: "",
-        confirm_password: "",
-      }
-    })
+  const form = useForm({
+    resolver: zodResolver(formSchema),
+    defaultValues: {
+      password: "",
+      confirm_password: "",
+    },
+  });
 
-const onSubmit = async (values) => {
+  const onSubmit = async (values) => {
+    const data = { ...values, userId: id };
 
-  const data = {...values, userId: id}
+    if (!isOnline) {
+      showErrorToast("You are offline. Please check your network connection.");
+      return;
+    }
 
-  if (!isOnline) {
-    showErrorToast("You are offline. Please check your network connection.");
-    return;
-  }
+    try {
+      setIsLoading(true);
 
-  try {
-    setIsLoading(true);
+      const result = await resetPassword(data);
+      console.log(result);
 
-    const result = await resetPassword(data);
-    console.log(result);
+      showSuccessToast(result.message || "Password reset successfully.");
 
-    showSuccessToast(result.message || "Password reset successfully.");
-
-    router.push("/dashboard");
-  } catch (error) {
-    showErrorToast(error.message || "An error occurred. Please try again.");
-  } finally {
-    setIsLoading(false);
-  }
-};
+      router.push("/dashboard");
+    } catch (error) {
+      showErrorToast(error.message || "An error occurred. Please try again.");
+    } finally {
+      setIsLoading(false);
+    }
+  };
 
   return (
     <div className="">
@@ -93,7 +86,6 @@ const onSubmit = async (values) => {
         transition={{ duration: 0.5 }}
       >
         <Card className="shadow-none drop-shadow-none rounded-none mx-auto space-y-3 border-0 m-0 p-0">
-          
           <CardContent className="shadow-none drop-shadow-none rounded-none mx-auto space-y-1 border-0 m-0 p-0">
             <Form {...form}>
               <motion.form
