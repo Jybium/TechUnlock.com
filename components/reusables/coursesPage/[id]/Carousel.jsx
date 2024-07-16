@@ -6,11 +6,11 @@ import styled from "styled-components";
 
 const CarouselContainer = styled.div.attrs({
   className:
-    "relative flex flex-col items-center gap-x-5 py-[2rem] justify-center w-full max-w-4xl mx-auto bg-transparent",
+    "relative flex flex-col items-center gap-x-5 pt-[1rem] px-[2rem] pb-[2rem] justify-center w-full w-[90%] mx-auto bg-transparent",
 })``;
 
 const SlideContainer = styled.div.attrs({
-  className: "flex w-full h-96 bg-transparent",
+  className: "flex w-full h-62",
 })`
   position: relative;
 `;
@@ -35,7 +35,7 @@ const ContentContainer = styled.div.attrs({
 `;
 
 const TextContent = styled.div.attrs({
-  className: "flex-grow flex flex-col gap-y-6 text-[#EAF7FC]",
+  className: "flex-grow flex flex-col gap-y-6 pb-[2rem] text-[#EAF7FC]",
 })``;
 
 const NavigationButtons = styled.div.attrs({
@@ -44,12 +44,12 @@ const NavigationButtons = styled.div.attrs({
 
 const Button = styled.button.attrs({
   className:
-    "h-12 w-12 flex items-center justify-center text-black rounded-full hover:bg-white/10 hover:backdrop-blur-lg hover:drop-shadow-md hover:text-white transition-all duration-300 ease-in-out",
+    "h-10 w-10 flex items-center justify-center text-black rounded-full hover:bg-white/10 hover:backdrop-blur-lg hover:drop-shadow-md hover:text-white transition-all duration-300 ease-in-out",
 })``;
 
 const DotsContainer = styled.div.attrs({
   className:
-    "absolute bottom-0 flex z-20 rounded-xl h-4 w-[10%] p-3 items-center justify-center space-x-2 bg-white",
+    "absolute bottom-0 flex z-20 rounded-xl h-4 w-fit p-3 items-center justify-center space-x-2 bg-white",
 })``;
 
 const Dot = styled.div`
@@ -83,10 +83,10 @@ const Carousel = ({ slides }) => {
   return (
     <CarouselContainer>
       <SlideContainer>
-        {slides.map((slide, index) => (
+        {slides?.map((slide, index) => (
           <ImageContainer
             key={index}
-            image={slide.image}
+            image={slide?.add_on_image}
             isactive={index === currentSlide}
           />
         ))}
@@ -95,9 +95,11 @@ const Carousel = ({ slides }) => {
             <h1 className="text-4xl font-semibold">Course add-ons</h1>
             <div className="grid gap-y-1">
               <h2 className="text-2xl font-semibold">
-                {slides[currentSlide].title}
+                {slides?.[currentSlide]?.title}
               </h2>
-              <p className="text-white">{slides[currentSlide].description}</p>
+              <p className="text-white">
+                {slides?.[currentSlide]?.description}
+              </p>
             </div>
           </TextContent>
           <NavigationButtons>
@@ -111,7 +113,7 @@ const Carousel = ({ slides }) => {
         </ContentContainer>
       </SlideContainer>
       <DotsContainer>
-        {slides.map((_, index) => (
+        {slides?.map((_, index) => (
           <Dot
             key={index}
             active={index === currentSlide}

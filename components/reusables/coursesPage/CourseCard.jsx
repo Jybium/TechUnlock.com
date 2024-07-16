@@ -62,7 +62,7 @@ const CourseCard = ({ item }) => {
           <div className="flex justify-end">
             <Button
               className="bg-primary text-white"
-              onClick={() => router.push(`${item?.id}`)}
+              onClick={() => router.push(`/courses/${item?.id}`)}
             >
               More training details
             </Button>

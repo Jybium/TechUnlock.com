@@ -3,45 +3,80 @@ import Image from "next/image";
 import { BannerCard } from "./BannerCard";
 import Rating from "../../landingPage/Rating";
 
+//IMAGES
+
+// UI/UX
+import UIBanner from "@/assets/course-page/UIBanner.svg";
+
+// AI
+import AIBanner from "@/assets/course-page/AICard.svg";
+
+// Web Development
+import WebBanner from "@/assets/course-page/webDevBanner.svg";
+
+// cybersecurity
+import cyber from "@/assets/course-page/cybersecurityCard.svg";
+
+// DM
+import DM from "@/assets/course-page/DMCard.svg";
+
+export const categoryMap = {
+  CYBER: "Cybersecurity",
+  WEB: "Web Development",
+  DM: "Digital Marketing",
+  "UI/UX": "UI/UX Design",
+  AI: "Artificial Intelligence",
+};
+
 const Banner = ({ course }) => {
+  const fullCategoryName = categoryMap[course?.category] || course?.category;
   return (
     <div className="">
-      <div className="relative h-screen w-full flex items-end justify-center bg-gradient-to-tr from-[#13485B] to-[#06212B]">
+      <div className="relative lg:h-screen w-full lg:flex lg:items-end lg:justify-center bg-gradient-to-tr from-[#13485B] to-[#06212B]">
         <Image
-          src={course?.banner}
+          src={
+            course?.category === "UI/UX"
+              ? UIBanner
+              : course?.category === "WEB"
+              ? WebBanner
+              : course?.category === "CYBER"
+              ? cyber
+              : course?.category === "DM"
+              ? DM
+              : AIBanner
+          }
           alt="course banner"
-          className="absolute top-0 left-0 w-full h-full object-fill"
+          className="absolute top-0 left-0 w-full h-full object-cover opacity-40"
         />
 
         <div className="relative flex justify-between gap-x-6 h-[90vh] w-[95%] mx-auto pb-10">
           <div className="flex flex-col justify-between w-[65%] text-[#FCFCFD]">
-            <h1 className=" text-[#FCFCFD] font-semibold text-4xl">
+            <h1 className=" text-[#FCFCFD] font-semibold text-2xl">
               Get started with your{" "}
-              <span className="font-bold">Cyber Security</span> Journey today.
+              <span className="font-bold text-pri1"> {fullCategoryName} </span>{" "}
+              Journey today.
             </h1>
 
-            <p className="text-2xl">
-              Designed for individuals with little to no prior experience in the
-              field, this course provides a solid foundation in cybersecurity
-              essentials. Whether you're a curious enthusiast or considering a
-              career switch, you'll gain practical knowledge and skills to
-              navigate the digital landscape securely.
-            </p>
+            <p className="text-xl">{course?.description}</p>
 
-            <div className="w-2/4 bg-[#FFFFFF]/40 backdrop-blur-lg drop-shadow-md px-7 py-4 rounded-md">
+            <div className="w-2/4 bg-[#FFFFFF]/40 backdrop-blur-lg drop-shadow-md px-5 py-3 rounded-md text-sm">
               <div className="mb-4 flex justify-between">
                 <p className="">
-                  Cyber Security{" "}
-                  <span>{course?.free ? "(Free)" : course?.price}</span>
+                  {course?.title}{" "}
+                  <span>
+                    {!course?.is_paid
+                      ? "(Free)"
+                      : `(# ${Number(course?.price).toFixed(0)})`}
+                  </span>
                 </p>
                 <Rating rating={course?.rating || 4.5} />
               </div>
               <div className="flex justify-between">
                 <p className="">
-                  Rating: <span>{course?.rating}</span>
+                  Rating: <span>{course?.rating || 5.0}</span>
                 </p>
                 <p className="">
-                  Total Enrolled: <span>{course?.enrolled}</span>
+                  Total Enrolled: <span>{course?.enrolled || "1, 500"}</span>
                 </p>
               </div>
             </div>

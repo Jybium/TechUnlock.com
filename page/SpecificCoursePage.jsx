@@ -1,6 +1,6 @@
 "use client";
 
-import React from "react";
+import React, { useEffect } from "react";
 import { useParams } from "next/navigation";
 import { getCourses } from "@/services/course";
 import Banner from "@/components/reusables/coursesPage/[id]/Banner";
@@ -18,24 +18,23 @@ const SpecificCoursePage = () => {
     const fetchCourses = async () => {
       try {
         const data = await getCourses();
-        console.log("Courses data:", data);
-        setCourses(data.filter((item) => item.id === id));
+        setCourses(data.filter((item) => item.id === +id));
       } catch (error) {
         console.error("Error fetching courses:", error.message);
       }
     };
 
     fetchCourses();
-  }, []);
+  }, [id]);
 
   return (
     <div className="">
-      <Banner />
-      <Description />
-      <Curriculum />
-      <CourseAddOn />
-      <FeedbackContainer />
-      <PromotionBanner />
+      <Banner course={Courses[0]} />
+      <Description course={Courses[0]} />
+      <Curriculum course={Courses[0]} />
+      <CourseAddOn course={Courses[0]} />
+      <FeedbackContainer course={Courses[0]} />
+      <PromotionBanner course={Courses[0]} />
     </div>
   );
 };

@@ -58,7 +58,7 @@ const CoursesPage = () => {
       return true;
     });
     setFilteredCourses(filtered);
-  }, [courses, featureFilter, difficultyFilter, search]);
+  }, [courses, featureFilter, difficultyFilter, search, filter]);
 
   return (
     <div className="">
