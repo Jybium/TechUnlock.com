@@ -8,6 +8,23 @@ import { useRouter } from "next/navigation";
 import { RadioGroup, RadioGroupItem } from "@/components/ui/radio-group";
 import { Label } from "@/components/ui/label";
 
+// images
+
+// UI/UX
+import UICard from "@/assets/course-page/UICard.svg";
+
+// web development
+import webDev from "@/assets/course-page/webDevCard.svg";
+
+// cybersecurity
+import cyberSec from "@/assets/course-page/cybersecurityCard.svg";
+
+// DM
+import DMCard from "@/assets/course-page/DMCard.svg";
+
+// AI
+import AI from "@/assets/course-page/AICard.svg";
+
 export const BannerCard = ({ courses }) => {
   const [currentIndex, setCurrentIndex] = useState(0);
   const [selectedOption, setSelectedOption] = useState("onsite");
@@ -15,24 +32,28 @@ export const BannerCard = ({ courses }) => {
 
   const nextSlide = () => {
     setCurrentIndex((prevIndex) =>
-      prevIndex === courses.length - 1 ? 0 : prevIndex + 1
+      prevIndex === ["dm", "ai", "web"].length - 1 ? 0 : prevIndex + 1
     );
   };
 
   const prevSlide = () => {
     setCurrentIndex((prevIndex) =>
-      prevIndex === 0 ? courses.length - 1 : prevIndex - 1
+      prevIndex === 0 ? ["dm", "ai", "web"].length - 1 : prevIndex - 1
     );
   };
 
-  const handleOptionChange = (value) => {
+  const handleChange = (value) => {
     setSelectedOption(value);
+  };
+
+  const getLabelClass = (value) => {
+    return selectedOption === value ? "text-gray-800" : "text-white";
   };
 
   return (
     <div className="relative w-full max-w-4xl mx-auto bg-[#FFFFFF]/20 rounded-md drop-shadow-lg backdrop-blur-lg px-3 py-2 border border-gray-900">
       <div className="relative h-52">
-        {courses?.map((course, index) => (
+        {["dm", "ai", "web"]?.map((course, index) => (
           <div
             key={index}
             className={cn("absolute inset-0 transition-opacity duration-1000", {
@@ -41,7 +62,17 @@ export const BannerCard = ({ courses }) => {
             })}
           >
             <Image
-              src={course.image}
+              src={
+                course.category === "UI/UX"
+                  ? UICard
+                  : course.category === "WEB"
+                  ? webDev
+                  : course.category === "CYBER"
+                  ? cyberSec
+                  : course.category === "DM"
+                  ? DMCard
+                  : AI
+              }
               alt={course.title}
               layout="fill"
               objectFit="cover"
@@ -52,8 +83,8 @@ export const BannerCard = ({ courses }) => {
       </div>
 
       {/* Navigation dots */}
-      <div className=" flex justify-center p-3 bg-sec10 w-1/4 mx-auto rounded-lg">
-        {courses?.map((course, index) => (
+      <div className=" flex justify-center px-2 py-2 bg-sec10 w-1/4 mx-auto rounded-xl my-2">
+        {["dm", "ai", "web"]?.map((course, index) => (
           <button
             key={index}
             className={cn("h-2 w-2 rounded-full mx-1 transition-colors", {
@@ -67,33 +98,38 @@ export const BannerCard = ({ courses }) => {
 
       {/* Radio group */}
       <div className="mt-3 px-3">
-        <RadioGroup defaultValue="onsite" className="grid gap-y-3">
+        <RadioGroup
+          defaultValue="onsite"
+          className="grid gap-y-3"
+          onValueChange={handleChange}
+        >
+          <div className="flex items-center space-x-2">
+            <RadioGroupItem value="pace" id="pace" />
+            <Label htmlFor="pace" className={getLabelClass("pace")}>
+              Learn at your pace
+            </Label>
+          </div>
           <div className="flex items-center space-x-2">
             <RadioGroupItem value="onsite" id="onsite" />
-            <Label htmlFor="onsite">Onsite</Label>
+            <Label htmlFor="onsite" className={getLabelClass("onsite")}>
+              Physical classes are available
+            </Label>
           </div>
           <div className="flex items-center space-x-2">
-            <RadioGroupItem value="option-two" id="option-two" />
-            <Label htmlFor="option-two">Learn at your pace</Label>
-          </div>
-          <div className="flex items-center space-x-2">
-            <RadioGroupItem value="option-two" id="option-two" />
-            <Label htmlFor="option-two">Physical classes are available</Label>
-          </div>
-          <div className="flex items-center space-x-2">
-            <RadioGroupItem value="option-two" id="option-two" />
-            <Label htmlFor="option-two">Work on real life projects</Label>
-          </div>
-          <div className="flex items-center space-x-2">
-            <RadioGroupItem value="option-two" id="option-two" />
-            <Label htmlFor="option-two">Learn at your pace</Label>
+            <RadioGroupItem value="real-project" id="real-project" />
+            <Label
+              htmlFor="real-project"
+              className={getLabelClass("real-project")}
+            >
+              Work on real life projects
+            </Label>
           </div>
         </RadioGroup>
       </div>
 
       {/* Buttons */}
       <div className="flex justify-between mt-4 px-4 pb-5">
-        <Button onClick={() => router.push("/courses/cybersecurity/register")}>
+        <Button onClick={() => router.push(`/courses/${courses.id}/pay`)}>
           Apply Now
         </Button>
         <Button variant="outline">Save for Later</Button>

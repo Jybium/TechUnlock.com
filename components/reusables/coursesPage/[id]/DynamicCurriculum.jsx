@@ -15,7 +15,7 @@ const items = [
   { id: 10, title: "Item 10", content: "Content for item 10." },
 ];
 
-const DynamicCard = () => {
+const DynamicCard = ({ course }) => {
   const [selectedItem, setSelectedItem] = useState(items[0]);
   const [scrollProgress, setScrollProgress] = useState(40); // Initial scrollbar height at 40%
   const itemsContainerRef = useRef(null);

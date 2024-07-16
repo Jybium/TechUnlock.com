@@ -19,7 +19,7 @@ const FilterBar = () => {
   };
 
   return (
-    <div className="bg-primary py-9 px-14">
+    <div className="bg-primary py-4 px-5">
       <div className="flex flex-col justify-between md:flex-row space-y-2 md:space-y-0 md:space-x-4">
         <div className="flex items-center gap-x-5">
           <p className="text-white">Featured:</p>
@@ -84,7 +84,16 @@ const FilterBar = () => {
           </div>
         </div>
 
-        <div className=""></div>
+        <div className="">
+          <Button
+            className={`${
+              difficultyFilter === "all" ? "bg-white text-gray-900" : ""
+            } bg-white text-gray-900  hover:bg-white hover:text-primary`}
+            onClick={() => handleFilterChange("difficulty", "all")}
+          >
+            Reset
+          </Button>
+        </div>
       </div>
     </div>
   );

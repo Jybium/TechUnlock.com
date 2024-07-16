@@ -1,12 +1,27 @@
 import React from "react";
+import Overview from "./Overview";
+import line from "@/assets/landing-page/Line.svg";
 import Image from "next/image";
-import DynamicCard from "./DynamicCurriculum";
 
-const Curriculum = () => {
+const Curriculum = ({ course }) => {
   return (
-    <div className="relative mx-[4rem]">
-      <div className="w-full bg-pri1 py-[2.75rem] px-[4rem]">
-        <DynamicCard />
+    <div className="relative bg-pri1">
+      <div className="w-[90%] mx-auto pt-5">
+        <div className="relative">
+          <p className="relative">
+            <Image
+              src={line}
+              alt="line"
+              className="absolute left-0 top-8 w-[12%] mx-auto"
+            />
+            <span className="text-2xl text-left font-semibold text-first-primary">
+              Overview
+            </span>
+          </p>
+        </div>
+        <div className="w-full bg-pri1 py-[2rem]">
+          <Overview course={course} />
+        </div>
       </div>
     </div>
   );

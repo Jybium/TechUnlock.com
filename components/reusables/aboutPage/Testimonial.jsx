@@ -25,8 +25,8 @@ const Testimonial = () => {
   }, []);
 
   return (
-    <div className="w-full bg-pri10 relative mt-[7rem]">
-      <p className="pt-10 font-semibold text-4xl text-white text-center">
+    <div className="w-full bg-pri10 relative mt-[4rem]">
+      <p className="pt-7 font-semibold text-4xl text-white text-center">
         Impacting the World
       </p>
       <div className="flex justify-between items-center h-full">
@@ -36,7 +36,7 @@ const Testimonial = () => {
         >
           <ChevronLeft size={20} />
         </button>
-        <div className="w-5/6 mx-auto py-[4rem] overflow-hidden">
+        <div className="w-5/6 mx-auto py-[3rem] overflow-hidden">
           <div
             className="flex transition-transform duration-500"
             style={{

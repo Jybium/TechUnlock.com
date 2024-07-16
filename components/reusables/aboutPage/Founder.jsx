@@ -7,20 +7,20 @@ const Founder = () => {
     <div className="w-full h-full">
       <div className="lg:flex lg:justify-between items-center w-[90%] mx-auto mb-[7.5rem] mt-[3rem]">
         <div className="lg:w-3/5">
-          <h3 className="text-gray-900 font-semibold text-4xl">
+          <h3 className="text-gray-900 font-semibold text-3xl">
             Meet the Founder of <span className="text-primary">TechUnlock</span>
           </h3>
-          <p className="mt-[2.70rem] text-2xl font-thin">
-            t Duis aute irure dolor in reprehenderit in voluptate velit esse
-            cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat
-            cupidatat non proident, sunt in culpa qui officia deserunt mollit
-            anim id est laborum. Lorem ipsum dolor sit amet, consectetur
-            adipiscing elit, sed do eiusmod tempor incididunt ut labore et
-            dolore magna aliqua. Ut enim ad minim veniam, quis nostrud
-            exercitation ullamco laboris nisi ut aliquip ex ea commodo
-            consequat.
+          <p className="mt-[2.70rem] text-lg font-thin">
+            A visionary leader multiplying skilled Tech Talents in Africa.
           </p>
-          <p className="mt-2 flex justify-end text-darkblue font-semibold text-2xl">
+          <p className="mt-[2rem] text-lg font-thin">
+            David is the Fo-Founder and Project Leader at TechUnlock Nigeria. He
+            has led over 400 projects at various scales to successful
+            completion. He currently is an Innovation Project lead, implementing
+            the digital skill training and development program in partnership
+            with The Federal Ministry of Education - IDEAS and The World Bank.
+          </p>
+          <p className="mt-2 flex justify-end text-pri10 font-semibold text-xl">
             David
           </p>
         </div>

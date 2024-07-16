@@ -1,10 +1,10 @@
-import React from 'react'
-import Image from 'next/image'
+import React from "react";
+import Image from "next/image";
 
-const TestimonyCard = ({data}) => {
+const TestimonyCard = ({ data }) => {
   return (
     <div className="relative w-full bg-pri1 pt-16 pb-5 px-6">
-      <div className="p-2 bg-white rounded-full absolute -top-1/3 left-[45%] shadow-md">
+      <div className="bg-white rounded-full absolute -top-1/3 left-[45%] shadow-md">
         <Image
           src={data.image}
           alt="testimony"
@@ -12,7 +12,6 @@ const TestimonyCard = ({data}) => {
           height={160}
           className="w-24 h-24 mx-auto rounded-full"
         />
-        
       </div>
 
       <div className="grid gap-y-8 text-center text-2xl">
@@ -23,6 +22,6 @@ const TestimonyCard = ({data}) => {
       </div>
     </div>
   );
-}
+};
 
-export default TestimonyCard
+export default TestimonyCard;
