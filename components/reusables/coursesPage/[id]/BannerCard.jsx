@@ -129,7 +129,7 @@ export const BannerCard = ({ courses }) => {
 
       {/* Buttons */}
       <div className="flex justify-between mt-4 px-4 pb-5">
-        <Button onClick={() => router.push(`/courses/${courses.id}/register`)}>
+        <Button onClick={() => router.push(`/courses/${courses.id}/pay`)}>
           Apply Now
         </Button>
         <Button variant="outline">Save for Later</Button>

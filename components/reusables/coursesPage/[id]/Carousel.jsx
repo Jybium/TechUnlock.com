@@ -68,11 +68,11 @@ const Carousel = ({ slides }) => {
   const slideInterval = useRef(null);
 
   const nextSlide = () => {
-    setCurrentSlide((currentSlide + 1) % slides.length);
+    setCurrentSlide((currentSlide + 1) % slides?.length);
   };
 
   const prevSlide = () => {
-    setCurrentSlide((currentSlide - 1 + slides.length) % slides.length);
+    setCurrentSlide((currentSlide - 1 + slides?.length) % slides?.length);
   };
 
   useEffect(() => {

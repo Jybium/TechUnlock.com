@@ -68,7 +68,7 @@ const Overview = ({ course }) => {
             <div className="flex justify-end">
               <Button
                 className="bg-primary text-white"
-                onClick={() => router.push(`/courses/${course?.id}/register`)}
+                onClick={() => router.push(`/courses/${course?.id}/pay`)}
               >
                 Apply now
               </Button>

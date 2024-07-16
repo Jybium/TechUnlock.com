@@ -6,7 +6,7 @@ import RegisterCourseForm from "@/components/forms/RegisterCourseForm";
 
 const FormContainer = () => {
   return (
-    <div className="w-full mt-[5rem]">
+    <div className="w-full mt-[3rem]">
       {/* This is the section header */}
       <div className="relative">
         <p className="relative grid justify-center content-center">
@@ -22,7 +22,7 @@ const FormContainer = () => {
       </div>
 
       {/* This part renders the registeration */}
-      <div className="bg-pri10 my-[2.5rem] px-[3.31rem] py-[6.5rem]">
+      <div className="bg-pri10 my-[2rem] px-[3.31rem] py-[4rem]">
         <div className="flex justify-between items-center gap-x-8">
           {/* The part renders the form UI */}
           <div className="md:w-1/2 bg-transparent">

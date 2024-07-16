@@ -1,12 +1,10 @@
-"use client";
-
 import React from "react";
-import SelectPaymentGuide from "@/page/CoursePayment";
+import Success from "@/components/reusables/Success";
 
 const page = () => {
   return (
     <div className="">
-      <SelectPaymentGuide />
+      <Success />
     </div>
   );
 };

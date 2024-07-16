@@ -18,8 +18,8 @@ const CourseCard = ({ item }) => {
 
   return (
     <div className="bg-pri1 rounded-md shadow-md">
-      <div className="bg-pri1 grid lg:flex gap-x-3 items-center p-2 w-full rounded-md">
-        <div className="w-1/3">
+      <div className="bg-pri1 grid lg:flex gap-x-3 lg:items-center p-2 w-full rounded-md">
+        <div className="lg:w-1/3">
           <Image
             src={item?.cover_image || ""}
             alt={item?.title}
@@ -28,7 +28,7 @@ const CourseCard = ({ item }) => {
           />
         </div>
 
-        <div className="pl-3 w-2/3 grid gap-y-6 py-2">
+        <div className="pl-3 lg:w-2/3 grid lg:gap-y-6 gap-y-3 py-2">
           <div className="flex justify-between items-center w-[90%]">
             <h1 className="text-3xl text-darkblue font-semibold">
               {item?.title}
@@ -59,7 +59,7 @@ const CourseCard = ({ item }) => {
             </p>
           </div>
 
-          <div className="flex justify-end">
+          <div className="lg:flex lg:justify-end mr-4">
             <Button
               className="bg-primary text-white"
               onClick={() => router.push(`/courses/${item?.id}`)}
