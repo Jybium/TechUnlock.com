@@ -36,10 +36,9 @@ const SignInForm = () => {
   const [isLoading, setIsLoading] = useState(false);
   const [isOnline, setIsOnline] = useState(true);
   const router = useRouter();
-
   const searchParams = useSearchParams();
-
   const redirect = searchParams.get("redirect");
+  const trxref = searchParams.get("trxref");
 
   useEffect(() => {
     const handleOnlineStatus = () => setIsOnline(navigator.onLine);
@@ -75,17 +74,21 @@ const SignInForm = () => {
         showSuccessToast(result.message || "Account login successfully.");
         // On successful login, redirect back to the original page
         if (redirect) {
-          router.replace(redirect);
+          let redirectUrl = redirect;
+          if (redirect === "/courses/verify" && trxref) {
+            redirectUrl += `?trxref=${trxref}`;
+          }
+          router.replace(redirectUrl);
         } else {
-          router.push("/courses"); // Default to home page if no redirect is specified
+          router.push("/courses"); // Default to courses page if no redirect is specified
         }
       } catch (error) {
-        showErrorToast("check credentials and try again");
+        showErrorToast("Check credentials and try again");
       } finally {
         setIsLoading(false);
       }
     },
-    [isOnline, router]
+    [isOnline, router, redirect, trxref]
   );
 
   return (

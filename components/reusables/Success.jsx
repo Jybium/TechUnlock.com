@@ -46,7 +46,7 @@ const Success = () => {
   }, [id]);
 
   useEffect(() => {
-    const reference = params.get("reference");
+    const reference = params.get("trxref");
     setReference(reference);
   }, []);
 
@@ -54,7 +54,7 @@ const Success = () => {
     const verifyPayment = async () => {
       try {
         const response = await fetch(
-          `${BASE_URL}/payment/verify-payment/${params.get("reference")}/`
+          `${BASE_URL}/payment/verify-payment/${params.get("trxref")}/`
         );
 
         const data = await response.json();
