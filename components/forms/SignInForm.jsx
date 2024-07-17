@@ -1,7 +1,7 @@
 "use client";
 
 import React, { useEffect, useState, useCallback } from "react";
-import { useRouter } from "next/navigation";
+import { useRouter, useSearchParams } from "next/navigation";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { useForm } from "react-hook-form";
 import { motion } from "framer-motion";
@@ -37,6 +37,10 @@ const SignInForm = () => {
   const [isOnline, setIsOnline] = useState(true);
   const router = useRouter();
 
+  const searchParams = useSearchParams();
+
+  const redirect = searchParams.get("redirect");
+
   useEffect(() => {
     const handleOnlineStatus = () => setIsOnline(navigator.onLine);
     handleOnlineStatus(); // Initial check
@@ -69,7 +73,12 @@ const SignInForm = () => {
         setIsLoading(true);
         const result = await signIn(values);
         showSuccessToast(result.message || "Account login successfully.");
-        router.push("/dashboard");
+        // On successful login, redirect back to the original page
+        if (redirect) {
+          router.push(redirect);
+        } else {
+          router.push("/courses"); // Default to home page if no redirect is specified
+        }
       } catch (error) {
         showErrorToast(error.message || "An error occurred. Please try again.");
       } finally {

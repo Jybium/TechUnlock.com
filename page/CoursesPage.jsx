@@ -75,7 +75,7 @@ const CoursesPage = () => {
           </div>
         )}
 
-        <div className="w-[90%] mx-auto grid gap-y-5 mb-10">
+        <div className="w-[90%] mx-auto grid gap-y-5 mb-5 lg:mb-10">
           {filteredCourses.map((course) => (
             <CourseCard key={course.id} item={course} />
           ))}

@@ -25,9 +25,9 @@ const Overview = ({ course }) => {
           </p>
         </div>
 
-        <div className="flex justify-between gap-y-4 w-full mt-5">
+        <div className="lg:flex lg:justify-between gap-y-4 w-full mt-5">
           {/* Course overview */}
-          <div className="w-full lg:w-[45%] flex flex-col justify-between">
+          <div className="w-full gap-y-4 lg:gap-y-0 lg:w-[45%] flex flex-col justify-between">
             <div className="">
               <div className="grid gap-2 text-darkblue font-semibold">
                 <p className="flex items-center gap-x-3">
@@ -57,7 +57,10 @@ const Overview = ({ course }) => {
                 </h4>
                 <div className="flex flex-wrap gap-3 text-xs mt-2">
                   {course?.course_skills.map((item) => (
-                    <span className="border border-primary py-1 px-2 rounded text-primary font-medium">
+                    <span
+                      className="border border-primary py-1 px-2 rounded text-primary font-medium"
+                      key={item?.id}
+                    >
                       {item.name}
                     </span>
                   ))}
@@ -65,7 +68,7 @@ const Overview = ({ course }) => {
               </div>
             </div>
 
-            <div className="flex justify-end">
+            <div className="flex justify-end mt-3 lg:mt-0">
               <Button
                 className="bg-primary text-white"
                 onClick={() => router.push(`/courses/${course?.id}/pay`)}

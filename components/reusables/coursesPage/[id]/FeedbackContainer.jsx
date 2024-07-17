@@ -7,8 +7,8 @@ import angleDown from "@/assets/course-page/ColouredDownAngle.svg";
 
 const FeedbackContainer = ({ course }) => {
   return (
-    <div className="relative h-[80vh] mb-[4rem]">
-      <div className="absolute -top-1/4 left-0 w-1/5 h-[80vh] overflow-hidden ">
+    <div className="relative mb-[2rem] lg:h-[60vh] lg:mb-[4rem]">
+      <div className="absolute hidden lg:block -top-1/4 left-0 w-1/5 h-[60vh] overflow-hidden ">
         <Image
           src={angleDown}
           alt="Decorative angle"
@@ -18,7 +18,7 @@ const FeedbackContainer = ({ course }) => {
         />
       </div>
 
-      <div className="relative mb-6 ml-16">
+      <div className="relative mb-6 ml-5 lg:ml-16">
         <p className="relative grid">
           <Image
             src={line}
@@ -31,12 +31,12 @@ const FeedbackContainer = ({ course }) => {
         </p>
       </div>
 
-      <div className="relative lg:flex lg:justify-between lg:gap-x-6 gap-y-3 lg:gap-y-0 w-[90%] mx-auto z-30">
+      <div className="relative grid lg:flex lg:justify-between lg:gap-x-6 gap-y-3 lg:gap-y-0 w-[90%] mx-auto z-30">
         <FeedbackCard course={course} />
         <FeedbackCard course={course} />
       </div>
 
-      <div className="absolute -bottom-1/2 right-0 w-1/5 h-[80vh] overflow-hidden ">
+      <div className="absolute hidden lg:block -bottom-1/2 right-0 w-1/5 h-[60vh] overflow-hidden ">
         <Image
           src={angleUp}
           alt="Decorative angle"

@@ -1,4 +1,3 @@
-
 import Image from "next/image";
 import FooterImage from "@/assets/images/footer-logo.svg";
 
@@ -6,7 +5,7 @@ const Footer = () => {
   return (
     <footer className="text-white relative w-full">
       <div className="absolute inset-0 bg-gradient-to-r from-sky-500 to-sky-800 opacity-50"></div>
-      <section className="mx-auto z-10 px-4 flex flex-col md:flex-row justify-between items-center md:items-start py-8 bg-[#1886AD] h-[50vh]">
+      <section className="mx-auto z-10 px-4 flex flex-col md:flex-row justify-between items-center md:items-start py-8 bg-[#1886AD] lg:h-[50vh]">
         <div className="z-10 pl-10 mb-6 md:mb-0 md:w-2/5 flex justify-center md:justify-start">
           <Image src={FooterImage} alt="Logo" className="w-38" />
         </div>
@@ -89,7 +88,7 @@ const Footer = () => {
         </div>
       </section>
       <section className="mx-auto z-10 p-6 bg-[#0A3747] relative">
-        <ul className="flex justify-center items-center">
+        <ul className="grid grid-cols-2 lg:grid-cols-5">
           <li>
             <a href="#" className="hover:underline">
               FAQ’s

@@ -83,7 +83,9 @@ const Success = () => {
           setStatus("error");
           setMessage("An error occurred while verifying payment.");
           showErrorToast("An error occurred while verifying payment.");
-          router.push("/courses");
+          setTimeout(() => {
+            router.push("/courses");
+          }, 3000);
         } finally {
           localStorage.removeItem("reference");
           setLoading(false);

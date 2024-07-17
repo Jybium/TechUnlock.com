@@ -21,8 +21,8 @@ import AI from "@/assets/course-page/AICard.svg";
 
 const Description = ({ course }) => {
   return (
-    <div className="relative mt-[6.44rem] mb-[5rem]">
-      <div className="lg:flex lg:justify-between lg:items-center w-full bg-pri1 py-[2rem] px-[3rem]">
+    <div className="relative mt-[3rem] mb-[2rem] lg:mt-[6.44rem] lg:mb-[5rem]">
+      <div className="grid gap-y-5 lg:gap-y-0 lg:flex lg:justify-between lg:items-center w-full bg-pri1 py-[2rem] px-[3rem]">
         <div className="lg:w-[55%]">
           <div className="">
             <div className="relative w-4/5 ml-auto">
