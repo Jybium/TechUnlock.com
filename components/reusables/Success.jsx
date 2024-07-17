@@ -105,7 +105,7 @@ const Success = () => {
         </Link>
       </nav>
       <div className="flex flex-col justify-center items-center h-5/6">
-        <div className="h-4/6 w-4/6 m-auto flex flex-col justify-between">
+        <div className="h-5/6 w-5/6 m-auto flex flex-col justify-between ">
           <div className="">
             {status === "success" || successRef.current.includes("verified") ? (
               <Image src={success} alt="success" className="mx-auto" />
