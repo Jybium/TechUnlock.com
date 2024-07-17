@@ -22,49 +22,41 @@ const getToken = async () => {
   return token;
 };
 
-const initializeInterceptors = (setIsLoading) => {
-  apiClient.interceptors.request.use(
-    async (config) => {
-      setIsLoading(true);
+apiClient.interceptors.request.use(
+  async (config) => {
+    const token = await getToken();
+
+    if (token) {
+      config.headers.Authorization = `Bearer ${token}`;
+    }
+    return config;
+  },
+  (error) => {
+    return Promise.reject(error);
+  }
+);
+
+apiClient.interceptors.response.use(
+  (response) => {
+    // Any status code that lie within the range of 2xx cause this function to trigger
+
+    return response;
+  },
+  async (error) => {
+    // Refresh token and retry request if token has expired
+    if (error.response && error.response.status === 401) {
+      cachedToken = null;
+      tokenExpiration = null;
       const token = await getToken();
-      setIsLoading(false);
 
       if (token) {
-        config.headers.Authorization = `Bearer ${token}`;
+        error.config.headers.Authorization = `Bearer ${token}`;
+        return apiClient.request(error.config);
       }
-      return config;
-    },
-    (error) => {
-      setIsLoading(false);
-      return Promise.reject(error);
     }
-  );
 
-  apiClient.interceptors.response.use(
-    (response) => {
-      // Any status code that lie within the range of 2xx cause this function to trigger
-      setIsLoading(false);
-      return response;
-    },
-    async (error) => {
-      // Any status codes that falls outside the range of 2xx cause this function to trigger
-      setIsLoading(false);
+    return Promise.reject(error);
+  }
+);
 
-      // Refresh token and retry request if token has expired
-      if (error.response && error.response.status === 401) {
-        cachedToken = null;
-        tokenExpiration = null;
-        const token = await getToken();
-
-        if (token) {
-          error.config.headers.Authorization = `Bearer ${token}`;
-          return apiClient.request(error.config);
-        }
-      }
-
-      return Promise.reject(error);
-    }
-  );
-};
-
-export { apiClient, initializeInterceptors };
+export { apiClient };

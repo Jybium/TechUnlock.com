@@ -65,13 +65,16 @@ const SignUpForm = () => {
         return;
       }
 
+      // Remove the terms checkbox value as it's not sent with the form data
+      delete values.terms;
+
       try {
         setIsLoading(true);
         const result = await signUp(values);
         showSuccessToast(result.message || "Account login successfully.");
         router.push("/courses");
       } catch (error) {
-        showErrorToast(error.message || "An error occurred. Please try again.");
+        showErrorToast("check credentials and try again");
       } finally {
         setIsLoading(false);
       }

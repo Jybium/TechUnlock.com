@@ -1,10 +1,10 @@
+import Success from "@/components/reusables/Success";
 import React from "react";
-import SpecificCoursePage from "@/page/SpecificCoursePage";
 
 const page = () => {
   return (
     <div className="">
-      <SpecificCoursePage />
+      <Success />
     </div>
   );
 };

@@ -19,12 +19,6 @@ const SelectPaymentGuide = () => {
 
   const router = useRouter();
 
-  const [isReferrerPaystack, setIsReferrerPaystack] = useState("");
-
-  useEffect(() => {
-    setIsReferrerPaystack(localStorage.getItem("reference"));
-  }, []);
-
   useEffect(() => {
     const fetchCourses = async () => {
       try {
@@ -53,7 +47,7 @@ const SelectPaymentGuide = () => {
         </Link>
       </nav>
 
-      <main className="my-8 bg-cover bg-[url('@/assets/images/payment-bg.svg')] flex flex-col gap-y-8 w-[90%] mx-auto p-4">
+      <main className="py-10 bg-cover bg-[url('@/assets/images/payment-bg.svg')] flex flex-col gap-y-8 w-[90%] mx-auto p-4">
         <div className="flex items-center">
           <p
             onClick={() => window.history.back()}
@@ -146,22 +140,13 @@ const SelectPaymentGuide = () => {
           </div>
 
           <div className="flex justify-center mt-8">
-            {isReferrerPaystack?.length > 0 ? (
-              <Button
-                className="flex items-center justify-center text-white bg-primary shadow-md rounded-md px-4 py-2"
-                onClick={() => router.push(`/courses/${id}/verify`)}
-              >
-                I have paid? Confirm payment
-              </Button>
-            ) : (
-              <Button
-                className="flex items-center justify-center text-primary bg-amber-50 shadow-md rounded-md"
-                onClick={handleOpenModal}
-              >
-                Select payment method
-                <span className="text-primary px-4 py-2 ">&rarr;</span>
-              </Button>
-            )}
+            <Button
+              className="flex items-center justify-center text-primary bg-amber-50 shadow-md rounded-md"
+              onClick={handleOpenModal}
+            >
+              Select payment method
+              <span className="text-primary px-4 py-2 ">&rarr;</span>
+            </Button>
           </div>
         </div>
       </main>

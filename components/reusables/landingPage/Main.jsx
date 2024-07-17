@@ -4,8 +4,8 @@ import Image from "next/image";
 
 function Main() {
   return (
-    <main className="flex flex-col items-center p-4 pb-0 my-20">
-      <div className="text-center mb-10">
+    <main className="flex flex-col items-center p-4 pb-0 my-10 lg:my-20">
+      <div className="text-left lg:text-center mb-10">
         <h1 className="lg:text-5xl text-3xl font-bold text-darkblue">
           Multiplying <span className="text-primary">skilled tech</span> talents
           in Africa
@@ -26,7 +26,7 @@ function Main() {
             into tech or learn a more advanced skill.
           </p>
         </div>
-        <div className="md:w-1/2 ">
+        <div className="lg:w-1/2">
           <Image
             src={image}
             alt="Tech"

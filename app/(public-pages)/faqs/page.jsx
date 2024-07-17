@@ -1,10 +1,10 @@
 import React from "react";
-import SpecificCoursePage from "@/page/SpecificCoursePage";
+import Faqs from "@/page/Faqs";
 
 const page = () => {
   return (
     <div className="">
-      <SpecificCoursePage />
+      <Faqs />
     </div>
   );
 };

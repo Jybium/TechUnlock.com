@@ -53,7 +53,7 @@ export default function ResetPasswordForm({ id }) {
   });
 
   const onSubmit = async (values) => {
-    const data = { ...values, userId: id };
+    const data = { ...values, user_id: id };
 
     if (!isOnline) {
       showErrorToast("You are offline. Please check your network connection.");
@@ -68,7 +68,7 @@ export default function ResetPasswordForm({ id }) {
 
       showSuccessToast(result.message || "Password reset successfully.");
 
-      router.push("/dashboard");
+      router.push("/login");
     } catch (error) {
       showErrorToast(error.message || "An error occurred. Please try again.");
     } finally {

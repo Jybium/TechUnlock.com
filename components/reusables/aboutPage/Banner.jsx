@@ -5,14 +5,14 @@ import Link from "next/link";
 
 const Banner = () => {
   return (
-    <div className="relative about h-[90vh] w-full overflow-hidden">
+    <div className="relative about lg:h-[90vh] w-full overflow-hidden">
       <div className="absolute inset-0 bg-gradient-to-r from-[#C0E8F6] to-[#89B3C1] opacity-30"></div>
 
       <div className="relative h-full w-full flex justify-center items-center z-20">
-        <div className="flex flex-col justify-between items-center p-8 rounded-lg max-w-3xl text-justify">
-          <h1 className="relative text-5xl font-bold text-primary leading-[1.05] tracking-tight">
+        <div className="flex flex-col justify-between items-center p-8 rounded-lg max-w-3xl lg:text-justify">
+          <h1 className="relative text-5xl lg:text-6xl font-bold text-primary lg:leading-[1.05] tracking-tight">
             TechUnlock{" "}
-            <span className="text-5xl text-pri10 font-semibold">
+            <span className="text-3xl lg:text-5xl text-pri10 font-semibold">
               the fastest growing tech space for newbies
             </span>
             <span className="absolute w-8 h-8 rounded-full bg-gradient-to-b from-[#101828] to-[#2FB3E3] drop-shadow-2xl inset-0 left-[89%] -top-3"></span>
@@ -40,11 +40,11 @@ const Banner = () => {
         </div>
 
         {/* Floating balls */}
-        <span className="absolute w-10 h-10 rounded-full bg-gradient-to-b from-[#101828] to-[#2FB3E3] drop-shadow-2xl left-[11.5%] top-[67%]"></span>
-        <span className="absolute w-10 h-10 rounded-full bg-gradient-to-b from-[#101828] to-[#2FB3E3] drop-shadow-2xl left-[86%] top-[55%]"></span>
+        <span className="absolute hidden lg:block w-10 h-10 rounded-full bg-gradient-to-b from-[#101828] to-[#2FB3E3] drop-shadow-2xl left-[11.5%] top-[67%]"></span>
+        <span className="absolute hidden lg:block w-10 h-10 rounded-full bg-gradient-to-b from-[#101828] to-[#2FB3E3] drop-shadow-2xl left-[86%] top-[55%]"></span>
       </div>
 
-      <div className="absolute bottom-0 right-0 w-1/6 h-[90vh] overflow-hidden z-10">
+      <div className="absolute hidden lg:block bottom-0 right-0 w-1/6 h-[90vh] overflow-hidden z-10">
         <Image
           src={angle}
           alt="Decorative angle"

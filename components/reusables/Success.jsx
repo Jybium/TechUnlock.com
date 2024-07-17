@@ -1,6 +1,6 @@
 "use client";
 
-import React, { useState, useEffect } from "react";
+import React, { useState, useEffect, useRef } from "react";
 import { useRouter } from "next/navigation";
 import LoadingSpinner from "./LoadingSpinner";
 import { getCourses } from "@/services/course";
@@ -19,6 +19,8 @@ const BASE_URL = "https://techunlock.pythonanywhere.com";
 
 const Success = () => {
   const { id } = useParams();
+  const params = useSearchParams();
+  const successRef = useRef("");
   const [loading, setLoading] = useState(true);
   const [Courses, setCourses] = React.useState([]);
   const [reference, setReference] = useState("");
@@ -43,7 +45,7 @@ const Success = () => {
   }, [id]);
 
   useEffect(() => {
-    const reference = localStorage.getItem("reference");
+    const reference = params.get("reference");
     setReference(reference);
   }, []);
 
@@ -51,7 +53,7 @@ const Success = () => {
     const verifyPayment = async () => {
       try {
         const response = await fetch(
-          `${BASE_URL}/payment/verify-payment/${reference}/`
+          `${BASE_URL}/payment/verify-payment/${params.get("reference")}/`
         );
 
         const data = await response.json();
@@ -60,6 +62,7 @@ const Success = () => {
           data.message.includes("success") ||
           data.message.includes("verified")
         ) {
+          successRef.current = data.message;
           setStatus("success");
           setMessage("Payment Successful!");
         } else if (data.message === "failure") {
@@ -103,7 +106,7 @@ const Success = () => {
       <div className="flex flex-col justify-center items-center h-5/6">
         <div className="h-4/6 w-4/6 m-auto flex flex-col justify-between">
           <div className="">
-            {status === "success" ? (
+            {status === "success" || successRef.current.includes("verified") ? (
               <Image src={success} alt="success" className="mx-auto" />
             ) : (
               <Image
@@ -120,6 +123,11 @@ const Success = () => {
               <div className="text-2xl text-pri10 font-semibold">
                 Congratulations you have successfully registered for a{" "}
                 {fullCategoryName} class
+              </div>
+            )}
+            {reference.length === 0 && (
+              <div className="text-2xl text-pri10 font-semibold">
+                No reference number found for verification purposes
               </div>
             )}
           </div>
