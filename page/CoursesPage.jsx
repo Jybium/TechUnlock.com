@@ -19,6 +19,7 @@ const CoursesPage = () => {
 
   const featureFilter = searchParams.get("feature") || "all";
   const difficultyFilter = searchParams.get("difficulty") || "all";
+  const categoryFilter = searchParams.get("category") || "all";
 
   useEffect(() => {
     const fetchCourses = async () => {
@@ -56,6 +57,12 @@ const CoursesPage = () => {
       if (
         filter &&
         !course.category.toLowerCase().includes(filter.toLowerCase())
+      ) {
+        return false;
+      }
+      if (
+        categoryFilter !== "all" &&
+        course.category.toLowerCase() !== categoryFilter.toLowerCase()
       ) {
         return false;
       }

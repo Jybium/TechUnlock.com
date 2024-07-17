@@ -42,10 +42,10 @@ export async function middleware(request) {
       body: authHeaderRequest.body,
     });
 
-    if (response.ok) {
+    if (token) {
       // Continue with the request
       return NextResponse.next();
-    } else if (response.status === 401 || response.status === 400) {
+    } else if (!token) {
       // Redirect to login on unauthorized or bad request, with redirect URL parameter and trxref
       url.pathname = loginRoute;
       url.searchParams.set("redirect", pathname);

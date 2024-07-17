@@ -20,7 +20,7 @@ const CourseCard = ({ course }) => {
         <div className="font-semibold text-xl mb-2 flex justify-between items-center">
           {title}
           <span className="inline-block rounded-full font-semibold text-gray-700">
-           <Rating rating={rating}/>
+            <Rating rating={rating} />
           </span>
         </div>
         <div className="flex-grow overflow-auto mt-3">
