@@ -4,12 +4,12 @@ export const Prog = [
     submenu: true,
     sublink: [
       {
-        name: "Online training",
+        name: "Physical Classes",
         url: "/courses",
       },
       {
-        name: "Physical Classes",
-        url: "/physical-classes",
+        name: "Online training",
+        url: "/courses",
       },
       {
         name: "Learn at your pace",

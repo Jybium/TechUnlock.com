@@ -21,8 +21,13 @@
   background-image: url("../assets/landing-page/metricsBg.png");
   background-position: center;
   background-repeat: no-repeat;
-
   background-size: cover;
+}
+
+@media screen and (max-width: 768px) {
+  .find-connect {
+    background-size: 70% 70%;
+  }
 }
 
 .about {

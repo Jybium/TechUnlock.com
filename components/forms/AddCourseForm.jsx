@@ -1,4 +1,7 @@
+"use client";
+
 import React, { useEffect, useState } from "react";
+import dynamic from "next/dynamic";
 import "@/components/forms/addcourseformstyle.css";
 import {
   useForm,
@@ -9,7 +12,7 @@ import {
 import { zodResolver } from "@hookform/resolvers/zod";
 import { z } from "zod";
 import courseSchema from "@/schema/AddCourse";
-import ReactQuill from "react-quill";
+const ReactQuill = dynamic(() => import("react-quill"), { ssr: false });
 import "react-quill/dist/quill.snow.css";
 import Select from "react-select";
 import { IoMdImage } from "react-icons/io";
@@ -362,33 +365,33 @@ const CourseForm = () => {
                     </span>
                   )}
                 </div>
+              </div>
 
-                {/* Skills to Gain */}
-                <div className="w-full space-y-2">
-                  <label className="font-semibold" id="course_skills">
-                    Skills to Gain
-                  </label>
-                  <Controller
-                    control={control}
-                    name="course_skills"
-                    className="h-5 py-2"
-                    render={({ field }) => (
-                      <Select
-                        {...field}
-                        options={skillSuggestions}
-                        isMulti
-                        onChange={handleSelectChange}
-                        value={fields.map((field) => ({
-                          value: field.name,
-                          label: field.name,
-                        }))}
-                        placeholder="Type to add skill"
-                        className="basic-multi-select w-full"
-                        classNamePrefix="select"
-                      />
-                    )}
-                  />
-                </div>
+              {/* Skills to Gain */}
+              <div className="w-full space-y-2">
+                <label className="font-semibold" id="course_skills">
+                  Skills to Gain
+                </label>
+                <Controller
+                  control={control}
+                  name="course_skills"
+                  className="h-5 py-2"
+                  render={({ field }) => (
+                    <Select
+                      {...field}
+                      options={skillSuggestions}
+                      isMulti
+                      onChange={handleSelectChange}
+                      value={fields.map((field) => ({
+                        value: field.name,
+                        label: field.name,
+                      }))}
+                      placeholder="Type to add skill"
+                      className="basic-multi-select w-full"
+                      classNamePrefix="select"
+                    />
+                  )}
+                />
               </div>
             </div>
 

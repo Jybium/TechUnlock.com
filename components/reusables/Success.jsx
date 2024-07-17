@@ -4,6 +4,7 @@ import React, { useState, useEffect } from "react";
 import { useRouter } from "next/navigation";
 import LoadingSpinner from "./LoadingSpinner";
 import { getCourses } from "@/services/course";
+import image from "@/assets/images/logo.svg";
 
 import success from "@/assets/dashboard/profileImage.svg";
 import failure from "@/assets/dashboard/failure.webp";
@@ -12,6 +13,7 @@ import { useParams } from "next/navigation";
 import { categoryMap } from "./coursesPage/[id]/Banner";
 import { Button } from "../ui/button";
 import { showErrorToast, showSuccessToast } from "@/helpers/toastUtil";
+import Link from "next/link";
 
 const BASE_URL = "https://techunlock.pythonanywhere.com";
 
@@ -46,48 +48,39 @@ const Success = () => {
   }, []);
 
   useEffect(() => {
-    if (reference.length === 0) {
-      router.push("/courses");
-    }
-  }, [reference]);
-
-  useEffect(() => {
     const verifyPayment = async () => {
-      if (reference) {
-        try {
-          const response = await fetch(
-            `${BASE_URL}/payment/verify-payment/${reference}/`
-          );
+      try {
+        const response = await fetch(
+          `${BASE_URL}/payment/verify-payment/${reference}/`
+        );
 
-          const data = await response.json();
+        const data = await response.json();
+        console.log(data);
+        if (
+          data.message.includes("success") ||
+          data.message.includes("verified")
+        ) {
+          setStatus("success");
+          setMessage("Payment Successful!");
+        } else if (data.message === "failure") {
+          setStatus("failure");
+          setMessage("Payment Failed.");
 
-          if (
-            data.message.includes("success") &&
-            data.message.includes("verified")
-          ) {
-            setStatus("success");
-            setMessage("Payment Successful!");
-          } else if (data.message === "failure") {
-            setStatus("failure");
-            setMessage("Payment Failed.");
-            router.push("/courses");
-            showSuccessToast("redirecting to courses page");
-          } else if (data.message === "abandoned") {
-            setStatus("abandoned");
-            setMessage("Payment Abandoned.");
-          } else {
-            setStatus("error");
-            setMessage("An unknown error occurred.");
-          }
-        } catch (error) {
+          showSuccessToast("redirecting to courses page");
+        } else if (data.message === "abandoned") {
+          setStatus("abandoned");
+          setMessage("Payment Abandoned.");
+        } else {
           setStatus("error");
-          setMessage("An error occurred while verifying payment.");
-          showErrorToast("An error occurred while verifying payment.");
-          router.push("/courses");
-        } finally {
-          localStorage.removeItem("reference");
-          setLoading(false);
+          setMessage("An unknown error occurred.");
         }
+      } catch (error) {
+        setStatus("error");
+        setMessage("An error occurred while verifying payment.");
+        showErrorToast("An error occurred while verifying payment.");
+      } finally {
+        localStorage.removeItem("reference");
+        setLoading(false);
       }
     };
 
@@ -99,37 +92,46 @@ const Success = () => {
   }
 
   return (
-    <div className="flex flex-col justify-center items-center h-screen">
-      <div className="h-4/6 w-4/6 m-auto flex flex-col justify-between">
-        <div className="">
-          {status === "success" ? (
-            <Image src={success} alt="success" className="" />
-          ) : (
-            <Image
-              src={failure}
-              alt="failure"
-              className="w-60 mx-auto rounded-full"
-            />
-          )}
-        </div>
+    <div className="h-screen">
+      <nav className="w-full bg-pri1 p-4 px-8 flex items-center rounded-md ">
+        <Link href="/">
+          <div className="md:cursor-pointer z-50 md:w-auto w-full flex items-center">
+            <Image src={image} alt="techUnlock logo" className="w-40 lg:w-52" />
+          </div>
+        </Link>
+      </nav>
+      <div className="flex flex-col justify-center items-center h-5/6">
+        <div className="h-4/6 w-4/6 m-auto flex flex-col justify-between">
+          <div className="">
+            {status === "success" ? (
+              <Image src={success} alt="success" className="mx-auto" />
+            ) : (
+              <Image
+                src={failure}
+                alt="failure"
+                className="w-60 mx-auto rounded-full"
+              />
+            )}
+          </div>
 
-        <div className="grid gap-y-3 text-center">
-          <div className="text-xl text-pri10 font-semibold">{message}</div>
-          {status === "success" && (
-            <div className="text-2xl text-pri10 font-semibold">
-              Congratulations you have successfully registered for a{" "}
-              {fullCategoryName} class
-            </div>
-          )}
-        </div>
+          <div className="grid gap-y-3 text-center">
+            <div className="text-xl text-pri10 font-semibold">{message}</div>
+            {status === "success" && (
+              <div className="text-2xl text-pri10 font-semibold">
+                Congratulations you have successfully registered for a{" "}
+                {fullCategoryName} class
+              </div>
+            )}
+          </div>
 
-        <div className="flex justify-center">
-          <Button
-            className="flex items-center justify-center text-white bg-primary shadow-md rounded-md px-4 py-2"
-            onClick={() => router.push("/courses")}
-          >
-            Continue learning
-          </Button>
+          <div className="flex justify-center">
+            <Button
+              className="flex items-center justify-center text-white bg-primary shadow-md rounded-md px-4 py-2"
+              onClick={() => router.push("/courses")}
+            >
+              Continue learning
+            </Button>
+          </div>
         </div>
       </div>
     </div>

@@ -1,16 +1,17 @@
+import { apiClient } from "@/helpers/apiClient";
+import { fetchToken } from "@/helpers/getToken";
 import axios from "axios";
 
 const BASE_URL = "https://techunlock.pythonanywhere.com";
 
 export async function getCourses() {
   try {
-    const response = await axios.get(`${BASE_URL}/course/courses/`);
+    const response = await apiClient.get(`${BASE_URL}/course/courses/`);
 
     // Handle response to check for errors
     if (response.data && response.data.error) {
       throw new Error(response.data.error); // Assuming the error message is in response.data.error
     }
-
     // Handle successful response
     return response.data;
   } catch (error) {
@@ -37,16 +38,16 @@ export async function getCourses() {
 }
 
 export async function registerForCourse(paymentData) {
+  const token = await fetchToken();
   try {
     const response = await axios.post(
       `${BASE_URL}/payment/initialize-payment/`,
       paymentData,
       {
         headers: {
-          // "Content-Type": "application/json",
-          Authorization: `Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ0b2tlbl90eXBlIjoiYWNjZXNzIiwiZXhwIjoxNzIxNzU1NDA3LCJpYXQiOjE3MjExNTA2MDcsImp0aSI6ImE4YTk1NzRkNTRjMzQ4ZGVhZWNhNDcwZjlmNGUyNGYyIiwidXNlcl9pZCI6Mn0.TWyj_3IaIb2rta4OsQ6fEnRfhVCzxhHwgtbVo3xVR3A`,
+          Authorization: `Bearer ${token}`,
         },
-        timeout: 5000, // 5 seconds timeout
+        timeout: 5000,
       }
     );
 

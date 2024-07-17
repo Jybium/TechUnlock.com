@@ -6,7 +6,7 @@ function Main() {
   return (
     <main className="flex flex-col items-center p-4 pb-0 my-20">
       <div className="text-center mb-10">
-        <h1 className="text-5xl font-bold text-darkblue">
+        <h1 className="lg:text-5xl text-3xl font-bold text-darkblue">
           Multiplying <span className="text-primary">skilled tech</span> talents
           in Africa
         </h1>

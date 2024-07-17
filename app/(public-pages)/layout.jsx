@@ -7,7 +7,7 @@ import { ModalProvider } from "@/Context/modal";
 import { usePathname } from "next/navigation";
 import React from "react";
 
-const layout = ({ children }) => {
+const Layout = ({ children }) => {
   const path = usePathname();
   return (
     <ModalProvider>
@@ -21,4 +21,4 @@ const layout = ({ children }) => {
   );
 };
 
-export default layout;
+export default Layout;

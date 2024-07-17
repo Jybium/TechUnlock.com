@@ -12,12 +12,12 @@ const Modal = ({ children }) => {
   return (
     <>
       {modal && (
-        <div className="fixed inset-0 flex items-end lg:items-center lg:justify-center z-50 ">
+        <div className="fixed inset-0 flex items-center justify-center z-50 ">
           <div
-            className="fixed inset-0 hidden lg:flex lg:h-auto bg-black/20 backdrop-blur-lg "
+            className="fixed inset-0 flex h-auto bg-black/20 backdrop-blur-lg "
             onClick={HandleModalClick}
           ></div>
-          <div className="relative bg-white p-6 rounded-lg shadow-lg z-10 w-full h-[calc(100vh-80vh)]  min-h-[calc(100vh-80px)] lg:min-h-max lg:h-auto lg:w-2/3 lg:max-w-xl mx-auto">
+          <div className="relative bg-white p-6 rounded-lg shadow-lg z-10 w-[90%] min-h-max lg:w-2/3 lg:max-w-xl mx-auto">
             {children}
           </div>
         </div>

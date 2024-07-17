@@ -10,7 +10,7 @@ const CarouselContainer = styled.div.attrs({
 })``;
 
 const SlideContainer = styled.div.attrs({
-  className: "flex w-full h-62",
+  className: "grid lg:flex w-full h-62",
 })`
   position: relative;
 `;
@@ -92,7 +92,9 @@ const Carousel = ({ slides }) => {
         ))}
         <ContentContainer isactive={true}>
           <TextContent>
-            <h1 className="text-4xl font-semibold">Course add-ons</h1>
+            <h1 className="text-2xl lg:text-4xl font-semibold">
+              Course add-ons
+            </h1>
             <div className="grid gap-y-1">
               <h2 className="text-2xl font-semibold">
                 {slides?.[currentSlide]?.title}

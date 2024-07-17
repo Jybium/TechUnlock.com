@@ -49,8 +49,8 @@ const Banner = ({ course }) => {
           className="absolute top-0 left-0 w-full h-full object-cover opacity-40"
         />
 
-        <div className="relative flex justify-between gap-x-6 h-[90vh] w-[95%] mx-auto pb-10">
-          <div className="flex flex-col justify-between w-[65%] text-[#FCFCFD]">
+        <div className="relative grid lg:flex lg:justify-between gap-x-6 lg:h-[90vh] w-[95%] mx-auto py-10 lg:py-0 lg:pb-10 gap-y-6 lg:gap-y-0">
+          <div className="flex flex-col justify-between lg:w-[65%] text-[#FCFCFD] gap-y-3 lg:gap-y-0">
             <h1 className=" text-[#FCFCFD] font-semibold text-2xl">
               Get started with your{" "}
               <span className="font-bold text-pri1"> {fullCategoryName} </span>{" "}
@@ -59,7 +59,7 @@ const Banner = ({ course }) => {
 
             <p className="text-xl">{course?.description}</p>
 
-            <div className="w-2/4 bg-[#FFFFFF]/40 backdrop-blur-lg drop-shadow-md px-5 py-3 rounded-md text-sm">
+            <div className="lg:w-2/4 bg-[#FFFFFF]/40 backdrop-blur-lg drop-shadow-md px-5 py-3 rounded-md text-sm">
               <div className="mb-4 flex justify-between">
                 <p className="">
                   {course?.title}{" "}
@@ -82,7 +82,7 @@ const Banner = ({ course }) => {
             </div>
           </div>
 
-          <div className="mt-4 absolute -bottom-12 right-0 z-20 w-[30%] ml-auto">
+          <div className="mt-4 lg:absolute lg:-bottom-12 right-0 z-20 lg:w-[30%] lg:ml-auto">
             <BannerCard courses={course} />
           </div>
         </div>

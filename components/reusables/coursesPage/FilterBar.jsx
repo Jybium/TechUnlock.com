@@ -21,10 +21,10 @@ const FilterBar = () => {
   return (
     <div className="bg-primary py-4 px-5">
       <div className="flex flex-col justify-between md:flex-row space-y-2 md:space-y-0 md:space-x-4">
-        <div className="flex items-center gap-x-5">
+        <div className="lg:flex items-center gap-x-5">
           <p className="text-white">Featured:</p>
 
-          <div className="flex space-x-2">
+          <div className="flex flex-wrap gap-y-2 lg:gap-y-0 gap-x-2">
             <Button
               className={`${
                 featureFilter === "popular" ? "bg-white text-gray-900" : ""
@@ -52,9 +52,9 @@ const FilterBar = () => {
           </div>
         </div>
 
-        <div className="flex items-center gap-x-5">
+        <div className="lg:flex items-center gap-x-5">
           <p className="text-white">Level:</p>
-          <div className="flex space-x-2">
+          <div className="flex flex-wrap space-x-2">
             <Button
               className={`${
                 difficultyFilter === "beginner" ? "bg-white text-gray-900" : ""

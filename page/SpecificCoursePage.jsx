@@ -9,10 +9,12 @@ import Curriculum from "@/components/reusables/coursesPage/[id]/Curriculum";
 import CourseAddOn from "@/components/reusables/coursesPage/[id]/CourseAddOn";
 import FeedbackContainer from "@/components/reusables/coursesPage/[id]/FeedbackContainer";
 import PromotionBanner from "@/components/reusables/coursesPage/[id]/PromotionBanner";
+import LoadingSpinner from "@/components/reusables/LoadingSpinner";
 
 const SpecificCoursePage = () => {
   const { id } = useParams();
   const [Courses, setCourses] = React.useState([]);
+  const [loading, setLoading] = React.useState(true);
 
   useEffect(() => {
     const fetchCourses = async () => {
@@ -21,11 +23,17 @@ const SpecificCoursePage = () => {
         setCourses(data.filter((item) => item.id === +id));
       } catch (error) {
         console.error("Error fetching courses:", error.message);
+      } finally {
+        setLoading(false);
       }
     };
 
     fetchCourses();
   }, [id]);
+
+  if (loading) {
+    return <LoadingSpinner />;
+  }
 
   return (
     <div className="">

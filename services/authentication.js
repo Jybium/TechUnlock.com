@@ -5,7 +5,6 @@ import forgotFormSchema from "@/schema/Forgot";
 import axios from "axios";
 import { z } from "zod";
 
-
 const BASE_URL = "https://techunlock.pythonanywhere.com";
 
 /**
@@ -17,19 +16,14 @@ const BASE_URL = "https://techunlock.pythonanywhere.com";
  */
 export async function signUp(data) {
   try {
-   
     // Validate data against schema
     formSchema.parse(data);
-  
 
     const response = await apiClient.post(`${BASE_URL}/account/sign-up/`, data);
-
 
     // Handle successful response
     return response.data;
   } catch (error) {
-   
-
     if (error.response) {
       // Server responded with a status other than 200 range
       throw new Error(
@@ -59,29 +53,30 @@ export async function signUp(data) {
  */
 export async function signIn(data) {
   try {
-    
     // Validate data against schema
-    signInFormSchema.parse(data); 
-   
+    signInFormSchema.parse(data);
 
     const response = await axios.post(`${BASE_URL}/account/sign-in/`, data);
-
 
     // Handle response to check for errors
     if (response.data && response.data.error) {
       throw new Error(response.data.error); // Assuming the error message is in response.data.error
     }
-  const apiResponse = await fetch("/api/set-cookie", {
-    method: "POST",
-    headers: {
-      "Content-Type": "application/json",
-    },
-    body: JSON.stringify({ response?.data?.access_token }),
-  });
 
-  if (!apiResponse.ok) {
-    throw new Error("Failed to set cookie");
-  }
+    const token = { token: response.data.token.access };
+
+    const apiResponse = await fetch("/api/set-cookie", {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json",
+      },
+      body: JSON.stringify(token),
+    });
+
+    if (!apiResponse.ok) {
+      throw new Error("Failed to set cookie");
+    }
+
     // Handle successful response
     return response.data;
   } catch (error) {
@@ -107,13 +102,11 @@ export async function signIn(data) {
   }
 }
 
-
-
 export async function resetPassword(data) {
   try {
     console.log("Validating data for sign-in...");
     // Validate data against schema
-    resetFormSchema.parse(data); 
+    resetFormSchema.parse(data);
     console.log("Data validated. Sending sign-in request...");
 
     const response = await axios.post(`${BASE_URL}/account/sign-in/`, data);
@@ -149,14 +142,11 @@ export async function resetPassword(data) {
   }
 }
 
-
-
-
 export async function forgotPassword(data) {
   try {
     console.log("Validating data for sign-in...");
     // Validate data against schema
-    forgotFormSchema.parse(data); 
+    forgotFormSchema.parse(data);
     console.log("Data validated. Sending sign-in request...");
 
     const response = await axios.post(`${BASE_URL}/account/sign-in/`, data);

@@ -5,8 +5,8 @@ const apiClient = axios.create({
   baseURL: "https://techunlock.pythonanywhere.com",
 });
 
-let cachedToken;
-let tokenExpiration;
+let cachedToken = null;
+let tokenExpiration = null;
 
 const getToken = async () => {
   if (cachedToken && tokenExpiration && tokenExpiration > Date.now()) {
@@ -16,7 +16,7 @@ const getToken = async () => {
   const token = await fetchToken();
   if (token) {
     cachedToken = token;
-    tokenExpiration = Date.now() + 15 * 60 * 1000; // Set token expiration time.
+    tokenExpiration = Date.now() + 15 * 60 * 1000; // Set token expiration time to 15 minutes.
   }
 
   return token;
@@ -36,6 +36,32 @@ const initializeInterceptors = (setIsLoading) => {
     },
     (error) => {
       setIsLoading(false);
+      return Promise.reject(error);
+    }
+  );
+
+  apiClient.interceptors.response.use(
+    (response) => {
+      // Any status code that lie within the range of 2xx cause this function to trigger
+      setIsLoading(false);
+      return response;
+    },
+    async (error) => {
+      // Any status codes that falls outside the range of 2xx cause this function to trigger
+      setIsLoading(false);
+
+      // Refresh token and retry request if token has expired
+      if (error.response && error.response.status === 401) {
+        cachedToken = null;
+        tokenExpiration = null;
+        const token = await getToken();
+
+        if (token) {
+          error.config.headers.Authorization = `Bearer ${token}`;
+          return apiClient.request(error.config);
+        }
+      }
+
       return Promise.reject(error);
     }
   );
