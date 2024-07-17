@@ -3,8 +3,8 @@ import Image from "next/image";
 
 const TestimonyCard = ({ data }) => {
   return (
-    <div className="relative w-full bg-pri1 pt-16 pb-5 px-6">
-      <div className="bg-white rounded-full absolute -top-1/3 left-[45%] shadow-md">
+    <div className="relative w-full grid gap-y-4 bg-pri1 pt-5 lg:pt-16  lg:pb-5 lg:px-6">
+      <div className="bg-white w-fit mx-auto rounded-full lg:absolute lg:-top-1/3 lg:left-[45%] shadow-md">
         <Image
           src={data.image}
           alt="testimony"
@@ -15,7 +15,9 @@ const TestimonyCard = ({ data }) => {
       </div>
 
       <div className="grid gap-y-8 text-center text-2xl">
-        <p className="text-sm text-first-primary italic">{data.testimony}</p>
+        <p className="text-sm text-first-primary italic line-clamp-3 lg:line-clamp-none">
+          {data.testimony}
+        </p>
         <p className="text-sm text-first-primary font-bold uppercase">
           {data.name} - <span className="capitalize">{data.position}</span>
         </p>

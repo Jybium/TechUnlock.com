@@ -6,12 +6,12 @@ import Link from "next/link";
 const JoinCommunity = () => {
   return (
     <div className="w-full">
-      <h1 className="text-first-primary font-semibold text-4xl text-center">
+      <h1 className="text-first-primary font-semibold text-3xl lg:text-4xl text-center">
         Join our Community
       </h1>
-      <div className="flex justify-between items-center w-[90%] mx-auto mt-8">
-        <div className="w-[40%]">
-          <h2 className="text-first-primary font-semibold text-4xl leading-[1.3]">
+      <div className="lg:flex lg:justify-between items-center w-[90%] mx-auto mt-8">
+        <div className="lg:w-[40%]">
+          <h2 className="text-first-primary font-semibold text-2xl lg:text-4xl leading-[1.3]">
             Start{" "}
             <Link href="/courses" className="text-primary">
               learning
@@ -27,7 +27,7 @@ const JoinCommunity = () => {
             </Link>
           </h2>
         </div>
-        <div className="w-[50%] ml-auto">
+        <div className="lg:w-[50%] lg:ml-auto">
           <Image
             src={community}
             alt="community interaction"

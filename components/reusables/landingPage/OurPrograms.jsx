@@ -8,10 +8,12 @@ const OurPrograms = () => {
   return (
     <div className="relative w-full my-[5rem]">
       <div className="w-[95%] mx-auto flex justify-between items-center">
-        <div className="grid gap-y-2 w-[45%]">
+        <div className="grid gap-y-2 lg:w-[45%]">
           {programStructure.map((program, index) => (
             <div className="" key={program.id}>
-              <h3 className="text-primary text-3xl font-bold">{program.title}</h3>
+              <h3 className="text-primary text-3xl font-bold">
+                {program.title}
+              </h3>
               <ul className="list-disc grid gap-y-1 mt-6 ml-6">
                 {program.description.map((desc, index) => (
                   <li key={index} className="text-gray-900">
@@ -23,7 +25,7 @@ const OurPrograms = () => {
           ))}
         </div>
 
-        <div className="relative w-[45%] h-2/3">
+        <div className="relative w-[45%] h-2/3 hidden lg:block">
           <Image
             src={image}
             alt="our program structure"
@@ -31,12 +33,11 @@ const OurPrograms = () => {
           />
         </div>
       </div>
-          <Image
-            src={angleImage}
-            alt="background angle"
-            className="absolute right-0 -bottom-1/3 w-[20%] -z-10"
-          
-          />
+      <Image
+        src={angleImage}
+        alt="background angle"
+        className="absolute right-0 -bottom-1/3 w-[20%] -z-10 hidden lg:block"
+      />
     </div>
   );
 };

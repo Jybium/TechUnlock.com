@@ -92,8 +92,8 @@ const Success = () => {
   }
 
   return (
-    <div className="">
-      <nav className="w-full bg-pri1 p-4 px-8 flex items-center rounded-md h-screen">
+    <div className="h-screen">
+      <nav className="w-full bg-pri1 p-4 px-8 flex items-center rounded-md ">
         <Link href="/">
           <div className="md:cursor-pointer z-50 md:w-auto w-full flex items-center">
             <Image src={image} alt="techUnlock logo" className="w-40 lg:w-52" />
