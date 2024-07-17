@@ -10,7 +10,7 @@ const CarouselContainer = styled.div.attrs({
 })``;
 
 const SlideContainer = styled.div.attrs({
-  className: "grid lg:flex w-full h-62 bg-black",
+  className: "grid lg:flex w-full h-62",
 })`
   position: relative;
 `;

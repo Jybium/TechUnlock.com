@@ -1,17 +1,17 @@
 import { apiClient } from "@/helpers/apiClient";
+import { fetchToken } from "@/helpers/getToken";
 import axios from "axios";
 
 const BASE_URL = "https://techunlock.pythonanywhere.com";
 
 export async function getCourses() {
   try {
-    const response = await axios.get(`${BASE_URL}/course/courses/`);
+    const response = await apiClient.get(`${BASE_URL}/course/courses/`);
 
     // Handle response to check for errors
     if (response.data && response.data.error) {
       throw new Error(response.data.error); // Assuming the error message is in response.data.error
     }
-
     // Handle successful response
     return response.data;
   } catch (error) {
@@ -38,11 +38,15 @@ export async function getCourses() {
 }
 
 export async function registerForCourse(paymentData) {
+  const token = await fetchToken();
   try {
-    const response = await apiClient.post(
+    const response = await axios.post(
       `${BASE_URL}/payment/initialize-payment/`,
       paymentData,
       {
+        headers: {
+          Authorization: `Bearer ${token}`,
+        },
         timeout: 5000,
       }
     );

@@ -57,5 +57,5 @@ export async function middleware(request) {
 
 // Specify the paths where the middleware should run
 export const config = {
-  matcher: ["/courses/:path*", "/dashboard/my-courses"],
+  matcher: ["/courses/:path*/:path*", "/dashboard/my-courses"],
 };

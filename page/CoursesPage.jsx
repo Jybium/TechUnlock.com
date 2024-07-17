@@ -7,9 +7,11 @@ import { useRouter, useSearchParams } from "next/navigation";
 import SelectCourse from "@/components/reusables/coursesPage/Select";
 import CourseCard from "@/components/reusables/coursesPage/CourseCard";
 import { getCourses } from "@/services/course";
+import LoadingSpinner from "@/components/reusables/LoadingSpinner";
 
 const CoursesPage = () => {
   const [search, setSearch] = React.useState("");
+  const [loading, setLoading] = React.useState(true);
   const [filter, setFilter] = React.useState("");
   const [courses, setCourses] = React.useState([]);
   const [filteredCourses, setFilteredCourses] = React.useState([]);
@@ -26,6 +28,8 @@ const CoursesPage = () => {
         setFilteredCourses(data);
       } catch (error) {
         console.error("Error fetching courses:", error.message);
+      } finally {
+        setLoading(false);
       }
     };
 
@@ -59,6 +63,10 @@ const CoursesPage = () => {
     });
     setFilteredCourses(filtered);
   }, [courses, featureFilter, difficultyFilter, search, filter]);
+
+  if (loading) {
+    return <LoadingSpinner />;
+  }
 
   return (
     <div className="">
