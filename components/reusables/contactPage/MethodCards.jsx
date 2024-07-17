@@ -3,7 +3,7 @@ import React from "react";
 const MethodCards = ({ item }) => {
   return (
     <div className="bg-pri1 w-full rounded-md">
-      <div className="p-6 grid gap-y-16 text-darkblue w-full">
+      <div className="p-6 grid gap-y-10 text-darkblue w-full">
         <span className="rounded-lg bg-primary flex items-center justify-center h-12 w-12">
           {item.icon}
         </span>

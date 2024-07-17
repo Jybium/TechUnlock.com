@@ -5,7 +5,7 @@ import ContactUsForm from "@/components/forms/ContactForm";
 
 const ContactUs = () => {
   return (
-    <div className="w-full my-[5rem]">
+    <div className="w-full my-[2rem] lg:my-[3rem]">
       <div className="lg:flex lg:justify-between items-center w-[95%] lg:w-[90%] mx-auto">
         <div className="lg:w-1/2 lg:ml-10 grid gap-y-12">
           <div className="grid gap-y-5 ml-6">

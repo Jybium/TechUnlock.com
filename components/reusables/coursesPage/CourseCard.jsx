@@ -59,7 +59,7 @@ const CourseCard = ({ item }) => {
             </p>
           </div>
 
-          <div className="flex justify-end mr-4">
+          <div className="flex justify-center lg:justify-end lg:mr-4">
             <Button
               className="bg-primary text-white"
               onClick={() => router.push(`/courses/${item?.id}`)}

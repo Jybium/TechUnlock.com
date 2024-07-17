@@ -17,9 +17,9 @@ const BASE_URL = "https://techunlock.pythonanywhere.com";
 export async function signUp(data) {
   try {
     // Validate data against schema
-    formSchema.parse(data);
+    // formSchema.parse(data);
 
-    const response = await apiClient.post(`${BASE_URL}/account/sign-up/`, data);
+    const response = await axios.post(`${BASE_URL}/account/sign-up/`, data);
 
     // Handle successful response
     return response.data;
@@ -109,7 +109,10 @@ export async function resetPassword(data) {
     resetFormSchema.parse(data);
     console.log("Data validated. Sending sign-in request...");
 
-    const response = await axios.post(`${BASE_URL}/account/sign-in/`, data);
+    const response = await axios.post(
+      `${BASE_URL}/account/set-password/`,
+      data
+    );
     console.log("Sign-in response received:", response.data);
 
     // Handle response to check for errors
@@ -125,7 +128,7 @@ export async function resetPassword(data) {
     if (error.response) {
       // Server responded with a status other than 200 range
       throw new Error(
-        error.response.data.message || "An error occurred while signing in."
+        error.response.data.message || "An error has occurred."
       );
     } else if (error.request) {
       // Request was made but no response received
@@ -149,8 +152,10 @@ export async function forgotPassword(data) {
     forgotFormSchema.parse(data);
     console.log("Data validated. Sending sign-in request...");
 
-    const response = await axios.post(`${BASE_URL}/account/sign-in/`, data);
-    console.log("Sign-in response received:", response.data);
+    const response = await axios.post(
+      `${BASE_URL}/account/recover-password/`,
+      data
+    );
 
     // Handle response to check for errors
     if (response.data && response.data.error) {

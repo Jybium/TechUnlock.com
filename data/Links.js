@@ -14,6 +14,7 @@ export const Prog = [
       {
         name: "Learn at your pace",
         url: "/bootcamp",
+        isComing: true,
       },
     ],
   },
@@ -31,6 +32,7 @@ export const Mor = [
       {
         name: "Blogs",
         url: "/blogs",
+        isComing: true,
       },
       {
         name: "Terms & conditions",

@@ -75,12 +75,12 @@ const SignInForm = () => {
         showSuccessToast(result.message || "Account login successfully.");
         // On successful login, redirect back to the original page
         if (redirect) {
-          router.push(redirect);
+          router.replace(redirect);
         } else {
           router.push("/courses"); // Default to home page if no redirect is specified
         }
       } catch (error) {
-        showErrorToast(error.message || "An error occurred. Please try again.");
+        showErrorToast("check credentials and try again");
       } finally {
         setIsLoading(false);
       }
