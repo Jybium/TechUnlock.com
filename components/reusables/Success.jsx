@@ -4,6 +4,7 @@ import React, { useState, useEffect, useRef } from "react";
 import { useRouter } from "next/navigation";
 import LoadingSpinner from "./LoadingSpinner";
 import { getCourses } from "@/services/course";
+import { useSearchParams } from "next/navigation";
 import image from "@/assets/images/logo.svg";
 
 import success from "@/assets/dashboard/profileImage.svg";
