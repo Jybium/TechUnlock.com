@@ -22,7 +22,7 @@ const Navbar = () => {
 
   useEffect(() => {
     const fetchTokens = async () => {
-      const token = fetchToken();
+      const token = await fetchToken();
       if (token) {
         setToken(token);
       } else {
@@ -45,7 +45,7 @@ const Navbar = () => {
   const handleLogout = async () => {
     const data = await removeToken();
     showSuccessToast(data);
-    window.location.href = "/";
+    router.push("/");
   };
 
   return (
@@ -75,9 +75,12 @@ const Navbar = () => {
           FAQs
         </Link>
         <More />
+        <p className="">
+          {token?.length !== 0 || Object.entries(token).length === 0}
+        </p>
       </div>
       <div className="hidden lg:block">
-        {token?.length !== 0 ? (
+        {token && Object.entries(token).length !== 0 ? (
           <div className="relative">
             <Avatar onClick={toggleMenu}>
               <AvatarImage src="https://github.com/shadcn.png" />
@@ -128,7 +131,7 @@ const Navbar = () => {
           </Link>
           <More />
 
-          {token?.length !== 0 ? (
+          {token && Object.entries(token).length !== 0 ? (
             <div className="relative">
               <Avatar onClick={toggleMenu}>
                 <AvatarImage src="https://github.com/shadcn.png" />

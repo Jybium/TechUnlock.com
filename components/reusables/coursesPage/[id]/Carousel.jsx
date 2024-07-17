@@ -10,7 +10,7 @@ const CarouselContainer = styled.div.attrs({
 })``;
 
 const SlideContainer = styled.div.attrs({
-  className: "grid lg:flex w-full h-62",
+  className: "grid lg:flex w-full h-68",
 })`
   position: relative;
 `;
@@ -19,19 +19,22 @@ const ImageContainer = styled.div`
   ${({ image }) => `
     background-image: url(${image});
   `}
-  @apply w-1/2 h-full bg-center bg-cover bg-primary transition-opacity duration-500 ease-in-out bg-transparent;
+  @apply w-full lg:w-1/2 h-full bg-center bg-cover bg-primary transition-opacity duration-500 ease-in-out bg-transparent;
   opacity: ${({ isactive }) => (isactive ? 1 : 0)};
-  position: absolute;
+  position: absolute lg:relative;
   top: 0;
   left: 0;
 `;
 
 const ContentContainer = styled.div.attrs({
   className:
-    "w-1/2 flex flex-col justify-between p-4 bg-transparent transition-opacity duration-500 ease-in-out",
+    "w-full lg:w-1/2 flex flex-col justify-between p-4 bg-transparent transition-opacity duration-500 ease-in-out",
 })`
   opacity: ${({ isactive }) => (isactive ? 1 : 0)};
   transition: opacity 0.5s ease-in-out;
+  position: absolute lg:relative;
+  top: 0;
+  left: 0;
 `;
 
 const TextContent = styled.div.attrs({

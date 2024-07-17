@@ -16,7 +16,7 @@ import { Button } from "@/components/ui/button";
 const Overview = ({ course }) => {
   const router = useRouter();
   return (
-    <div className="w-full bg-white py-[2rem] px-[3rem]">
+    <div className="w-full bg-white py-[2rem] px-[1rem] md:px-[3rem]">
       <div className="grid gap-y-4">
         <div className="flex items-end justify-between w-1/2">
           <h3 className="text-pri10 font-semibold text-2xl">{course?.title}</h3>
