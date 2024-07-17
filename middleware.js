@@ -12,8 +12,10 @@ export async function middleware(request) {
 
   // If the user is trying to access a protected route
   if (
-    pathname.startsWith("/courses/") ||
-    pathname.startsWith("/dashboard/my-courses")
+    pathname.includes("register") ||
+    pathname.includes("pay") ||
+    pathname.includes("verify") ||
+    pathname.startsWith("/dashboard")
   ) {
     if (!token) {
       // Redirect to login if no token found, with redirect URL parameter
