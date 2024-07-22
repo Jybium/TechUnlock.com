@@ -94,6 +94,7 @@ const Footer = () => {
                 <a
                   href="https://www.instagram.com/techunlocknigeria"
                   target="_blank"
+                  rel="noreferrer"
                   className="hover:underline"
                 >
                   @techunlocknigeria
@@ -103,6 +104,7 @@ const Footer = () => {
                 <a
                   href="https://www.linkedin.com/company/techunlock"
                   target="_blank"
+                  rel="noreferrer"
                   className="hover:underline"
                 >
                   @techunlock
@@ -112,6 +114,7 @@ const Footer = () => {
                 <a
                   href="https://x.com/TechUnlockNG"
                   target="_blank"
+                  rel="noreferrer"
                   className="hover:underline"
                 >
                   @TechUnlockNG
