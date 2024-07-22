@@ -13,11 +13,7 @@ const FeedbackCard = ({ course, image }) => {
         {/* The container holdiing the reviewr's data */}
         <div className="w-2/5 grid gap-y-2">
           {/* reviewr's image */}
-          <Image
-            src={testimony}
-            alt="testimonial image"
-            className="w-52 h-48"
-          />
+          <Image src={image} alt="testimonial image" className="w-52 h-48" />
           {/* reviewer information */}
           <div className="grid gap-1">
             <p className="text-base font-semibold">James Gareth</p>
