@@ -3,6 +3,7 @@
 import { ChevronLeft, ChevronRight } from "lucide-react";
 import React, { useState, useEffect, useRef } from "react";
 import styled from "styled-components";
+import Image from "next/image";
 
 const CarouselContainer = styled.div.attrs({
   className:
@@ -10,20 +11,23 @@ const CarouselContainer = styled.div.attrs({
 })``;
 
 const SlideContainer = styled.div.attrs({
-  className: "grid lg:flex w-full h-68",
+  className: "grid lg:flex w-full h-64",
 })`
   position: relative;
 `;
 
-const ImageContainer = styled.div`
-  ${({ image }) => `
-    background-image: url(${image});
-  `}
-  @apply w-full lg:w-1/2 h-full bg-center bg-cover bg-primary transition-opacity duration-500 ease-in-out bg-transparent;
+const ImageWrapper = styled.div`
+  width: 50%;
+  height: 100%;
   opacity: ${({ isactive }) => (isactive ? 1 : 0)};
-  position: absolute lg:relative;
-  top: 0;
-  left: 0;
+  transition: opacity 0.5s ease-in-out;
+  @apply lg:relative;
+`;
+
+const StyledImage = styled(Image)`
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
 `;
 
 const ContentContainer = styled.div.attrs({
@@ -32,9 +36,10 @@ const ContentContainer = styled.div.attrs({
 })`
   opacity: ${({ isactive }) => (isactive ? 1 : 0)};
   transition: opacity 0.5s ease-in-out;
-  position: absolute lg:relative;
+  position: absolute;
   top: 0;
   left: 0;
+  @apply lg:relative;
 `;
 
 const TextContent = styled.div.attrs({
@@ -87,11 +92,15 @@ const Carousel = ({ slides }) => {
     <CarouselContainer>
       <SlideContainer>
         {slides?.map((slide, index) => (
-          <ImageContainer
-            key={index}
-            image={slide?.add_on_image}
-            isactive={index === currentSlide}
-          />
+          <ImageWrapper key={index} isactive={index === currentSlide}>
+            <StyledImage
+              src={slide?.add_on_image}
+              alt={slide?.title}
+              width={300}
+              height={300}
+              // layout="fill"
+            />
+          </ImageWrapper>
         ))}
         <ContentContainer isactive={true}>
           <TextContent>

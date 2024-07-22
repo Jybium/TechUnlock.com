@@ -24,37 +24,10 @@
   background-size: cover;
 }
 
-.about {
-  background-image: url("../assets/about-page/about.svg");
-  background-position: center;
-  background-repeat: no-repeat;
-  background-size: cover;
-}
-
-.whoweare {
-  background-image: url("../assets/about-page/lock.svg");
-  background-position: center center;
-  background-repeat: no-repeat;
-  background-size: contain;
-}
-
 @media screen and (max-width: 768px) {
   .find-connect {
     background-size: contain;
     background-position: center;
-  }
-}
-
-@media screen and (max-width: 768px) {
-  .about {
-    background-image: none;
-  }
-}
-
-@media screen and (max-width: 768px) {
-  .whoweare {
-    background-size: cover;
-    background-position: cover;
   }
 }
 

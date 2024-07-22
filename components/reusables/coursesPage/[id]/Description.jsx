@@ -30,7 +30,7 @@ const Description = ({ course }) => {
                 <Image
                   src={line}
                   alt="line"
-                  className="absolute left-0 top-8 w-[33%] mx-auto"
+                  className="absolute left-0 top-8 w-[28%] mx-auto"
                 />
                 <span className="text-center text-2xl font-semibold text-first-primary">
                   Description
@@ -39,7 +39,7 @@ const Description = ({ course }) => {
             </div>
 
             <div className="grid gap-y-4 mt-5">
-              <h3 className="text-pri10 font-semibold ">
+              <h3 className="text-pri10 font-semibold text-lg">
                 {course?.category === "UI/UX"
                   ? "Want to create digital products that are both beautiful and user-friendly?"
                   : course?.category === "WEB"
@@ -51,7 +51,7 @@ const Description = ({ course }) => {
                   : "Curious about the future of technology? "}
               </h3>
 
-              <p className="text-sm">
+              <p className="text-base">
                 {course?.category === "UI/UX"
                   ? "This comprehensive UI/UX course will equip you with the skills and knowledge to design intuitive, engaging, and visually stunning user experiences that leave a lasting impression."
                   : course?.category === "WEB"
@@ -159,7 +159,7 @@ const Description = ({ course }) => {
                     <p className="">
                       By the end of this course, you will be able to:
                     </p>
-                    <ul className="list-disc">
+                    <ul className="list-disc ml-6 mt-1">
                       <li className="">
                         Understand the core concepts and applications of
                         Artificial Intelligence.
@@ -192,14 +192,14 @@ const Description = ({ course }) => {
           <Image
             src={
               course?.category === "UI/UX"
-                ? UICard
+                ? course?.cover_image
                 : course?.category === "WEB"
-                ? webDev
+                ? course?.cover_image
                 : course?.category === "CYBER"
-                ? cyberSec
+                ? course?.cover_image
                 : course?.category === "DM"
-                ? DMCard
-                : AI
+                ? course?.cover_image
+                : course?.cover_image
             }
             alt={course?.title}
             width={500}

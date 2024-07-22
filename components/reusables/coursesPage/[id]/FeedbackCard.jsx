@@ -3,7 +3,7 @@ import testimony from "@/assets/course-page/feedback.svg";
 import Image from "next/image";
 import { categoryMap } from "./Banner";
 
-const FeedbackCard = ({ course }) => {
+const FeedbackCard = ({ course, image }) => {
   const fullCategoryName = categoryMap[course?.category] || course?.category;
 
   return (

@@ -5,6 +5,7 @@ import FooterImage from "@/assets/images/footer-logo.svg";
 import { ArrowUp } from "lucide-react";
 import { useEffect, useRef } from "react";
 import { useRouter } from "next/navigation";
+import Link from "next/link";
 
 const Footer = () => {
   const router = useRouter();
@@ -29,77 +30,108 @@ const Footer = () => {
             <ArrowUp />
           </button>
         </div>
-        <div className="w-full md:w-3/5 flex gap-x-5 z-10 flex-row justify-between">
-          <div className="mb-6 md:mb-0 md:ml-auto md:w-1/4 text-left">
+        <div className="w-full md:w-3/5 grid grid-cols-2 md:grid-cols-3 gap-x-5 z-10 md:flex md:justify-between">
+          <div className="mb-6 md:mb-0 md:ml-auto md:w-1/3 text-left text-lg">
             <h3 className="font-bold mb-2 text-[#0A3747]">Company</h3>
             <ul>
               <li>
-                <a href="#" className="hover:underline">
+                <Link href="/about-us" className="hover:underline">
                   About Us
-                </a>
+                </Link>
               </li>
               <li>
-                <a href="#" className="hover:underline">
+                <Link href="#" className="hover:underline">
                   Services
-                </a>
+                </Link>
               </li>
               <li>
-                <a href="#" className="hover:underline">
+                <Link href="/contact-us" className="hover:underline">
                   Contact
-                </a>
+                </Link>
               </li>
             </ul>
           </div>
-          <div className="mb-6 md:mb-0 md:w-1/3 text-left">
+          <div className="mb-6 md:mb-0 md:w-1/3 text-left text-lg">
             <h3 className="font-bold mb-2 text-[#0A3747]">Programs</h3>
             <ul>
               <li>
-                <a href="#" className="hover:underline">
+                <Link
+                  href="/courses?category=cyber"
+                  className="hover:underline"
+                >
                   Cybersecurity
-                </a>
+                </Link>
               </li>
               <li>
-                <a href="#" className="hover:underline">
-                  Design
-                </a>
+                <Link
+                  href="/courses?category=ui/ux"
+                  className="hover:underline"
+                >
+                  UI/UX Design
+                </Link>
               </li>
               <li>
-                <a href="#" className="hover:underline">
+                <Link href="/courses?category=ai" className="hover:underline">
                   Artificial Intelligence
-                </a>
+                </Link>
               </li>
               <li>
-                <a href="#" className="hover:underline">
+                <Link href="/courses?category=dm" className="hover:underline">
                   Digital Marketing
-                </a>
+                </Link>
               </li>
               <li>
-                <a href="#" className="hover:underline">
+                <Link href="/courses?category=web" className="hover:underline">
                   Web Development
-                </a>
+                </Link>
               </li>
             </ul>
           </div>
-          <div className="md:w-1/3 text-left">
+          <div className="md:w-1/3 text-left text-lg">
             <h3 className="font-bold mb-2 text-[#0A3747]">Contacts</h3>
             <ul>
               <li>
-                <a href="#" className="hover:underline">
-                  @techunlockNigeria
+                <a
+                  href="https://www.instagram.com/techunlocknigeria"
+                  target="_blank"
+                  className="hover:underline"
+                >
+                  @techunlocknigeria
                 </a>
               </li>
               <li>
-                <a href="#" className="hover:underline">
-                  @Techunlock
+                <a
+                  href="https://www.linkedin.com/company/techunlock"
+                  target="_blank"
+                  className="hover:underline"
+                >
+                  @techunlock
                 </a>
               </li>
               <li>
-                <a href="#" className="hover:underline">
+                <a
+                  href="https://x.com/TechUnlockNG"
+                  target="_blank"
+                  className="hover:underline"
+                >
+                  @TechUnlockNG
+                </a>
+              </li>
+              <li>
+                <a
+                  href="mailto:admin@techunlock.org"
+                  className="hover:underline"
+                >
+                  admin@techunlock.org
+                </a>
+              </li>
+              <li>
+                <a href="tel:07037734027" className="hover:underline">
                   07037734027
                 </a>
               </li>
               <li>
-                <a href="#" className="hover:underline">
+                <a href="tel:09034770558" className="hover:underline">
                   09034770558
                 </a>
               </li>
@@ -110,33 +142,33 @@ const Footer = () => {
       <section className="mx-auto z-10 p-6 bg-[#0A3747] relative">
         <ul className="flex flex-wrap justify-center">
           <li>
-            <a href="#" className="hover:underline">
+            <Link href="/faqs" className="hover:underline">
               FAQ’s
-            </a>
+            </Link>
             <span className="lg:mx-4 mx-2">|</span>
           </li>
           <li>
-            <a href="#" className="hover:underline">
+            <Link href="/privacy-policy" className="hover:underline">
               Privacy Policy
-            </a>
+            </Link>
             <span className="lg:mx-4 mx-2">|</span>
           </li>
           <li>
-            <a href="#" className="hover:underline">
+            <Link href="/terms-and-conditions" className="hover:underline">
               Terms and Conditions
-            </a>
+            </Link>
             <span className="lg:mx-4 mx-2">|</span>
           </li>
           <li>
-            <a href="#" className="hover:underline">
+            <Link href="/" className="hover:underline">
               Home
-            </a>
+            </Link>
             <span className="lg:mx-4 mx-2">|</span>
           </li>
           <li>
-            <a href="#" className="hover:underline">
+            <Link href="/courses" className="hover:underline">
               Start Learning
-            </a>
+            </Link>
           </li>
         </ul>
       </section>

@@ -22,6 +22,7 @@ import { addCourse } from "@/services/register";
 import LoadingSpinner from "../reusables/LoadingSpinner";
 import { useRouter } from "next/navigation";
 import { Button } from "../ui/button";
+import axios from "axios";
 
 const skillSuggestions = [
   { value: "JavaScript", label: "JavaScript" },
@@ -29,6 +30,60 @@ const skillSuggestions = [
   { value: "Node.js", label: "Node.js" },
   { value: "Python", label: "Python" },
   { value: "Django", label: "Django" },
+  { value: "AI Concepts", label: "AI Concepts" },
+  { value: "Data types and structures", label: "Data types and structures" },
+  { value: "Predictive Models", label: "Predictive Models" },
+  { value: "Dependencies", label: "Dependencies" },
+  { value: "CSV, JSON, text files", label: "CSV, JSON, text files" },
+  { value: "NumPy", label: "NumPy" },
+  { value: "Matplotlib", label: "Matplotlib" },
+  { value: "Pandas", label: "Pandas" },
+  { value: "HTML Basics", label: "HTML Basics" },
+  { value: "Domain & Hosting", label: "Domain & Hosting" },
+  { value: "HTTPS", label: "HTTPS" },
+  { value: "URL", label: "URL" },
+  { value: "HTML", label: "HTML" },
+  { value: "CSS", label: "CSS" },
+  { value: "GIT", label: "GIT" },
+  { value: "Backend Logic", label: "Backend Logic" },
+  { value: "Frontend Logic", label: "Frontend Logic" },
+  { value: "UI/UX Design", label: "UI/UX Design" },
+  { value: "Responsive Design", label: "Responsive Design" },
+  { value: "CSS Frameworks", label: "CSS Frameworks" },
+  { value: "Bootstrap", label: "Bootstrap" },
+  { value: "UI Design", label: "UI Design" },
+  { value: "User Experience", label: "User Experience" },
+  { value: "Design Thinking", label: "Design Thinking" },
+  { value: "Figma", label: "Figma" },
+  { value: "Prototyping", label: "Prototyping" },
+  { value: "Wireframing", label: "Wireframing" },
+  { value: "Design Principles", label: "Design Principles" },
+  { value: "Product Design", label: "Product Design" },
+  { value: "Mock-up Design", label: "Mock-up Design" },
+  { value: "Design Systems", label: "Design Systems" },
+  { value: "Social Media", label: "Social Media" },
+  { value: "Content Creation", label: "Content Creation" },
+  { value: "Digital Media", label: "Digital Media" },
+  {
+    value: "Ideal Customer Profile (ICP)",
+    label: "Ideal Customer Profile (ICP)",
+  },
+  { value: "Sponsored Advert", label: "Sponsored Advert" },
+  { value: "Target Audience", label: "Target Audience" },
+  { value: "SEO", label: "SEO" },
+  { value: "PPC", label: "PPC" },
+  { value: "Content Marketing", label: "Content Marketing" },
+  { value: "Analytics", label: "Analytics" },
+  { value: "Content Writing", label: "Content Writing" },
+  { value: "Copywriting", label: "Copywriting" },
+  { value: "Technical Writing", label: "Technical Writing" },
+  { value: "Branding", label: "Branding" },
+  { value: "Marketing Strategy", label: "Marketing Strategy" },
+  { value: "Marketing Research", label: "Marketing Research" },
+  { value: "Marketing Analysis", label: "Marketing Analysis" },
+  { value: "KPIs", label: "KPIs" },
+  { value: "Reporting", label: "Reporting" },
+  { value: "Insights", label: "Insights" },
 ];
 
 const CourseForm = () => {
@@ -94,7 +149,7 @@ const CourseForm = () => {
     console.log(data);
 
     // Handle offline state
-    if (!isOnline) {
+    if (!navigator.onLine) {
       showErrorToast("You are offline. Please check your network connection.");
       return;
     }
@@ -102,17 +157,46 @@ const CourseForm = () => {
     try {
       setIsLoading(true);
 
-      const addon = data.addon.map((item) => {
+      // Upload cover image to Cloudinary
+      const formData = new FormData();
+      formData.append("file", data.cover_image);
+      formData.append("upload_preset", "ml_default");
+
+      const cloudinaryResponse = await axios.post(
+        "https://api.cloudinary.com/v1_1/ddynvenje/image/upload",
+        formData
+      );
+
+      const coverImageUrl = cloudinaryResponse.data.secure_url;
+
+      // Upload addon images to Cloudinary (if any)
+      const addonImagesPromises = data.addon?.map(async (addon) => {
+        const addonFormData = new FormData();
+        addonFormData.append("file", addon.add_on_image);
+        addonFormData.append("upload_preset", "ml_default");
+
+        const addonCloudinaryResponse = await axios.post(
+          "https://api.cloudinary.com/v1_1/ddynvenje/image/upload",
+          addonFormData
+        );
+
         return {
-          title: item.title,
-          description: item.description,
+          ...addon,
+          add_on_image: addonCloudinaryResponse.data.secure_url,
         };
       });
 
-      delete data.cover_image;
-      data.addon = addon;
+      const addonImages = await Promise.all(addonImagesPromises || []);
 
-      const result = await addCourse(data);
+      // Include image URLs in data
+      const updatedData = {
+        ...data,
+        cover_image: coverImageUrl,
+        addon: addonImages.length > 0 ? addonImages : undefined,
+      };
+
+      // Send the updated data to your server
+      const result = await addCourse(updatedData);
       showSuccessToast(result.message || "Course created successfully.");
       reset();
     } catch (error) {
@@ -288,8 +372,8 @@ const CourseForm = () => {
                     render={({ field }) => (
                       <select {...field}>
                         <option value="">Select Duration</option>
-                        <option value="3 hrs per week">3 hrs per week</option>
-                        <option value="5 hrs per week">5 hrs per week</option>
+                        <option value="4 weeks">4 weeks</option>
+                        <option value="6 weeks">6 weeks</option>
                         <option value="10 weeks">10 weeks</option>
                       </select>
                     )}
@@ -411,9 +495,11 @@ const CourseForm = () => {
                       render={({ field }) => (
                         <select {...field}>
                           <option value="">Select module</option>
-                          <option value="module1">Module 1</option>
-                          <option value="module2">Module 2</option>
-                          <option value="module3">Module 3</option>
+                          <option value="Module 1">Module 1</option>
+                          <option value="Module 2">Module 2</option>
+                          <option value="Module 3">Module 3</option>
+                          <option value="Module 4">Module 4</option>
+                          <option value="Module 5">Module 5</option>
                         </select>
                       )}
                     />

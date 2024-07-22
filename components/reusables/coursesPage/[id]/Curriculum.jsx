@@ -12,7 +12,7 @@ const Curriculum = ({ course }) => {
             <Image
               src={line}
               alt="line"
-              className="absolute left-0 top-8 w-[12%] mx-auto"
+              className="absolute left-0 top-8 w-[10%] mx-auto"
             />
             <span className="text-2xl text-left font-semibold text-first-primary">
               Overview

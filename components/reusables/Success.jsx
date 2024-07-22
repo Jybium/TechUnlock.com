@@ -66,11 +66,19 @@ const Success = () => {
           successRef.current = data.message;
           setStatus("success");
           setMessage("Payment Successful!");
+
+          setTimeout(() => {
+            router.push("/courses/onboarding");
+            showSuccessToast("redirecting ...");
+          }, 10000);
         } else if (data.message === "failure") {
           setStatus("failure");
           setMessage("Payment Failed.");
 
-          showSuccessToast("redirecting to courses page");
+          setTimeout(() => {
+            router.push("/courses");
+            showSuccessToast("redirecting ...");
+          }, 10000);
         } else if (data.message === "abandoned") {
           setStatus("abandoned");
           setMessage("Payment Abandoned.");
@@ -81,7 +89,12 @@ const Success = () => {
       } catch (error) {
         setStatus("error");
         setMessage("An error occurred while verifying payment.");
-        showErrorToast("An error occurred while verifying payment.");
+        setTimeout(() => {
+          router.push("/courses");
+          showSuccessToast(
+            "An error occurred while verifying payment. \n redirecting ..."
+          );
+        }, 10000);
       } finally {
         localStorage.removeItem("reference");
         setLoading(false);
@@ -131,14 +144,26 @@ const Success = () => {
                 No reference number found for verification purposes
               </div>
             )}
+            {status !== "success" && (
+              <div className="text-2xl text-pri10 font-semibold">
+                If your account has been debited, please contact our support
+                service with clear proof at{" "}
+                <Link className="text-primary" passHref legacyBehavior>
+                  <a href="mailto:info@techunlock.com">info@techunlock.com</a>
+                </Link>{" "}
+                if the reversal does not occur within 24 hours.
+              </div>
+            )}
           </div>
 
           <div className="flex justify-center">
             <Button
               className="flex items-center justify-center text-white bg-primary shadow-md rounded-md px-4 py-2"
-              onClick={() => router.push("/courses")}
+              onClick={() =>
+                router.push(`${success ? "/courses/onboarding" : "/courses"}`)
+              }
             >
-              Continue learning
+              Continue
             </Button>
           </div>
         </div>

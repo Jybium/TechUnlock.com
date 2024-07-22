@@ -58,7 +58,7 @@ const PaymentTypeSelect = () => {
         Select Payment Type
       </h2>
       <div className="space-y-5">
-        {["Bank Transfer", "Paystack"].map((type) => (
+        {["Paystack", "Bank Transfer"].map((type) => (
           <div
             key={type}
             className="flex items-center rounded shadow px-4 py-2 w-full cursor-pointer"

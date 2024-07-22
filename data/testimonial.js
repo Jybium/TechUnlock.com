@@ -1,4 +1,8 @@
 import trainee from "@/assets/about-page/student.svg";
+import trainee2 from "@/assets/course-page/feedback-7.jpg";
+import trainee3 from "@/assets/course-page/feedback.jpg";
+import trainee4 from "@/assets/course-page/feedback-4.jpg";
+import trainee5 from "@/assets/course-page/feedback-5.jpg";
 
 const testimonial = [
   {
@@ -19,7 +23,7 @@ const testimonial = [
     name: "Jerry Bayo ",
     profession: "Frontend developer trainee",
     value: "Available materials for you to learn from.",
-    image: trainee,
+    image: trainee2,
   },
   {
     id: 3,
@@ -30,7 +34,7 @@ const testimonial = [
     profession: "Frontend developer trainee",
     value:
       "Experienced trainers and mentors ready to sharpen your selected field.",
-    image: trainee,
+    image: trainee3,
   },
   {
     id: 4,
@@ -40,17 +44,17 @@ const testimonial = [
     name: "Jerry Bayo ",
     profession: "Frontend developer trainee",
     value: " Learners from around the country.",
-    image: trainee,
+    image: trainee4,
   },
   {
     id: 5,
     number: "20+",
     message:
       "“ This is the best beginner friendly course I have ever enrolled for. From the tutors down to the conducive learning environment, every was just made for seamless interaction. ”",
-    name: "Jerry Bayo ",
+    name: "Adeola Gbadamosi",
     profession: "Frontend developer trainee",
     value: "Courses enrollment.",
-    image: trainee,
+    image: trainee5,
   },
 ];
 

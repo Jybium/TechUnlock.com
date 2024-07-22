@@ -7,13 +7,13 @@ const Accordion = memo(({ items }) => {
   return (
     <div className="space-y-4">
       {items?.map((item, index) => (
-        <AccordionItem key={index} item={item} />
+        <AccordionItem key={index} index={index} item={item} />
       ))}
     </div>
   );
 });
 
-const AccordionItem = memo(({ item }) => {
+const AccordionItem = memo(({ item, index }) => {
   const [isOpen, setIsOpen] = useState(false);
   const contentRef = useRef(null);
 
@@ -28,7 +28,9 @@ const AccordionItem = memo(({ item }) => {
         className="w-full flex justify-between items-center px-4 py-3 focus:outline-none text-sm"
         aria-expanded={isOpen}
       >
-        <span className="text-sm font-medium">{item.title}</span>
+        <span className="text-sm font-medium">
+          Module {index + 1}: {item.title}
+        </span>
         <span className="text-lg">{isOpen ? "-" : "+"}</span>
       </button>
       <AnimatePresence>

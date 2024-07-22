@@ -5,10 +5,10 @@ import image from "@/assets/landing-page/authImage.png";
 import Link from "next/link";
 
 export const footerLinks = [
-  {id: 1, name: "FAQs", url: "/faqs"},
-  {id: 2, name: "Privacy Policy", url: "/privacy-policy"},
-  {id: 3, name: "Terms", url: "/terms"},
-]
+  { id: 1, name: "FAQs", url: "/faqs" },
+  { id: 2, name: "Privacy Policy", url: "/privacy-policy" },
+  { id: 3, name: "Terms", url: "/terms-and-conditions" },
+];
 
 const AuthLayout = ({ children, title, message, action, to }) => {
   return (
