@@ -30,7 +30,7 @@ const Description = ({ course }) => {
                 <Image
                   src={line}
                   alt="line"
-                  className="absolute left-0 top-8 w-[28%] mx-auto"
+                  className="absolute left-0 top-8 w-[54%] md:w-[25%] mx-auto"
                 />
                 <span className="text-center text-2xl font-semibold text-first-primary">
                   Description

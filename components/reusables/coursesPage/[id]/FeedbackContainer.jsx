@@ -37,7 +37,7 @@ const FeedbackContainer = ({ course }) => {
           <Image
             src={line}
             alt="line"
-            className="absolute left-0 top-7 w-[12%] mx-auto"
+            className="absolute left-0 top-8 w-[31%] md:w-[10%] mx-auto"
           />
           <span className="text-left text-2xl font-semibold text-pri10">
             Feedbacks

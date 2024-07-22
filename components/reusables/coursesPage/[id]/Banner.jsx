@@ -15,7 +15,7 @@ import AIBanner from "@/assets/course-page/AICard.svg";
 import WebBanner from "@/assets/course-page/webDevBanner.svg";
 
 // cybersecurity
-import cyber from "@/assets/course-page/cybersecurityCard.svg";
+import cyber from "@/assets/course-page/cyber.jpg";
 
 // DM
 import DM from "@/assets/course-page/DMCard.svg";
@@ -51,7 +51,7 @@ const Banner = ({ course }) => {
 
         <div className="relative grid lg:flex lg:justify-between gap-x-6 lg:h-[60vh] w-[95%] mx-auto py-10 lg:py-0 lg:pb-10 gap-y-6 lg:gap-y-0">
           <div className="flex flex-col justify-between lg:w-[65%] text-[#FCFCFD] gap-y-3 lg:gap-y-0">
-            <h1 className=" text-[#FCFCFD] font-semibold text-2xl">
+            <h1 className=" text-[#FCFCFD] font-semibold text-3xl md:text-2xl">
               {/* Get started with your{" "}
               <span className="font-bold text-pri1"> {fullCategoryName} </span>{" "}
               Journey today. */}

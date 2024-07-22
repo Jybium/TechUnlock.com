@@ -9,13 +9,14 @@ import image from "@/assets/images/logo.svg";
 import Image from "next/image";
 import Link from "next/link";
 import { fetchToken } from "@/helpers/getToken";
-import { Avatar, AvatarFallback, AvatarImage } from "../ui/avatar";
 import { Menu, X } from "lucide-react";
 import { showSuccessToast } from "@/helpers/toastUtil";
 import axios from "axios";
+import { IoIosArrowDown, IoIosArrowUp } from "react-icons/io";
 
 const Navbar = () => {
   const [token, setToken] = useState("");
+  const [loading, setLoading] = useState(true);
   const [accountDetails, setAccountDetails] = useState(null);
   const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
   const [Open, setOpen] = useState(false);
@@ -39,6 +40,7 @@ const Navbar = () => {
 
   const fetchAccountDetails = async (token) => {
     try {
+      setLoading(true);
       const response = await axios.get(
         "https://techunlock.pythonanywhere.com/account/account-details/",
         {
@@ -55,6 +57,8 @@ const Navbar = () => {
         console.error("Failed to fetch account details:", error);
         // Optionally handle other errors
       }
+    } finally {
+      setLoading(false);
     }
   };
 
@@ -120,21 +124,33 @@ const Navbar = () => {
         </p>
       </div>
       <div className="hidden lg:block">
-        {token && Object.entries(token).length !== 0 ? (
+        {loading ? (
+          " "
+        ) : token && Object.entries(token).length !== 0 ? (
           <div className="relative">
-            <Avatar onClick={toggleMenu}>
-              <AvatarFallback>
-                {accountDetails?.name?.[0] || "CN"}
-              </AvatarFallback>
-            </Avatar>
+            <div
+              onClick={toggleMenu}
+              className="flex gap-x-3 items-center shadow rounded-md border border-sec10 py-2 px-4 bg-white"
+            >
+              <p className="flex items-center capitalize">
+                {accountDetails?.first_name} {accountDetails?.last_name}
+              </p>
+              <span className="">
+                {Open ? (
+                  <IoIosArrowUp size={16} />
+                ) : (
+                  <IoIosArrowDown size={16} />
+                )}
+              </span>
+            </div>
 
             <p
               className={`${
                 Open ? "block" : "hidden"
-              } absolute top-10 z-10 cursor-pointer text-red-500 px-4 py-2 bg-white rounded shadow drop-shadow`}
+              } absolute top-11 z-10 cursor-pointer text-red-500 px-4 py-2 bg-white rounded shadow drop-shadow`}
               onClick={handleLogout}
             >
-              logout
+              Logout
             </p>
           </div>
         ) : (
@@ -172,19 +188,25 @@ const Navbar = () => {
           </Link>
           <More />
 
-          {token && Object.entries(token).length !== 0 ? (
+          {loading ? (
+            " "
+          ) : token && Object.entries(token).length !== 0 ? (
             <div className="relative">
-              <Avatar onClick={toggleMenu}>
-                <AvatarImage
-                  src={
-                    accountDetails?.profilePicture ||
-                    "https://github.com/shadcn.png"
-                  }
-                />
-                <AvatarFallback>
-                  {accountDetails?.name?.[0] || "CN"}
-                </AvatarFallback>
-              </Avatar>
+              <div
+                onClick={toggleMenu}
+                className="flex gap-x-3 w-fit items-center shadow rounded-md border border-sec10 py-2 px-4 bg-white"
+              >
+                <p className="flex items-center capitalize">
+                  {accountDetails?.first_name} {accountDetails?.last_name}
+                </p>
+                <span className="">
+                  {Open ? (
+                    <IoIosArrowUp size={16} />
+                  ) : (
+                    <IoIosArrowDown size={16} />
+                  )}
+                </span>
+              </div>
 
               <p
                 className={`${

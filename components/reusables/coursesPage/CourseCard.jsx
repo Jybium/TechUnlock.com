@@ -55,7 +55,9 @@ const CourseCard = ({ item }) => {
             </p>
             <p className="flex items-center gap-x-3">
               <ModuleIcon />{" "}
-              <span className="">Module: {item?.number_of_modules}</span>
+              <span className="">
+                Module: {item?.number_of_modules || item?.modules.length}
+              </span>
             </p>
             <p className="flex items-center gap-x-3">
               <CertificateIcon />{" "}

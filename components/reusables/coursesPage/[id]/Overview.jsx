@@ -15,12 +15,13 @@ import { Button } from "@/components/ui/button";
 
 const Overview = ({ course }) => {
   const router = useRouter();
+
   return (
     <div className="w-full bg-white py-[2rem] px-[1rem] md:px-[3rem]">
       <div className="grid gap-y-4">
-        <div className="flex items-end justify-between w-1/2 md:pr-5">
+        <div className="md:flex items-end md:justify-between md:w-1/2 md:pr-5">
           <h3 className="text-pri10 font-semibold text-2xl">{course?.title}</h3>
-          <p className=" border border-pri10 rounded p-1 text-sm w-fit whitespace-nowrap">
+          <p className="cursor-pointer border border-pri10 rounded p-1 text-sm w-fit text-pri10 font-semibold whitespace-nowrap mt-2 lg:mt-0">
             Training fee: #{Number(course?.price)?.toFixed(0)}
           </p>
         </div>
@@ -42,7 +43,10 @@ const Overview = ({ course }) => {
                 </p>
                 <p className="flex items-center gap-x-3">
                   <ModuleIcon />{" "}
-                  <span className="">Module: {course?.number_of_modules}</span>
+                  <span className="">
+                    Module:{" "}
+                    {course?.number_of_modules || course?.modules?.length}
+                  </span>
                 </p>
                 <p className="flex items-center gap-x-3">
                   <CertificateIcon />{" "}
@@ -58,7 +62,7 @@ const Overview = ({ course }) => {
                 <div className="flex flex-wrap gap-3 text-xs mt-2">
                   {course?.course_skills.map((item) => (
                     <span
-                      className="border border-primary py-1 px-2 rounded text-primary font-medium"
+                      className="border border-primary py-1 px-2 rounded text-primary font-medium cursor-pointer"
                       key={item?.id}
                     >
                       {item.name}
@@ -85,7 +89,7 @@ const Overview = ({ course }) => {
                 <Image
                   src={line}
                   alt="line"
-                  className="absolute left-0 top-8 w-[29%] mx-auto"
+                  className="absolute left-0 top-8 w-[42%] md:w-[25%] mx-auto"
                 />
                 <span className="text-2xl font-semibold text-first-primary">
                   Curriculum
