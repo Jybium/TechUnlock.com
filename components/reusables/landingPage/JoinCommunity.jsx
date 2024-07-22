@@ -11,7 +11,7 @@ const JoinCommunity = () => {
       </h1>
       <div className="lg:flex lg:justify-between items-center w-[90%] mx-auto mt-8">
         <div className="lg:w-[40%]">
-          <h2 className="text-first-primary font-semibold text-2xl lg:text-4xl leading-[1.3]">
+          <h2 className="text-first-primary font-semibold text-2xl lg:text-5xl leading-loose">
             Start{" "}
             <Link href="/courses" className="text-primary">
               learning

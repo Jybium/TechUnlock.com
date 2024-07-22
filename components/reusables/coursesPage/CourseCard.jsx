@@ -21,9 +21,15 @@ const CourseCard = ({ item }) => {
       <div className="bg-pri1 grid lg:flex gap-x-3 lg:items-center p-2 w-full rounded-md">
         <div className="lg:w-1/3">
           <Image
-            src={item?.cover_image || ""}
+            src={
+              item?.cover_image.includes("path-to-image")
+                ? ""
+                : item?.cover_image || ""
+            }
             alt={item?.title}
             className="w-full h-full rounded-md "
+            width={300}
+            height={300}
             // layout="fill"
           />
         </div>
@@ -49,7 +55,9 @@ const CourseCard = ({ item }) => {
             </p>
             <p className="flex items-center gap-x-3">
               <ModuleIcon />{" "}
-              <span className="">Module: {item?.number_of_modules}</span>
+              <span className="">
+                Module: {item?.number_of_modules || item?.modules.length}
+              </span>
             </p>
             <p className="flex items-center gap-x-3">
               <CertificateIcon />{" "}

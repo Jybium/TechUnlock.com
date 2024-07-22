@@ -3,36 +3,80 @@
 import { useEffect, useState } from "react";
 import Programs from "./landingPage/Programs";
 import { removeToken } from "@/helpers/removeToken";
-import { useRouter } from "next/navigation";
+import { useRouter, usePathname } from "next/navigation";
 import More from "./landingPage/More";
 import image from "@/assets/images/logo.svg";
 import Image from "next/image";
 import Link from "next/link";
 import { fetchToken } from "@/helpers/getToken";
-import { Avatar, AvatarFallback, AvatarImage } from "../ui/avatar";
 import { Menu, X } from "lucide-react";
 import { showSuccessToast } from "@/helpers/toastUtil";
+import axios from "axios";
+import { IoIosArrowDown, IoIosArrowUp } from "react-icons/io";
 
 const Navbar = () => {
   const [token, setToken] = useState("");
+  const [loading, setLoading] = useState(true);
+  const [accountDetails, setAccountDetails] = useState(null);
   const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
   const [Open, setOpen] = useState(false);
 
   const router = useRouter();
+  const pathname = usePathname();
 
   useEffect(() => {
     const fetchTokens = async () => {
       const token = await fetchToken();
       if (token) {
         setToken(token);
+        fetchAccountDetails(token);
       } else {
         setToken("");
       }
     };
 
     fetchTokens();
-    console.log(token);
   }, []);
+
+  const fetchAccountDetails = async (token) => {
+    try {
+      setLoading(true);
+      const response = await axios.get(
+        "https://techunlock.pythonanywhere.com/account/account-details/",
+        {
+          headers: {
+            Authorization: `Bearer ${token}`,
+          },
+        }
+      );
+      setAccountDetails(response.data);
+    } catch (error) {
+      if (error.response?.status === 401 || error.response?.status === 400) {
+        handleInvalidToken();
+      } else {
+        console.error("Failed to fetch account details:", error);
+        // Optionally handle other errors
+      }
+    } finally {
+      setLoading(false);
+    }
+  };
+
+  const handleInvalidToken = () => {
+    // Remove token and redirect to login if pathname matches
+    if (
+      pathname.includes("pay") ||
+      pathname.includes("register") ||
+      pathname.includes("verify")
+    ) {
+      removeToken().then(() => {
+        router.push("/login");
+      });
+    } else {
+      // Optionally, handle other cases if needed
+      removeToken();
+    }
+  };
 
   const toggleMobileMenu = () => {
     setIsMobileMenuOpen(!isMobileMenuOpen);
@@ -43,9 +87,9 @@ const Navbar = () => {
   };
 
   const handleLogout = async () => {
-    const data = await removeToken();
-    showSuccessToast(data);
-    router.push("/");
+    await removeToken();
+    showSuccessToast("Logged out successfully");
+    window.location.href = "/";
   };
 
   return (
@@ -67,11 +111,11 @@ const Navbar = () => {
       </div>
 
       <div className="md:flex hidden items-center gap-12 text-sec10">
-        <Link href="/about-us" className="text-xl font-semibold cursor-pointer">
+        <Link href="/about-us" className="text-lg font-semibold cursor-pointer">
           About
         </Link>
         <Programs />
-        <Link href="/faqs" className="text-xl font-semibold cursor-pointer">
+        <Link href="/faqs" className="text-lg font-semibold cursor-pointer">
           FAQs
         </Link>
         <More />
@@ -80,20 +124,33 @@ const Navbar = () => {
         </p>
       </div>
       <div className="hidden lg:block">
-        {token && Object.entries(token).length !== 0 ? (
+        {loading ? (
+          " "
+        ) : token && Object.entries(token).length !== 0 ? (
           <div className="relative">
-            <Avatar onClick={toggleMenu}>
-              <AvatarImage src="https://github.com/shadcn.png" />
-              <AvatarFallback>CN</AvatarFallback>
-            </Avatar>
+            <div
+              onClick={toggleMenu}
+              className="flex gap-x-3 items-center shadow rounded-md border border-sec10 py-2 px-4 bg-white"
+            >
+              <p className="flex items-center capitalize">
+                {accountDetails?.first_name} {accountDetails?.last_name}
+              </p>
+              <span className="">
+                {Open ? (
+                  <IoIosArrowUp size={16} />
+                ) : (
+                  <IoIosArrowDown size={16} />
+                )}
+              </span>
+            </div>
 
             <p
               className={`${
                 Open ? "block" : "hidden"
-              } absolute top-10 z-10 cursor-pointer text-red-500 px-4 py-2 bg-white rounded shadow drop-shadow`}
+              } absolute top-11 z-10 cursor-pointer text-red-500 px-4 py-2 bg-white rounded shadow drop-shadow`}
               onClick={handleLogout}
             >
-              logout
+              Logout
             </p>
           </div>
         ) : (
@@ -131,12 +188,25 @@ const Navbar = () => {
           </Link>
           <More />
 
-          {token && Object.entries(token).length !== 0 ? (
+          {loading ? (
+            " "
+          ) : token && Object.entries(token).length !== 0 ? (
             <div className="relative">
-              <Avatar onClick={toggleMenu}>
-                <AvatarImage src="https://github.com/shadcn.png" />
-                <AvatarFallback>CN</AvatarFallback>
-              </Avatar>
+              <div
+                onClick={toggleMenu}
+                className="flex gap-x-3 w-fit items-center shadow rounded-md border border-sec10 py-2 px-4 bg-white"
+              >
+                <p className="flex items-center capitalize">
+                  {accountDetails?.first_name} {accountDetails?.last_name}
+                </p>
+                <span className="">
+                  {Open ? (
+                    <IoIosArrowUp size={16} />
+                  ) : (
+                    <IoIosArrowDown size={16} />
+                  )}
+                </span>
+              </div>
 
               <p
                 className={`${
@@ -148,7 +218,7 @@ const Navbar = () => {
               </p>
             </div>
           ) : (
-            <div className="flex flex-col md:flex-row items-center gap-5">
+            <div className="flex flex-row items-center gap-5">
               <Link href="/login" className="cursor-pointer">
                 <button className="text-pri9 border-primary border-2 bg-white w-20 p-3 rounded-xl">
                   Login

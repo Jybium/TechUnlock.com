@@ -1,5 +1,6 @@
 import React from "react";
 import dynamic from "next/dynamic";
+import OnScrollView from "@/components/reusables/Layout/OnScrollView";
 // import Navbar from "@/components/reusables/Navbar";
 const Navbar = React.lazy(() => import("@/components/reusables/Navbar"));
 const Footer = React.lazy(() => import("@/components/reusables/Footer"));
@@ -38,19 +39,32 @@ const LandingPage = () => {
       </React.Suspense>
       <Header />
       <section className="bg-gradient-to-b from-white via-gray-100 to-gray-300">
-        <Main />
-        <FindConnect />
+        <OnScrollView>
+          <Main />
+        </OnScrollView>
+        <OnScrollView>
+          <FindConnect />
+        </OnScrollView>
         <div className="relative">
-          <Metrics />
+          <OnScrollView>
+            <Metrics />
+          </OnScrollView>
           <div className="absolute -top-5 left-0 right-0 h-20 bg-gradient-to-b from-white via-primary/20 to-primary/40 pointer-events-none"></div>
           <div className="absolute -bottom-5 left-0 right-0 h-20 bg-gradient-to-t from-white via-primary/20 to-primary/40 pointer-events-none"></div>
         </div>
 
-        <ProgramsOffered />
-
-        <OurPartner />
-        <OurPrograms />
-        <JoinCommunity />
+        <OnScrollView>
+          <ProgramsOffered />
+        </OnScrollView>
+        <OnScrollView>
+          <OurPartner />
+        </OnScrollView>
+        <OnScrollView>
+          <OurPrograms />
+        </OnScrollView>
+        <OnScrollView>
+          <JoinCommunity />
+        </OnScrollView>
       </section>
 
       <React.Suspense>

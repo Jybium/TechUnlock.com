@@ -24,29 +24,32 @@ export async function middleware(request) {
       return NextResponse.redirect(url);
     }
 
-    // Clone the request and set the authorization header
-    const authHeaderRequest = new Request(request.url, {
-      method: request.method,
-      headers: new Headers({
-        ...Object.fromEntries(request.headers.entries()),
-        Authorization: `Bearer ${token}`,
-      }),
-      body: request.body,
-      redirect: "manual",
-    });
+    try {
+      // Send the request to the server to check token validity
+      const response = await fetch(request.url, {
+        method: request.method,
+        headers: {
+          ...Object.fromEntries(request.headers.entries()),
+          Authorization: `Bearer ${token}`,
+        },
+        body: request.body,
+      });
 
-    // Send the request to the server to check token validity
-    const response = await fetch(authHeaderRequest.url, {
-      method: authHeaderRequest.method,
-      headers: authHeaderRequest.headers,
-      body: authHeaderRequest.body,
-    });
-
-    if (token) {
-      // Continue with the request
-      return NextResponse.next();
-    } else if (!token) {
-      // Redirect to login on unauthorized or bad request, with redirect URL parameter and trxref
+      if (response.ok) {
+        // Continue with the request
+        return NextResponse.next();
+      } else if (response.status === 401 || response.status === 400) {
+        // Redirect to login on unauthorized or bad request, with redirect URL parameter and trxref
+        url.pathname = loginRoute;
+        url.searchParams.set("redirect", pathname);
+        if (trxref) {
+          url.searchParams.set("trxref", trxref);
+        }
+        return NextResponse.redirect(url);
+      }
+    } catch (error) {
+      // Handle fetch errors
+      console.error("Token validation failed:", error);
       url.pathname = loginRoute;
       url.searchParams.set("redirect", pathname);
       if (trxref) {
@@ -60,6 +63,7 @@ export async function middleware(request) {
   if (
     pathname.includes("register") ||
     pathname.includes("pay") ||
+    pathname.includes("verify") ||
     pathname.startsWith("/dashboard")
   ) {
     if (!token) {
@@ -69,29 +73,29 @@ export async function middleware(request) {
       return NextResponse.redirect(url);
     }
 
-    // Clone the request and set the authorization header
-    const authHeaderRequest = new Request(request.url, {
-      method: request.method,
-      headers: new Headers({
-        ...Object.fromEntries(request.headers.entries()),
-        Authorization: `Bearer ${token}`,
-      }),
-      body: request.body,
-      redirect: "manual",
-    });
+    try {
+      // Send the request to the server to check token validity
+      const response = await fetch(request.url, {
+        method: request.method,
+        headers: {
+          ...Object.fromEntries(request.headers.entries()),
+          Authorization: `Bearer ${token}`,
+        },
+        body: request.body,
+      });
 
-    // Send the request to the server to check token validity
-    const response = await fetch(authHeaderRequest.url, {
-      method: authHeaderRequest.method,
-      headers: authHeaderRequest.headers,
-      body: authHeaderRequest.body,
-    });
-
-    if (response.ok) {
-      // Continue with the request
-      return NextResponse.next();
-    } else if (response.status === 401 || response.status === 400) {
-      // Redirect to login on unauthorized or bad request, with redirect URL parameter
+      if (response.ok) {
+        // Continue with the request
+        return NextResponse.next();
+      } else if (response.status === 401 || response.status === 400) {
+        // Redirect to login on unauthorized or bad request, with redirect URL parameter
+        url.pathname = loginRoute;
+        url.searchParams.set("redirect", pathname);
+        return NextResponse.redirect(url);
+      }
+    } catch (error) {
+      // Handle fetch errors
+      console.error("Token validation failed:", error);
       url.pathname = loginRoute;
       url.searchParams.set("redirect", pathname);
       return NextResponse.redirect(url);
@@ -104,5 +108,5 @@ export async function middleware(request) {
 
 // Specify the paths where the middleware should run
 export const config = {
-  matcher: ["/courses/:id/:path*", "/dashboard/my-courses"],
+  matcher: ["/courses/:id/:path*", "/dashboard/my-courses", "/courses/verify"],
 };

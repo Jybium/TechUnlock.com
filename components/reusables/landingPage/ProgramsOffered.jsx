@@ -1,20 +1,18 @@
-import React from 'react'
+import React from "react";
 import CourseCard from "./CourseCard";
-import courses from '@/data/courses';
+import courses from "@/data/courses";
 import line from "@/assets/landing-page/Line.svg";
 import sideImage from "@/assets/landing-page/ColoredAngle.svg";
-import Image from 'next/image';
-
+import Image from "next/image";
 
 const ProgramsOffered = () => {
   return (
     <div className="relative my-[5rem]">
-      
-        <Image
-          src={sideImage}
-          alt="side-image"
-          className="absolute left-0 -top-[11%] w-[15%] -z-10"
-        />
+      <Image
+        src={sideImage}
+        alt="side-image"
+        className="absolute left-0 -top-[11%] w-[15%] -z-10 hidden md:block"
+      />
 
       <div className="relative">
         <p className="relative grid justify-center content-center">
@@ -38,11 +36,6 @@ const ProgramsOffered = () => {
       </div>
     </div>
   );
-}
+};
 
-export default ProgramsOffered
-
-
-
-
-
+export default ProgramsOffered;

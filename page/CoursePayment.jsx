@@ -71,7 +71,7 @@ const SelectPaymentGuide = () => {
                 readOnly
               />
               <span>
-                For you selected course and level{" "}
+                For your selected course and level{" "}
                 <span className="text-primary">
                   {Courses?.title} {Courses?.difficulty} level
                 </span>

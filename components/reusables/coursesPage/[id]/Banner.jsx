@@ -15,7 +15,7 @@ import AIBanner from "@/assets/course-page/AICard.svg";
 import WebBanner from "@/assets/course-page/webDevBanner.svg";
 
 // cybersecurity
-import cyber from "@/assets/course-page/cybersecurityCard.svg";
+import cyber from "@/assets/course-page/cyber.jpg";
 
 // DM
 import DM from "@/assets/course-page/DMCard.svg";
@@ -32,7 +32,7 @@ const Banner = ({ course }) => {
   const fullCategoryName = categoryMap[course?.category] || course?.category;
   return (
     <div className="">
-      <div className="relative lg:h-screen w-full lg:flex lg:items-end lg:justify-center bg-gradient-to-tr from-[#13485B] to-[#06212B]">
+      <div className="relative lg:h-[80vh] w-full lg:flex lg:items-end lg:justify-center bg-gradient-to-tr from-[#13485B] to-[#06212B]">
         <Image
           src={
             course?.category === "UI/UX"
@@ -49,15 +49,26 @@ const Banner = ({ course }) => {
           className="absolute top-0 left-0 w-full h-full object-cover opacity-40"
         />
 
-        <div className="relative grid lg:flex lg:justify-between gap-x-6 lg:h-[90vh] w-[95%] mx-auto py-10 lg:py-0 lg:pb-10 gap-y-6 lg:gap-y-0">
+        <div className="relative grid lg:flex lg:justify-between gap-x-6 lg:h-[60vh] w-[95%] mx-auto py-10 lg:py-0 lg:pb-10 gap-y-6 lg:gap-y-0">
           <div className="flex flex-col justify-between lg:w-[65%] text-[#FCFCFD] gap-y-3 lg:gap-y-0">
-            <h1 className=" text-[#FCFCFD] font-semibold text-2xl">
-              Get started with your{" "}
+            <h1 className=" text-[#FCFCFD] font-semibold text-3xl md:text-2xl">
+              {/* Get started with your{" "}
               <span className="font-bold text-pri1"> {fullCategoryName} </span>{" "}
-              Journey today.
+              Journey today. */}
+              {course?.title}
             </h1>
 
-            <p className="text-xl">{course?.description}</p>
+            <p className="text-xl">
+              {course?.description === "UI/UX"
+                ? "Learn how to design user friendly digital products that work, in this intensive course. Understand the fundamentals of design processes and how you can transform user experiences through functional product designs."
+                : course?.description === "WEB"
+                ? "Unleash your web development potential with our expert-led course. Master Python, HTML, & CSS through hands-on projects, gaining skills for a career in web design or enhancing your current abilities."
+                : course?.description === "CYBER"
+                ? "Designed for individuals with little to no prior experience in the field, this course provides a solid foundation in cybersecurity essentials. Whether you're a curious enthusiast or considering a career switch, you'll gain practical knowledge and skills to navigate the digital landscape securely."
+                : course?.description === "DM"
+                ? "Explore the possibilities of building and growing a business and scaling using social media marketing channels, email marketing affiliate marketing, SMS marketing, content marketing and other social media channels."
+                : "Start your journey to becoming and AI Certified professional. From Beginner to intermediate level of proficiency. Our Applied Artificial Intelligence course module builds the foundation for you to excel in your career and professional pursuit."}
+            </p>
 
             <div className="lg:w-2/4 bg-[#FFFFFF]/40 backdrop-blur-lg drop-shadow-md px-5 py-3 rounded-md text-sm">
               <div className="mb-4 flex justify-between">

@@ -3,7 +3,7 @@ import testimony from "@/assets/course-page/feedback.svg";
 import Image from "next/image";
 import { categoryMap } from "./Banner";
 
-const FeedbackCard = ({ course }) => {
+const FeedbackCard = ({ course, image }) => {
   const fullCategoryName = categoryMap[course?.category] || course?.category;
 
   return (
@@ -14,9 +14,9 @@ const FeedbackCard = ({ course }) => {
         <div className="w-2/5 grid gap-y-2">
           {/* reviewr's image */}
           <Image
-            src={testimony}
+            src={image}
             alt="testimonial image"
-            className="w-52 h-48"
+            className="w-52 h-48 object-cover"
           />
           {/* reviewer information */}
           <div className="grid gap-1">

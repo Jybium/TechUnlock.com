@@ -1,12 +1,14 @@
 "use client";
 
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import Image from "next/image";
 import { Button } from "@/components/ui/button";
 import { cn } from "@/lib/utils";
 import { useRouter } from "next/navigation";
 import { RadioGroup, RadioGroupItem } from "@/components/ui/radio-group";
 import { Label } from "@/components/ui/label";
+import physicalClass from "@/assets/course-page/physicalClass.jpg";
+import mentor from "@/assets/course-page/withTutor.svg";
 
 // images
 
@@ -24,56 +26,71 @@ import DMCard from "@/assets/course-page/DMCard.svg";
 
 // AI
 import AI from "@/assets/course-page/AICard.svg";
+import { Check } from "lucide-react";
 
 export const BannerCard = ({ courses }) => {
   const [currentIndex, setCurrentIndex] = useState(0);
   const [selectedOption, setSelectedOption] = useState("onsite");
   const router = useRouter();
 
-  const nextSlide = () => {
-    setCurrentIndex((prevIndex) =>
-      prevIndex === ["dm", "ai", "web"].length - 1 ? 0 : prevIndex + 1
-    );
-  };
+  const Images = [
+    {
+      id: 1,
+      image:
+        courses.category === "UI/UX"
+          ? UICard
+          : courses.category === "WEB"
+          ? webDev
+          : courses.category === "CYBER"
+          ? cyberSec
+          : courses.category === "DM"
+          ? DMCard
+          : AI,
+      option: "pace",
+    },
+    { id: 2, image: physicalClass, option: "onsite" },
+    { id: 3, image: mentor, option: "tutor" },
+  ];
 
-  const prevSlide = () => {
-    setCurrentIndex((prevIndex) =>
-      prevIndex === 0 ? ["dm", "ai", "web"].length - 1 : prevIndex - 1
-    );
-  };
+  useEffect(() => {
+    const interval = setInterval(() => {
+      setCurrentIndex((prevIndex) =>
+        prevIndex === Images.length - 1 ? 0 : prevIndex + 1
+      );
+    }, 3000);
+
+    return () => clearInterval(interval);
+  }, [Images.length]);
+
+  useEffect(() => {
+    setSelectedOption(Images[currentIndex].option);
+  }, [currentIndex]);
 
   const handleChange = (value) => {
     setSelectedOption(value);
+    const newIndex = Images.findIndex((image) => image.option === value);
+    setCurrentIndex(newIndex);
   };
 
   const getLabelClass = (value) => {
-    return selectedOption === value ? "text-gray-800" : "text-white";
+    return selectedOption === value ? "text-gray-800 " : "text-white ";
   };
 
   return (
     <div className="relative w-full max-w-4xl mx-auto bg-[#FFFFFF]/20 rounded-md drop-shadow-lg backdrop-blur-lg px-3 py-2 border border-gray-900">
+      {/* Images */}
       <div className="relative h-52">
-        {["dm", "ai", "web"]?.map((course, index) => (
+        {Images.map((imageObj, index) => (
           <div
-            key={index}
+            key={imageObj.id}
             className={cn("absolute inset-0 transition-opacity duration-1000", {
               "opacity-0": index !== currentIndex,
               "opacity-100": index === currentIndex,
             })}
           >
             <Image
-              src={
-                course.category === "UI/UX"
-                  ? UICard
-                  : course.category === "WEB"
-                  ? webDev
-                  : course.category === "CYBER"
-                  ? cyberSec
-                  : course.category === "DM"
-                  ? DMCard
-                  : AI
-              }
-              alt={course.title}
+              src={imageObj.image}
+              alt={`Slide ${index + 1}`}
               layout="fill"
               objectFit="cover"
               className="rounded-lg"
@@ -83,13 +100,13 @@ export const BannerCard = ({ courses }) => {
       </div>
 
       {/* Navigation dots */}
-      <div className=" flex justify-center px-2 py-2 bg-sec10 w-1/4 mx-auto rounded-xl my-2">
-        {["dm", "ai", "web"]?.map((course, index) => (
+      <div className="flex justify-center items-center px-1 py-1 bg-sec10 w-fit mx-auto rounded-xl my-2">
+        {Images.map((_, index) => (
           <button
             key={index}
             className={cn("h-2 w-2 rounded-full mx-1 transition-colors", {
               "bg-white": index !== currentIndex,
-              "bg-blue-500": index === currentIndex,
+              "bg-primary h-3 w-3": index === currentIndex,
             })}
             onClick={() => setCurrentIndex(index)}
           />
@@ -99,32 +116,39 @@ export const BannerCard = ({ courses }) => {
       {/* Radio group */}
       <div className="mt-3 px-3">
         <RadioGroup
-          defaultValue="onsite"
+          value={selectedOption}
           className="grid gap-y-3"
           onValueChange={handleChange}
         >
-          <div className="flex items-center space-x-2">
+          <div className="flex items-center space-x-4">
             <RadioGroupItem value="pace" id="pace" />
             <Label htmlFor="pace" className={getLabelClass("pace")}>
-              Learn at your pace
+              {courses?.difficulty} class
             </Label>
           </div>
-          <div className="flex items-center space-x-2">
+          <div className="flex items-center space-x-4">
             <RadioGroupItem value="onsite" id="onsite" />
             <Label htmlFor="onsite" className={getLabelClass("onsite")}>
               Physical classes are available
             </Label>
           </div>
-          <div className="flex items-center space-x-2">
-            <RadioGroupItem value="real-project" id="real-project" />
-            <Label
-              htmlFor="real-project"
-              className={getLabelClass("real-project")}
-            >
-              Work on real life projects
+          <div className="flex items-center space-x-4">
+            <RadioGroupItem value="tutor" id="tutor" />
+            <Label htmlFor="tutor" className={getLabelClass("tutor")}>
+              Online class with a tutor
             </Label>
           </div>
         </RadioGroup>
+        <div className="text-sm text-white font-medium space-y-2 mt-3">
+          <p className="flex items-center gap-x-4">
+            <Check className="text-red-400" size={18} /> Certification
+          </p>
+
+          <p className="flex items-center gap-x-4">
+            <Check className="text-red-400" size={18} /> Work on real life
+            projects
+          </p>
+        </div>
       </div>
 
       {/* Buttons */}

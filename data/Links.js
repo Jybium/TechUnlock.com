@@ -36,7 +36,7 @@ export const Mor = [
       },
       {
         name: "Terms & conditions",
-        url: "/terms",
+        url: "/terms-and-conditions",
       },
     ],
   },

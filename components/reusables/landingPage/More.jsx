@@ -14,7 +14,7 @@ const More = () => {
         <div key={link.name}>
           <div className=" text-left md:cursor-pointer group">
             <h1
-              className="py-7 flex justify-between items-center md:pr-0 pr-5 font-semibold text-xl group"
+              className="py-7 flex justify-between items-center md:pr-0 pr-5 font-semibold text-lg group"
               onClick={() => {
                 setHeading(heading !== link.name ? link.name : "");
               }}
