@@ -39,7 +39,7 @@ const StyledImage = styled(Image)`
 
 const ContentContainer = styled.div.attrs({
   className:
-    "w-full relative lg:w-1/2 flex flex-col justify-between p-4 bg-transparent transition-opacity duration-500 ease-in-out",
+    "w-full relative h-full lg:w-1/2 flex flex-col justify-between p-4 bg-transparent transition-opacity duration-500 ease-in-out",
 })`
   opacity: ${({ isactive }) => (isactive ? 1 : 0)};
   transition: opacity 0.5s ease-in-out;
@@ -95,20 +95,6 @@ const Carousel = ({ slides }) => {
 
   return (
     <CarouselContainer>
-      <SlideContainer>
-        <SlideWrapper currentSlide={currentSlide}>
-          {slides.map((slide, index) => (
-            <ImageWrapper key={index}>
-              <StyledImage
-                src={slide?.add_on_image}
-                alt={slide?.title}
-                width={300}
-                height={300}
-              />
-            </ImageWrapper>
-          ))}
-        </SlideWrapper>
-      </SlideContainer>
       <ContentContainer isactive={true}>
         <TextContent>
           <h1 className="text-2xl lg:text-4xl font-semibold">Course add-ons</h1>
@@ -128,6 +114,20 @@ const Carousel = ({ slides }) => {
           </Button>
         </NavigationButtons>
       </ContentContainer>
+      <SlideContainer>
+        <SlideWrapper currentSlide={currentSlide}>
+          {slides.map((slide, index) => (
+            <ImageWrapper key={index}>
+              <StyledImage
+                src={slide?.add_on_image}
+                alt={slide?.title}
+                width={300}
+                height={300}
+              />
+            </ImageWrapper>
+          ))}
+        </SlideWrapper>
+      </SlideContainer>
       <DotsContainer>
         {slides.map((_, index) => (
           <Dot

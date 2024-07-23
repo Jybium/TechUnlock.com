@@ -20,7 +20,7 @@ import { Card, CardContent } from "@/components/ui/card";
 import { Input } from "@/components/ui/input";
 import Link from "next/link";
 import formSchema from "@/schema/Signin";
-import { ArrowLeft } from "lucide-react";
+import { ArrowLeft, Eye, EyeOff } from "lucide-react";
 import { signIn } from "@/services/authentication";
 import { showErrorToast, showSuccessToast } from "@/helpers/toastUtil";
 
@@ -33,6 +33,7 @@ const LoadingSpinner = dynamic(
 );
 
 const SignInForm = () => {
+  const [showPassword, setShowPassword] = useState(false);
   const [isLoading, setIsLoading] = useState(false);
   const [isOnline, setIsOnline] = useState(true);
   const router = useRouter();
@@ -146,11 +147,19 @@ const SignInForm = () => {
                       <FormItem>
                         <FormLabel>Password</FormLabel>
                         <FormControl>
-                          <Input
-                            type="password"
-                            placeholder="Enter your password"
-                            {...field}
-                          />
+                          <div className="relative">
+                            <Input
+                              type={showPassword ? "text" : "password"}
+                              placeholder="Enter your password"
+                              {...field}
+                            />
+                            <span
+                              className="absolute right-3 bottom-2"
+                              onClick={() => setShowPassword(!showPassword)}
+                            >
+                              {showPassword ? <Eye /> : <EyeOff />}
+                            </span>
+                          </div>
                         </FormControl>
                         <FormMessage className="text-red-500" />
                       </FormItem>

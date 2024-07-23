@@ -23,11 +23,12 @@ import { Card, CardContent } from "@/components/ui/card";
 import { Input } from "@/components/ui/input";
 import formSchema from "@/schema/Reset";
 import LoadingSpinner from "@/components/reusables/LoadingSpinner";
-import { ArrowLeft } from "lucide-react";
+import { ArrowLeft, Eye, EyeOff } from "lucide-react";
 import { showErrorToast, showSuccessToast } from "@/helpers/toastUtil";
 import { resetPassword } from "@/services/authentication";
 
 export default function ResetPasswordForm({ id }) {
+  const [showPassword, setShowPassword] = useState(false);
   const [isLoading, setIsLoading] = useState(false);
   const [isOnline, setIsOnline] = useState(true);
 
@@ -107,11 +108,19 @@ export default function ResetPasswordForm({ id }) {
                       <FormItem>
                         <FormLabel>Enter new paswword</FormLabel>
                         <FormControl>
-                          <Input
-                            type="password"
-                            placeholder="Enter password"
-                            {...field}
-                          />
+                          <div className="relative">
+                            <Input
+                              type={showPassword ? "text" : "password"}
+                              placeholder="Enter password"
+                              {...field}
+                            />
+                            <span
+                              className="absolute right-3 bottom-2"
+                              onClick={() => setShowPassword(!showPassword)}
+                            >
+                              {showPassword ? <Eye /> : <EyeOff />}
+                            </span>
+                          </div>
                         </FormControl>
                         <FormMessage className="text-red-500" />
                       </FormItem>
@@ -131,11 +140,19 @@ export default function ResetPasswordForm({ id }) {
                       <FormItem>
                         <FormLabel>Confirm paswword</FormLabel>
                         <FormControl>
-                          <Input
-                            type="password"
-                            placeholder="Confirm password"
-                            {...field}
-                          />
+                          <div className="relative">
+                            <Input
+                              type={showPassword ? "text" : "password"}
+                              placeholder="Confirm password"
+                              {...field}
+                            />
+                            <span
+                              className="absolute right-3 bottom-2"
+                              onClick={() => setShowPassword(!showPassword)}
+                            >
+                              {showPassword ? <Eye /> : <EyeOff />}
+                            </span>
+                          </div>
                         </FormControl>
                         <FormMessage />
                       </FormItem>

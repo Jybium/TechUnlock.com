@@ -1,13 +1,103 @@
 "use client";
 
-import React from "react";
+import React, { useEffect, useState } from "react";
 import logo from "@/assets/images/logo.svg";
 import { Button } from "@/components/ui/button";
 import Image from "next/image";
-import { useRouter } from "next/navigation";
+import { usePathname, useRouter } from "next/navigation";
+import { fetchToken } from "@/helpers/getToken";
+import axios from "axios";
+import LoadingSpinner from "@/components/reusables/LoadingSpinner";
+import { getCourses } from "@/services/course";
+import { removeToken } from "@/helpers/removeToken";
 
 const Page = () => {
+  const [course, setCourses] = useState();
+  const [token, setToken] = useState("");
+  const [id, setId] = useState();
+  const [loading, setLoading] = useState(true);
+  const [accountDetails, setAccountDetails] = useState(null);
+
   const router = useRouter();
+  const pathname = usePathname();
+
+  useEffect(() => {
+    const id = sessionStorage.getItem("course_id");
+    setId(id);
+  }, []);
+
+  useEffect(() => {
+    const fetchTokens = async () => {
+      const token = await fetchToken();
+      if (token) {
+        setToken(token);
+        fetchAccountDetails(token);
+      } else {
+        setToken("");
+      }
+    };
+
+    fetchTokens();
+  }, []);
+
+  useEffect(() => {
+    const fetchCourses = async () => {
+      try {
+        const data = await getCourses();
+        const response = data.filter((item) => item.id === +id);
+        setCourses(response[0]);
+      } catch (error) {
+        console.error("Error fetching courses:", error.message);
+      }
+    };
+
+    fetchCourses();
+  }, [id]);
+
+  const fetchAccountDetails = async (token) => {
+    try {
+      setLoading(true);
+      const response = await axios.get(
+        "https://techunlock.pythonanywhere.com/account/account-details/",
+        {
+          headers: {
+            Authorization: `Bearer ${token}`,
+          },
+        }
+      );
+      setAccountDetails(response.data);
+    } catch (error) {
+      if (error.response?.status === 401 || error.response?.status === 400) {
+        handleInvalidToken();
+      } else {
+        console.error("Failed to fetch account details:", error);
+        // Optionally handle other errors
+      }
+    } finally {
+      setLoading(false);
+    }
+  };
+
+  const handleInvalidToken = () => {
+    // Remove token and redirect to login if pathname matches
+    if (
+      pathname.includes("pay") ||
+      pathname.includes("register") ||
+      pathname.includes("verify")
+    ) {
+      removeToken().then(() => {
+        router.push("/login");
+      });
+    } else {
+      // Optionally, handle other cases if needed
+      removeToken();
+    }
+  };
+
+  if (loading) {
+    return <LoadingSpinner />;
+  }
+
   return (
     <div className="my-6">
       <div className="w-5/6 md:w-4/6 mx-auto space-y-6">
@@ -19,11 +109,14 @@ const Page = () => {
           <Image src={logo} alt="Logo" className="" />
 
           <div className="grid gap-y-4 text-sm">
-            <h3 className="">Dear John,</h3>
+            <h3 className="">Dear {accountDetails?.first_name},</h3>
             <p className="">
               Thank you for applying for the virtual classes on{" "}
-              <span className="text-pri10 font-semibold">UI/UX Design </span>
-              <span className="text-pri10 font-semibold">Advanced</span> Course!
+              <span className="text-pri10 font-semibold">{course?.title} </span>
+              <span className="text-pri10 font-semibold">
+                {course?.difficulty}
+              </span>{" "}
+              Course!
             </p>
             <div className="space-y-5">
               <p className="">

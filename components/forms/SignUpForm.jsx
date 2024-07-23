@@ -22,11 +22,12 @@ import { Input } from "@/components/ui/input";
 import formSchema from "@/schema/Signup";
 import Logo from "@/components/reusables/Logo";
 import LoadingSpinner from "@/components/reusables/LoadingSpinner";
-import { ArrowLeft } from "lucide-react";
+import { ArrowLeft, Eye, EyeOff } from "lucide-react";
 import { signUp } from "@/services/authentication";
 import { showErrorToast, showSuccessToast } from "@/helpers/toastUtil";
 
 const SignUpForm = () => {
+  const [showPassword, setShowPassword] = useState(false);
   const [isLoading, setIsLoading] = useState(false);
   const [isOnline, setIsOnline] = useState(true);
 
@@ -74,7 +75,7 @@ const SignUpForm = () => {
         showSuccessToast(result.message || "Account login successfully.");
         router.push("/courses");
       } catch (error) {
-        showErrorToast("check credentials and try again");
+        showErrorToast(error.message || "An error occurred. Please try again.");
       } finally {
         setIsLoading(false);
       }
@@ -184,14 +185,22 @@ const SignUpForm = () => {
                       <FormItem>
                         <FormLabel>Password</FormLabel>
                         <FormControl>
-                          <Input
-                            type="password"
-                            placeholder="Enter your password"
-                            {...field}
-                            onChange={(e) => {
-                              field.onChange(e);
-                            }}
-                          />
+                          <div className="relative">
+                            <Input
+                              type={showPassword ? "text" : "password"}
+                              placeholder="Enter your password"
+                              {...field}
+                              onChange={(e) => {
+                                field.onChange(e);
+                              }}
+                            />
+                            <span
+                              className="absolute right-3 bottom-2"
+                              onClick={() => setShowPassword(!showPassword)}
+                            >
+                              {showPassword ? <Eye /> : <EyeOff />}
+                            </span>
+                          </div>
                         </FormControl>
                         <FormMessage className="text-red-500" />
                       </FormItem>
@@ -211,14 +220,23 @@ const SignUpForm = () => {
                       <FormItem>
                         <FormLabel>Confirm password</FormLabel>
                         <FormControl>
-                          <Input
-                            type="password"
-                            placeholder="Confirm your password"
-                            {...field}
-                            onChange={(e) => {
-                              field.onChange(e);
-                            }}
-                          />
+                          <div className="relative">
+                            <Input
+                              type={showPassword ? "text" : "password"}
+                              placeholder="Confirm your password"
+                              {...field}
+                              onChange={(e) => {
+                                field.onChange(e);
+                              }}
+                            />
+
+                            <span
+                              className="absolute right-3 bottom-2"
+                              onClick={() => setShowPassword(!showPassword)}
+                            >
+                              {showPassword ? <Eye /> : <EyeOff />}
+                            </span>
+                          </div>
                         </FormControl>
                         <FormMessage className="text-red-500" />
                       </FormItem>

@@ -19,7 +19,6 @@ import Link from "next/link";
 const BASE_URL = "https://techunlock.pythonanywhere.com";
 
 const Success = () => {
-  const { id } = useParams();
   const params = useSearchParams();
   const successRef = useRef("");
   const [loading, setLoading] = useState(true);
@@ -28,6 +27,8 @@ const Success = () => {
   const [status, setStatus] = useState("");
   const [message, setMessage] = useState("");
   const router = useRouter();
+
+  const id = sessionStorage.getItem("course_id");
 
   const fullCategoryName = categoryMap[Courses?.category] || Courses?.category;
 

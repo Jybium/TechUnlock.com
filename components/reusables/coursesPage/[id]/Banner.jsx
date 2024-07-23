@@ -75,7 +75,7 @@ const Banner = ({ course }) => {
                 <p className="">
                   {course?.title}{" "}
                   <span>
-                    {!course?.is_paid
+                    {!course?.price
                       ? "(Free)"
                       : `(# ${Number(course?.price).toFixed(0)})`}
                   </span>
