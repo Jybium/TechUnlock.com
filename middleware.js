@@ -53,7 +53,6 @@ export async function middleware(request) {
   if (
     pathname.includes("register") ||
     pathname.includes("pay") ||
-    pathname.includes("verify") ||
     pathname.startsWith("/dashboard")
   ) {
     if (!token) {
