@@ -26,13 +26,10 @@ export async function middleware(request) {
     console.log("Token extracted from session storage header:", token);
   }
 
-  // Function to redirect to login with redirect URL parameter and optional trxref
-  const redirectToLogin = (trxref = null) => {
+  // Function to redirect to login with redirect URL parameter
+  const redirectToLogin = () => {
     url.pathname = loginRoute;
     url.searchParams.set("redirect", pathname);
-    if (trxref) {
-      url.searchParams.set("trxref", trxref);
-    }
     console.log("Redirecting to login with URL:", url.toString());
     return NextResponse.redirect(url);
   };
@@ -42,7 +39,11 @@ export async function middleware(request) {
     const trxref = url.searchParams.get("trxref");
 
     if (!token) {
-      return redirectToLogin(trxref);
+      // Allow the request to proceed even if the token is not present
+      console.log(
+        "No token found, but proceeding with the request to /courses/verify"
+      );
+      return NextResponse.next();
     }
 
     // Skip token validation and continue with the request
