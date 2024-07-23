@@ -34,7 +34,7 @@ const FeedbackCard = ({ course, image }) => {
             <h3 className="font-normal text-base">
               This is the best beginner friendly course I have ever enrolled
               for. From the tutors down to the conducive learning environment,
-              every was just made for seamless interaction.
+              everything was just made for seamless interaction.
             </h3>
 
             <p className="text-right">”</p>

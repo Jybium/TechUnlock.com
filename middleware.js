@@ -8,20 +8,29 @@ export async function middleware(request) {
   const loginRoute = "/login";
 
   // Extract the token from the cookies
-  const token = request.cookies.get("access_token")?.value;
+  let token = request.cookies.get("access_token")?.value;
+
+  // Check if the token is in the query parameters
+  if (!token) {
+    token = url.searchParams.get("token");
+  }
+
+  // Function to redirect to login with redirect URL parameter and optional trxref
+  const redirectToLogin = (trxref = null) => {
+    url.pathname = loginRoute;
+    url.searchParams.set("redirect", pathname);
+    if (trxref) {
+      url.searchParams.set("trxref", trxref);
+    }
+    return NextResponse.redirect(url);
+  };
 
   // Handle /courses/verify route specifically
   if (pathname === "/courses/verify") {
     const trxref = url.searchParams.get("trxref");
 
     if (!token) {
-      // Redirect to login if no token found, with redirect URL parameter and trxref
-      url.pathname = loginRoute;
-      url.searchParams.set("redirect", pathname);
-      if (trxref) {
-        url.searchParams.set("trxref", trxref);
-      }
-      return NextResponse.redirect(url);
+      return redirectToLogin(trxref);
     }
 
     try {
@@ -38,24 +47,14 @@ export async function middleware(request) {
       if (response.ok) {
         // Continue with the request
         return NextResponse.next();
-      } else if (response.status === 401 || response.status === 400) {
+      } else {
         // Redirect to login on unauthorized or bad request, with redirect URL parameter and trxref
-        url.pathname = loginRoute;
-        url.searchParams.set("redirect", pathname);
-        if (trxref) {
-          url.searchParams.set("trxref", trxref);
-        }
-        return NextResponse.redirect(url);
+        return redirectToLogin(trxref);
       }
     } catch (error) {
       // Handle fetch errors
       console.error("Token validation failed:", error);
-      url.pathname = loginRoute;
-      url.searchParams.set("redirect", pathname);
-      if (trxref) {
-        url.searchParams.set("trxref", trxref);
-      }
-      return NextResponse.redirect(url);
+      return redirectToLogin(trxref);
     }
   }
 
@@ -67,10 +66,7 @@ export async function middleware(request) {
     pathname.startsWith("/dashboard")
   ) {
     if (!token) {
-      // Redirect to login if no token found, with redirect URL parameter
-      url.pathname = loginRoute;
-      url.searchParams.set("redirect", pathname);
-      return NextResponse.redirect(url);
+      return redirectToLogin();
     }
 
     try {
@@ -87,18 +83,14 @@ export async function middleware(request) {
       if (response.ok) {
         // Continue with the request
         return NextResponse.next();
-      } else if (response.status === 401 || response.status === 400) {
+      } else {
         // Redirect to login on unauthorized or bad request, with redirect URL parameter
-        url.pathname = loginRoute;
-        url.searchParams.set("redirect", pathname);
-        return NextResponse.redirect(url);
+        return redirectToLogin();
       }
     } catch (error) {
       // Handle fetch errors
       console.error("Token validation failed:", error);
-      url.pathname = loginRoute;
-      url.searchParams.set("redirect", pathname);
-      return NextResponse.redirect(url);
+      return redirectToLogin();
     }
   }
 
