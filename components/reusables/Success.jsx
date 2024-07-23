@@ -59,6 +59,12 @@ const Success = () => {
 
         const data = await response.json();
         console.log(data);
+
+        if (response.status === 400 || response.status === 401) {
+          router.push("/login");
+          return;
+        }
+
         if (
           data.message.includes("success") ||
           data.message.includes("verified")
