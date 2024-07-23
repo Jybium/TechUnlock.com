@@ -20,6 +20,7 @@ export async function middleware(request) {
 
   // Add a new header to check for token in session storage
   const tokenFromHeader = request.headers.get("x-access-token");
+  console.log("Token extracted from session storage header:", tokenFromHeader);
   if (!token && tokenFromHeader) {
     token = tokenFromHeader;
     console.log("Token extracted from session storage header:", token);
@@ -36,7 +37,7 @@ export async function middleware(request) {
     return NextResponse.redirect(url);
   };
 
-  // Handle /courses/verify route specifically
+  // Handle /courses/verify route specifically for redirects and search parameter extraction
   if (pathname === "/courses/verify") {
     const trxref = url.searchParams.get("trxref");
 
@@ -44,31 +45,8 @@ export async function middleware(request) {
       return redirectToLogin(trxref);
     }
 
-    try {
-      // Send the request to the server to check token validity
-      const response = await fetch(request.url, {
-        method: request.method,
-        headers: {
-          ...Object.fromEntries(request.headers.entries()),
-          Authorization: `Bearer ${token}`,
-        },
-        body: request.body,
-      });
-
-      if (response.ok) {
-        console.log("Token validation successful");
-        // Continue with the request
-        return NextResponse.next();
-      } else {
-        console.log("Token validation failed with status:", response.status);
-        // Redirect to login on unauthorized or bad request, with redirect URL parameter and trxref
-        return redirectToLogin(trxref);
-      }
-    } catch (error) {
-      // Handle fetch errors
-      console.error("Token validation failed with error:", error);
-      return redirectToLogin(trxref);
-    }
+    // Skip token validation and continue with the request
+    return NextResponse.next();
   }
 
   // General handling for other protected routes
