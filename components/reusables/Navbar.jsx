@@ -128,9 +128,7 @@ const Navbar = () => {
         </p>
       </div>
       <div className="hidden lg:block">
-        {loading ? (
-          " "
-        ) : token && Object.entries(token).length !== 0 ? (
+        {token && Object.entries(token).length !== 0 ? (
           <div className="relative">
             <div
               onClick={toggleMenu}
@@ -200,9 +198,7 @@ const Navbar = () => {
 
           <More onclick={handleNavLinkClick} />
 
-          {loading ? (
-            " "
-          ) : token && Object.entries(token).length !== 0 ? (
+          {token && Object.entries(token).length !== 0 ? (
             <div className="relative">
               <div
                 onClick={toggleMenu}
