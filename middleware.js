@@ -13,6 +13,16 @@ export async function middleware(request) {
   // Check if the token is in the query parameters
   if (!token) {
     token = url.searchParams.get("token");
+    console.log("Token extracted from URL:", token);
+  } else {
+    console.log("Token extracted from cookies:", token);
+  }
+
+  // Add a new header to check for token in session storage
+  const tokenFromHeader = request.headers.get("x-access-token");
+  if (!token && tokenFromHeader) {
+    token = tokenFromHeader;
+    console.log("Token extracted from session storage header:", token);
   }
 
   // Function to redirect to login with redirect URL parameter and optional trxref
@@ -22,6 +32,7 @@ export async function middleware(request) {
     if (trxref) {
       url.searchParams.set("trxref", trxref);
     }
+    console.log("Redirecting to login with URL:", url.toString());
     return NextResponse.redirect(url);
   };
 
@@ -45,15 +56,17 @@ export async function middleware(request) {
       });
 
       if (response.ok) {
+        console.log("Token validation successful");
         // Continue with the request
         return NextResponse.next();
       } else {
+        console.log("Token validation failed with status:", response.status);
         // Redirect to login on unauthorized or bad request, with redirect URL parameter and trxref
         return redirectToLogin(trxref);
       }
     } catch (error) {
       // Handle fetch errors
-      console.error("Token validation failed:", error);
+      console.error("Token validation failed with error:", error);
       return redirectToLogin(trxref);
     }
   }
@@ -81,15 +94,17 @@ export async function middleware(request) {
       });
 
       if (response.ok) {
+        console.log("Token validation successful");
         // Continue with the request
         return NextResponse.next();
       } else {
+        console.log("Token validation failed with status:", response.status);
         // Redirect to login on unauthorized or bad request, with redirect URL parameter
         return redirectToLogin();
       }
     } catch (error) {
       // Handle fetch errors
-      console.error("Token validation failed:", error);
+      console.error("Token validation failed with error:", error);
       return redirectToLogin();
     }
   }

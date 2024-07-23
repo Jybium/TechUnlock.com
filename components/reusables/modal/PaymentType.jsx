@@ -50,6 +50,7 @@ const PaymentTypeSelect = () => {
         showSuccessToast(
           "Successfully, you are now being redirected to the payment page"
         );
+        sessionStorage.setItem("access_token", token);
         // Redirect to payment confirmation page if successful
         window.location.href = `${response?.data?.authorization_url}?token=${token}`;
       }
