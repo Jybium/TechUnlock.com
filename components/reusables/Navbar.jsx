@@ -92,6 +92,10 @@ const Navbar = () => {
     window.location.href = "/";
   };
 
+  const handleNavLinkClick = () => {
+    setIsMobileMenuOpen(false);
+  };
+
   return (
     <nav className="flex items-center justify-around bg-pri1 font-sora py-4 lg:py-2 rounded-md">
       <Link href="/">
@@ -130,7 +134,7 @@ const Navbar = () => {
           <div className="relative">
             <div
               onClick={toggleMenu}
-              className="flex gap-x-3 items-center shadow rounded-md border border-sec10 py-2 px-4 bg-white"
+              className="flex gap-x-3 items-center shadow rounded-md border border-sec10 py-2 px-4 bg-white cursor-pointer"
             >
               <p className="flex items-center capitalize">
                 {accountDetails?.first_name} {accountDetails?.last_name}
@@ -179,14 +183,22 @@ const Navbar = () => {
           <Link
             href="/about-us"
             className="text-xl font-semibold cursor-pointer"
+            onClick={handleNavLinkClick}
           >
             About
           </Link>
-          <Programs />
-          <Link href="/faqs" className="text-xl font-semibold cursor-pointer">
+
+          <Programs onclick={handleNavLinkClick} />
+
+          <Link
+            href="/faqs"
+            className="text-xl font-semibold cursor-pointer"
+            onClick={handleNavLinkClick}
+          >
             FAQs
           </Link>
-          <More />
+
+          <More onclick={handleNavLinkClick} />
 
           {loading ? (
             " "
@@ -194,7 +206,7 @@ const Navbar = () => {
             <div className="relative">
               <div
                 onClick={toggleMenu}
-                className="flex gap-x-3 w-fit items-center shadow rounded-md border border-sec10 py-2 px-4 bg-white"
+                className="flex gap-x-3 w-fit items-center shadow rounded-md border border-sec10 py-2 px-4 bg-white cursor-pointer"
               >
                 <p className="flex items-center capitalize">
                   {accountDetails?.first_name} {accountDetails?.last_name}

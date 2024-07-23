@@ -5,7 +5,7 @@ import { Mor } from "@/data/Links";
 import { ChevronUp } from "lucide-react";
 import Link from "next/link";
 
-const More = () => {
+const More = ({ onclick }) => {
   const [heading, setHeading] = useState("");
 
   return (
@@ -38,11 +38,15 @@ const More = () => {
                       } my-2 relative`}
                       key={slink.name}
                       disabled={slink.isComing === true}
+                      onClick={onclick}
                     >
                       <Link
-                        href={`${slink.url}`}
-                        className="text-sec10"
-                        disabled={slink.isComing}
+                        href={slink.isComing ? "#" : slink.url}
+                        className={`text-sec10 ${
+                          slink.isComing ? "cursor-not-allowed opacity-50" : ""
+                        }`}
+                        onClick={(e) => slink.isComing && e.preventDefault()}
+                        disabled={slink.isComing === true}
                       >
                         {slink.name}
                       </Link>

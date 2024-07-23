@@ -5,7 +5,7 @@ import { Prog } from "@/data/Links";
 import { ChevronUp } from "lucide-react";
 import Link from "next/link";
 
-const Programs = () => {
+const Programs = ({ onclick }) => {
   const [heading, setHeading] = useState("");
 
   return (
@@ -34,10 +34,11 @@ const Programs = () => {
                     <li
                       className={`${
                         slink.isComing &&
-                        "cursor-not-allowed flex justify-between items-center"
+                        "cursor-not-allowed flex justify-between items-center gap-x-5"
                       } my-2 relative`}
                       key={slink.name}
                       disabled={slink.isComing}
+                      onClick={onclick}
                     >
                       <Link
                         href={slink.isComing ? "#" : slink.url}
