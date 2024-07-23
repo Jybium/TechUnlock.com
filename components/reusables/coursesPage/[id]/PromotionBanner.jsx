@@ -1,7 +1,13 @@
+"use client";
+
 import { Button } from "@/components/ui/button";
+import { useParams, useRouter } from "next/navigation";
 import React from "react";
 
 const PromotionBanner = () => {
+  const { id } = useParams();
+  const router = useRouter();
+
   return (
     <div className="relative bg-pri10 w-[90%] mx-auto mb-[3rem] rounded z-40">
       <div className="flex flex-col items-center justify-center py-5 gap-y-7 w-5/6 mx-auto text-center">
@@ -14,7 +20,10 @@ const PromotionBanner = () => {
           information.
         </p>
 
-        <Button className="px-6 py-2 rounded-xl bg-[#2FB3E3] text-pri1 font-medium header-button">
+        <Button
+          className="px-6 py-2 rounded-xl bg-[#2FB3E3] text-pri1 font-medium header-button"
+          onClick={() => router.push(`/courses/${id}/pay`)}
+        >
           Enroll for our physical class
         </Button>
       </div>

@@ -27,7 +27,7 @@ const TabsComponent = ({ data }) => {
           </button>
         ))}
       </div>
-      <div className="tab-content mt-4 md:mt-0 md:w-3/5">
+      <div className="tab-content mt-8 md:mt-0 md:w-3/5">
         <Accordion items={data[activeTab].questions} />
       </div>
     </div>

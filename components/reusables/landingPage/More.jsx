@@ -34,7 +34,7 @@ const More = () => {
                     <li
                       className={`${
                         slink.isComing &&
-                        "cursor-not-allowed flex justify-between items-center"
+                        "cursor-not-allowed flex gap-x-5 justify-between items-center"
                       } my-2 relative`}
                       key={slink.name}
                       disabled={slink.isComing === true}
@@ -47,7 +47,9 @@ const More = () => {
                         {slink.name}
                       </Link>
                       {slink.isComing && (
-                        <p className="text-xs animate-pulse">coming soon</p>
+                        <p className="text-xs md:text-[10px] animate-pulse">
+                          coming soon
+                        </p>
                       )}
                     </li>
                   ))}

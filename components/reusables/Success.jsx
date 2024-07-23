@@ -43,7 +43,7 @@ const Success = () => {
     };
 
     fetchCourses();
-  }, [id]);
+  }, [id, Courses]);
 
   useEffect(() => {
     const reference = params.get("trxref");
@@ -149,7 +149,7 @@ const Success = () => {
                 If your account has been debited, please contact our support
                 service with clear proof at{" "}
                 <Link className="text-primary" passHref legacyBehavior>
-                  <a href="mailto:info@techunlock.com">info@techunlock.com</a>
+                  <a href="mailto:info@techunlock.com">admin@techunlock.com</a>
                 </Link>{" "}
                 if the reversal does not occur within 24 hours.
               </div>
