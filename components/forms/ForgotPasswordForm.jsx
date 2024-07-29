@@ -69,14 +69,17 @@ const ForgotPasswordForm = () => {
         setIsLoading(true);
         const result = await forgotPassword(values);
         showSuccessToast(
-          result.message || "Please check your email for further instructions"
+          result.message ||
+            "If you have an account, a mail has been sent to your registered email address"
         );
 
         setTimeout(() => {
           router.push("/success");
         }, 3000);
       } catch (error) {
-        showErrorToast(error.message || "An error occurred. Please try again.");
+        showSuccessToast(
+          "If you have an account, a mail has been sent to your registered email address"
+        );
       } finally {
         setIsLoading(false);
       }

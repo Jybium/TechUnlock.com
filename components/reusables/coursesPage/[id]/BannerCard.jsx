@@ -37,13 +37,13 @@ export const BannerCard = ({ courses }) => {
     {
       id: 1,
       image:
-        courses.category === "UI/UX"
+        courses?.category === "UI/UX"
           ? UICard
-          : courses.category === "WEB"
+          : courses?.category === "WEB"
           ? webDev
-          : courses.category === "CYBER"
+          : courses?.category === "CYBER"
           ? cyberSec
-          : courses.category === "DM"
+          : courses?.category === "DM"
           ? DMCard
           : AI,
       option: "pace",
@@ -77,7 +77,7 @@ export const BannerCard = ({ courses }) => {
   };
 
   return (
-    <div className="relative w-full max-w-4xl mx-auto bg-[#FFFFFF]/20 rounded-md drop-shadow-lg backdrop-blur-lg px-3 py-2 border border-gray-900">
+    <div className="relative w-full max-w-3xl mx-auto bg-[#FFFFFF]/20 rounded-md drop-shadow-lg backdrop-blur-lg px-3 py-2 border border-gray-900">
       {/* Images */}
       <div className="relative h-52">
         {Images.map((imageObj, index) => (
@@ -123,7 +123,7 @@ export const BannerCard = ({ courses }) => {
           <div className="flex items-center space-x-4">
             <RadioGroupItem value="pace" id="pace" />
             <Label htmlFor="pace" className={getLabelClass("pace")}>
-              {courses?.difficulty} class
+              <span className="capitalize">{courses?.difficulty}</span> class
             </Label>
           </div>
           <div className="flex items-center space-x-4">

@@ -4,7 +4,7 @@ import image from "@/assets/images/main1.svg";
 function Main() {
   return (
     <main className="p-4 pb-0 my-10 lg:my-16">
-      <h2 className="lg:text-5xl text-left mb-10  w-[90%] mx-auto mr-auto text-3xl font-bold text-darkblue">
+      <h2 className="lg:text-3xl text-left mb-10  w-[90%] mx-auto mr-auto text-3xl font-bold text-darkblue">
         Multiplying <span className="text-primary">skilled tech</span> talents
         in Africa
       </h2>

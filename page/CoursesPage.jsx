@@ -1,6 +1,7 @@
 "use client";
 
 import React, { useEffect } from "react";
+import { useCourses } from "@/Context/courses";
 import SearchBar from "@/components/reusables/coursesPage/SearchBar";
 import FilterBar from "@/components/reusables/coursesPage/FilterBar";
 import { useRouter, useSearchParams } from "next/navigation";
@@ -10,10 +11,9 @@ import { getCourses } from "@/services/course";
 import LoadingSpinner from "@/components/reusables/LoadingSpinner";
 
 const CoursesPage = () => {
+  const { courses, loading } = useCourses();
   const [search, setSearch] = React.useState("");
-  const [loading, setLoading] = React.useState(true);
   const [filter, setFilter] = React.useState("");
-  const [courses, setCourses] = React.useState([]);
   const [filteredCourses, setFilteredCourses] = React.useState([]);
   const searchParams = useSearchParams();
 
@@ -22,20 +22,8 @@ const CoursesPage = () => {
   const categoryFilter = searchParams.get("category") || "all";
 
   useEffect(() => {
-    const fetchCourses = async () => {
-      try {
-        const data = await getCourses();
-        setCourses(data);
-        setFilteredCourses(data);
-      } catch (error) {
-        console.error("Error fetching courses:", error.message);
-      } finally {
-        setLoading(false);
-      }
-    };
-
-    fetchCourses();
-  }, []);
+    setFilteredCourses(courses);
+  }, [courses]);
 
   useEffect(() => {
     const filtered = courses.filter((course) => {

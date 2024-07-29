@@ -1,9 +1,9 @@
 "use client";
 
 import React, { useState, useEffect, useRef } from "react";
+import { useCourses } from "@/Context/courses";
 import { useRouter } from "next/navigation";
 import LoadingSpinner from "./LoadingSpinner";
-import { getCourses } from "@/services/course";
 import { useSearchParams } from "next/navigation";
 import image from "@/assets/images/logo.svg";
 
@@ -20,7 +20,9 @@ const BASE_URL = "https://techunlock.pythonanywhere.com";
 
 const Success = () => {
   const params = useSearchParams();
+  const { courses } = useCourses();
   const successRef = useRef("");
+  const [id, setId] = useState("");
   const [loading, setLoading] = useState(true);
   const [Courses, setCourses] = React.useState([]);
   const [reference, setReference] = useState("");
@@ -28,23 +30,17 @@ const Success = () => {
   const [message, setMessage] = useState("");
   const router = useRouter();
 
-  const id = sessionStorage.getItem("course_id");
+  useEffect(() => {
+    const id = sessionStorage.getItem("course_id");
+    setId(id);
+  }, []);
 
   const fullCategoryName = categoryMap[Courses?.category] || Courses?.category;
 
   useEffect(() => {
-    const fetchCourses = async () => {
-      try {
-        const data = await getCourses();
-        const response = data.filter((item) => item.id === +id);
-        setCourses(response[0]);
-      } catch (error) {
-        console.error("Error fetching courses:", error.message);
-      }
-    };
-
-    fetchCourses();
-  }, [id, Courses]);
+    const response = courses.filter((item) => item.id === +id);
+    setCourses(response[0]);
+  }, [id, courses]);
 
   useEffect(() => {
     const reference = params.get("trxref");

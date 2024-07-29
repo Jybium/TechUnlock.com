@@ -5,18 +5,17 @@ import logo from "@/assets/images/logo.svg";
 import { Button } from "@/components/ui/button";
 import Image from "next/image";
 import { usePathname, useRouter } from "next/navigation";
-import { fetchToken } from "@/helpers/getToken";
-import axios from "axios";
 import LoadingSpinner from "@/components/reusables/LoadingSpinner";
-import { getCourses } from "@/services/course";
 import { removeToken } from "@/helpers/removeToken";
+import { useAuth } from "@/Context/auth";
+import { useCourses } from "@/Context/courses";
 
 const Page = () => {
   const [course, setCourses] = useState();
-  const [token, setToken] = useState("");
+  const { courses } = useCourses();
   const [id, setId] = useState();
   const [loading, setLoading] = useState(true);
-  const [accountDetails, setAccountDetails] = useState(null);
+  const { auth } = useAuth();
 
   const router = useRouter();
   const pathname = usePathname();
@@ -27,56 +26,9 @@ const Page = () => {
   }, []);
 
   useEffect(() => {
-    const fetchTokens = async () => {
-      const token = await fetchToken();
-      if (token) {
-        setToken(token);
-        fetchAccountDetails(token);
-      } else {
-        setToken("");
-      }
-    };
-
-    fetchTokens();
-  }, []);
-
-  useEffect(() => {
-    const fetchCourses = async () => {
-      try {
-        const data = await getCourses();
-        const response = data.filter((item) => item.id === +id);
-        setCourses(response[0]);
-      } catch (error) {
-        console.error("Error fetching courses:", error.message);
-      }
-    };
-
-    fetchCourses();
+    const response = courses.filter((item) => item.id === +id);
+    setCourses(response[0]);
   }, [id]);
-
-  const fetchAccountDetails = async (token) => {
-    try {
-      setLoading(true);
-      const response = await axios.get(
-        "https://techunlock.pythonanywhere.com/account/account-details/",
-        {
-          headers: {
-            Authorization: `Bearer ${token}`,
-          },
-        }
-      );
-      setAccountDetails(response.data);
-    } catch (error) {
-      if (error.response?.status === 401 || error.response?.status === 400) {
-        handleInvalidToken();
-      } else {
-        console.error("Failed to fetch account details:", error);
-        // Optionally handle other errors
-      }
-    } finally {
-      setLoading(false);
-    }
-  };
 
   const handleInvalidToken = () => {
     // Remove token and redirect to login if pathname matches
@@ -109,7 +61,7 @@ const Page = () => {
           <Image src={logo} alt="Logo" className="" />
 
           <div className="grid gap-y-4 text-sm">
-            <h3 className="">Dear {accountDetails?.first_name},</h3>
+            <h3 className="">Dear {auth?.first_name},</h3>
             <p className="">
               Thank you for applying for the virtual classes on{" "}
               <span className="text-pri10 font-semibold">{course?.title} </span>

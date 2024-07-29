@@ -13,24 +13,21 @@ export async function middleware(request) {
   // Check if the token is in the query parameters
   if (!token) {
     token = url.searchParams.get("token");
-    console.log("Token extracted from URL:", token);
   } else {
-    console.log("Token extracted from cookies:", token);
   }
 
   // Add a new header to check for token in session storage
   const tokenFromHeader = request.headers.get("x-access-token");
-  console.log("Token extracted from session storage header:", tokenFromHeader);
+
   if (!token && tokenFromHeader) {
     token = tokenFromHeader;
-    console.log("Token extracted from session storage header:", token);
   }
 
   // Function to redirect to login with redirect URL parameter
   const redirectToLogin = () => {
     url.pathname = loginRoute;
     url.searchParams.set("redirect", pathname);
-    console.log("Redirecting to login with URL:", url.toString());
+
     return NextResponse.redirect(url);
   };
 

@@ -1,3 +1,5 @@
+"use client";
+
 import React from "react";
 import Image from "next/image";
 import { BannerCard } from "./BannerCard";
@@ -46,7 +48,7 @@ const Banner = ({ course }) => {
               : AIBanner
           }
           alt="course banner"
-          className="absolute top-0 left-0 w-full h-full object-cover opacity-40"
+          className="absolute top-0 left-0 w-full h-full object-cover opacity-20"
         />
 
         <div className="relative grid lg:flex lg:justify-between gap-x-6 lg:h-[60vh] w-[95%] mx-auto py-10 lg:py-0 lg:pb-10 gap-y-6 lg:gap-y-0">
@@ -58,7 +60,7 @@ const Banner = ({ course }) => {
               {course?.title}
             </h1>
 
-            <p className="text-xl">
+            <p className="text-lg">
               {course?.description === "UI/UX"
                 ? "Learn how to design user friendly digital products that work, in this intensive course. Understand the fundamentals of design processes and how you can transform user experiences through functional product designs."
                 : course?.description === "WEB"
@@ -71,8 +73,8 @@ const Banner = ({ course }) => {
             </p>
 
             <div className="lg:w-2/4 bg-[#FFFFFF]/40 backdrop-blur-lg drop-shadow-md px-5 py-3 rounded-md text-sm">
-              <div className="mb-4 flex justify-between">
-                <p className="">
+              <div className="mb-4 flex justify-between items-start">
+                <p className="text-sm">
                   {course?.title}{" "}
                   <span>
                     {!course?.price

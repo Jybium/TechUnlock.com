@@ -19,7 +19,99 @@ import ImageEight from "@/assets/course-page/feedback-7.jpg";
 import ImageNine from "@/assets/course-page/feedback-8.jpg";
 import ImageTen from "@/assets/course-page/feedback-9.jpg";
 
+const reviews = {
+  "UI/UX": [
+    {
+      name: "Bankole",
+      review:
+        "This training platform re-ignited my love for tech and I am happy to learn from brilliant tutors here on TechUnlock.",
+    },
+    {
+      name: "Davidson",
+      review:
+        "It is by far the best tech training academy I have learned from. I must say a big thank you to the tutors for their brilliance and skill.",
+    },
+    {
+      name: "Ayoola",
+      review:
+        "I learned more than just tech skills here. I learned to be a better marketer and entrepreneur.",
+    },
+  ],
+  WEB: [
+    {
+      name: "Godwin",
+      review:
+        "I will gladly recommend this training to anyone looking to skill up or even start a career in tech.",
+    },
+    {
+      name: "Chisom (Sickle Cell Warrior)",
+      review:
+        "I learned a skill that will always be with me and I will be able to use it to get a job remotely.",
+    },
+    {
+      name: "Olaitan",
+      review:
+        "There are many other learning platforms, but TechUnlock will take your learning journey personal and see to it that you grow.",
+    },
+  ],
+  CYBER: [
+    {
+      name: "Christopher",
+      review:
+        "I now know many ways to stay safe and secure my digital assets on the web, thanks to TechUnlock.",
+    },
+    {
+      name: "Rofiat",
+      review:
+        "Thank you TechUnlock. I passed my ISC2 international certified exams. I am now an intern at Cybervergent.",
+    },
+    {
+      name: "Nsikak",
+      review:
+        "It’s not just the training for me, it’s the collaboration, the opportunity, and the learning environment.",
+    },
+  ],
+  DM: [
+    {
+      name: "Petra",
+      review:
+        "Thank you TechUnlock Nigeria, I learned a new skill and I am already applying it in a real-life project.",
+    },
+    {
+      name: "Tolu",
+      review:
+        "Wow! I got exposed to an international project working with a well-experienced team, all thanks to TechUnlock.",
+    },
+    {
+      name: "Victoria",
+      review:
+        "The training facility was very convenient for me and my 9-month-old baby. The staff and trainers are very accommodating and professional.",
+    },
+  ],
+  default: [
+    {
+      name: "Adetola",
+      review:
+        "I wasn’t confident about my skillset before, but now, I am certain I can take up any task in development.",
+    },
+    {
+      name: "Ifeatu, student",
+      review:
+        "The exposure is great for students, newbies, and professionals at all levels.",
+    },
+  ],
+};
+
+const getRandomReview = (category) => {
+  const categoryReviews = reviews[category] || reviews["default"];
+  const randomIndex = Math.floor(Math.random() * categoryReviews.length);
+  return categoryReviews[randomIndex];
+};
+
 const FeedbackContainer = ({ course }) => {
+  const reviewOne = getRandomReview(course?.category);
+  const reviewTwo = getRandomReview(course?.category);
+
   return (
     <div className="relative mb-[2rem] lg:h-[60vh] lg:mb-[4rem]">
       <div className="absolute hidden lg:block -top-1/4 left-0 w-1/5 h-[60vh] overflow-hidden ">
@@ -49,33 +141,36 @@ const FeedbackContainer = ({ course }) => {
         <FeedbackCard
           course={course}
           image={
-            course.category === "UI/UX"
+            course?.category === "UI/UX"
               ? ImageOne
-              : course.category === "WEB"
+              : course?.category === "WEB"
               ? ImageFour
-              : course.category === "CYBER"
+              : course?.category === "CYBER"
               ? ImageTwo
-              : course.category === "DM"
+              : course?.category === "DM"
               ? ImageThree
               : ImageFive
           }
+          name={reviewOne?.name}
+          review={reviewOne?.review}
         />
         <FeedbackCard
           course={course}
           image={
-            course.category === "UI/UX"
+            course?.category === "UI/UX"
               ? ImageSix
-              : course.category === "WEB"
+              : course?.category === "WEB"
               ? ImageSeven
-              : course.category === "CYBER"
+              : course?.category === "CYBER"
               ? ImageEight
-              : course.category === "DM"
+              : course?.category === "DM"
               ? ImageNine
               : ImageTen
           }
+          name={reviewTwo?.name}
+          review={reviewTwo?.review}
         />
       </div>
-
       <div className="absolute hidden lg:block -bottom-1/2 right-0 w-1/5 h-[60vh] overflow-hidden ">
         <Image
           src={angleUp}

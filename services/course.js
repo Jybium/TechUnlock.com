@@ -76,3 +76,40 @@ export async function registerForCourse(paymentData) {
     return "An error occurred while initializing payment.";
   }
 }
+export async function getEnrolledCourses() {
+  const token = await fetchToken();
+  try {
+    const response = await axios.get(`${BASE_URL}/course/enrolled-courses/`, {
+      headers: {
+        Authorization: `Bearer ${token}`,
+      },
+      timeout: 5000,
+    });
+
+    if (response.status === 200) {
+      return response.data;
+    } else {
+      // Handle unexpected response status
+      console.error(`Unexpected response status: ${response.status}`);
+      return "An error occurred while getting enrolled courses.";
+    }
+  } catch (error) {
+    console.error("Error during getting enrolled course:", error);
+
+    if (error.response) {
+      // Server responded with a status other than 200 range
+      throw new Error(error.response.data.message || "An error occurred.");
+    } else if (error.request) {
+      // Request was made but no response received
+      throw new Error(
+        "No response received. Please check your network connection."
+      );
+    } else if (error instanceof z.ZodError) {
+      // Validation error
+      throw new Error(error.errors.map((err) => err.message).join(", "));
+    } else {
+      // Something else happened
+      throw new Error("An unexpected error occurred.");
+    }
+  }
+}
