@@ -18,7 +18,7 @@ const EnrolledCourseCard = ({ item }) => {
 
   return (
     <div className="bg-pri1 rounded-md shadow-md">
-      <div className="bg-pri1 w-fit p-2 rounded-md">
+      <div className="bg-pri1 w-fit p-2 rounded-md flex flex-col justify-between h-full">
         <div className="">
           <Image
             src={
@@ -34,7 +34,7 @@ const EnrolledCourseCard = ({ item }) => {
           />
         </div>
 
-        <div className="pl-3 grid lg:gap-y-6 gap-y-3 py-2">
+        <div className="pl-3 grid lg:gap-y-6 gap-y-3 py-2 h-full">
           <div className="flex justify-between items-center w-[90%] text-sm">
             <h1 className=" text-darkblue font-semibold text-base">
               {item?.title}

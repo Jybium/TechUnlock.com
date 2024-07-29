@@ -18,7 +18,6 @@ const Page = () => {
   const { auth } = useAuth();
 
   const router = useRouter();
-  const pathname = usePathname();
 
   useEffect(() => {
     const id = sessionStorage.getItem("course_id");
@@ -27,24 +26,9 @@ const Page = () => {
 
   useEffect(() => {
     const response = courses.filter((item) => item.id === +id);
-    setCourses(response[0]);
-  }, [id]);
 
-  const handleInvalidToken = () => {
-    // Remove token and redirect to login if pathname matches
-    if (
-      pathname.includes("pay") ||
-      pathname.includes("register") ||
-      pathname.includes("verify")
-    ) {
-      removeToken().then(() => {
-        router.push("/login");
-      });
-    } else {
-      // Optionally, handle other cases if needed
-      removeToken();
-    }
-  };
+    setCourses(response[0]);
+  }, [id, courses]);
 
   if (loading) {
     return <LoadingSpinner />;
@@ -53,7 +37,7 @@ const Page = () => {
   return (
     <div className="my-6">
       <div className="w-5/6 md:w-4/6 mx-auto space-y-6">
-        <h1 className="text-primary font-semibold text-4xl">
+        <h1 className="text-primary font-semibold text-2xl lg:text-3xl">
           TechUnlock <span className="text-sec10">course enrollment</span>
         </h1>
 
