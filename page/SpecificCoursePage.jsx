@@ -1,8 +1,8 @@
 "use client";
 
 import React, { useEffect } from "react";
+import { useCourses } from "@/Context/courses";
 import { useParams } from "next/navigation";
-import { getCourses } from "@/services/course";
 import Banner from "@/components/reusables/coursesPage/[id]/Banner";
 import Description from "@/components/reusables/coursesPage/[id]/Description";
 import Curriculum from "@/components/reusables/coursesPage/[id]/Curriculum";
@@ -13,23 +13,14 @@ import LoadingSpinner from "@/components/reusables/LoadingSpinner";
 
 const SpecificCoursePage = () => {
   const { id } = useParams();
+  const { courses, loading } = useCourses();
   const [Courses, setCourses] = React.useState([]);
-  const [loading, setLoading] = React.useState(true);
 
   useEffect(() => {
-    const fetchCourses = async () => {
-      try {
-        const data = await getCourses();
-        setCourses(data.filter((item) => item.id === +id));
-      } catch (error) {
-        console.error("Error fetching courses:", error.message);
-      } finally {
-        setLoading(false);
-      }
-    };
+    const response = courses.filter((item) => item.id === +id);
 
-    fetchCourses();
-  }, [id]);
+    setCourses(response);
+  }, [id, courses]);
 
   if (loading) {
     return <LoadingSpinner />;

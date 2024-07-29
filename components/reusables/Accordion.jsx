@@ -22,16 +22,35 @@ const AccordionItem = memo(({ item, index }) => {
     setIsOpen(!isOpen);
   };
 
-  // Function to convert HTML string into array of list items
+  // Function to parse HTML content and return JSX elements
   const parseContent = (content) => {
     if (!content) return [];
-    return content
-      .split("</p>")
-      .map((item) => item.replace("<p>• ", "").trim())
-      .filter((item) => item !== "");
+
+    const parser = new DOMParser();
+    const doc = parser.parseFromString(content, "text/html");
+
+    const lists = Array.from(doc.querySelectorAll("ul"));
+    const paragraphs = Array.from(doc.querySelectorAll("p"));
+
+    return (
+      <>
+        {lists.map((list, listIndex) => (
+          <ul key={listIndex} className="list-disc ml-6">
+            {Array.from(list.children).map((li, liIndex) => (
+              <li key={liIndex}>{li.textContent}</li>
+            ))}
+          </ul>
+        ))}
+        {paragraphs.map((paragraph, paragraphIndex) => (
+          <p key={paragraphIndex} className="ml-6">
+            {paragraph.textContent}
+          </p>
+        ))}
+      </>
+    );
   };
 
-  const listItems = parseContent(item?.description || item?.content);
+  const parsedContent = parseContent(item?.description || item?.content);
 
   return (
     <div className="border border-pri10 rounded">
@@ -61,11 +80,7 @@ const AccordionItem = memo(({ item, index }) => {
             className="overflow-hidden"
           >
             <div ref={contentRef} className="p-4 text-sm">
-              <ul className="list-disc ml-6">
-                {listItems.map((listItem, idx) => (
-                  <li key={idx}>{listItem}</li>
-                ))}
-              </ul>
+              {parsedContent}
             </div>
           </motion.div>
         )}

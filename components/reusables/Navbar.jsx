@@ -13,6 +13,9 @@ import { Menu, X } from "lucide-react";
 import { showSuccessToast } from "@/helpers/toastUtil";
 import axios from "axios";
 import { IoIosArrowDown, IoIosArrowUp } from "react-icons/io";
+import { CgProfile } from "react-icons/cg";
+
+import logout from "@/assets/landing-page/logout.svg";
 
 const Navbar = () => {
   const [token, setToken] = useState("");
@@ -84,6 +87,7 @@ const Navbar = () => {
 
   const toggleMenu = () => {
     setOpen(!Open);
+    setIsMobileMenuOpen(false);
   };
 
   const handleLogout = async () => {
@@ -127,6 +131,7 @@ const Navbar = () => {
           {token?.length !== 0 || Object.entries(token).length === 0}
         </p>
       </div>
+
       <div className="hidden lg:block">
         {token && Object.entries(token).length !== 0 ? (
           <div className="relative">
@@ -146,14 +151,26 @@ const Navbar = () => {
               </span>
             </div>
 
-            <p
+            <div
               className={`${
                 Open ? "block" : "hidden"
-              } absolute top-11 z-10 cursor-pointer text-red-500 px-4 py-2 bg-white rounded shadow drop-shadow`}
-              onClick={handleLogout}
+              } absolute top-12 z-40 cursor-pointer w-full text-red-500 px-4 py-2 bg-white rounded shadow drop-shadow font-medium`}
             >
-              Logout
-            </p>
+              <Link
+                href="/profile"
+                className="cursor-pointer text-pri9 py-1 flex items-center gap-x-4"
+                onClick={toggleMenu}
+              >
+                <CgProfile size={20} /> View profile
+              </Link>
+
+              <p
+                className={`cursor-pointer text-red-500 py-1 flex items-center gap-x-4`}
+                onClick={handleLogout}
+              >
+                <Image src={logout} alt="logout icon" className="" /> Log out
+              </p>
+            </div>
           </div>
         ) : (
           <div className="md:flex items-center gap-5 hidden">
@@ -216,14 +233,26 @@ const Navbar = () => {
                 </span>
               </div>
 
-              <p
+              <div
                 className={`${
                   Open ? "block" : "hidden"
-                } absolute top-10 z-10 cursor-pointer text-red-500 px-4 py-2 bg-white rounded shadow drop-shadow`}
-                onClick={handleLogout}
+                } absolute top-12 z-40 cursor-pointer w-full text-red-500 px-4 py-2 bg-white rounded shadow drop-shadow font-medium`}
               >
-                logout
-              </p>
+                <Link
+                  href="/profile"
+                  className="cursor-pointer text-pri9 py-1 flex items-center gap-x-4"
+                  onClick={toggleMenu}
+                >
+                  <CgProfile size={20} /> View profile
+                </Link>
+
+                <p
+                  className={`cursor-pointer text-red-500 py-1 flex items-center gap-x-4`}
+                  onClick={handleLogout}
+                >
+                  <Image src={logout} alt="logout icon" className="" /> Log out
+                </p>
+              </div>
             </div>
           ) : (
             <div className="flex flex-row items-center gap-5">

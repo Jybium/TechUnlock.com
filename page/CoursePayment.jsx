@@ -7,31 +7,23 @@ import Modal from "@/components/reusables/Modal";
 import image from "@/assets/images/logo.svg";
 import Link from "next/link";
 import Image from "next/image";
-import { getCourses } from "@/services/course";
 import PaymentTypeSelect from "@/components/reusables/modal/PaymentType";
 import { useParams } from "next/navigation";
 import { Button } from "@/components/ui/button";
+import { useCourses } from "@/Context/courses";
 
 const SelectPaymentGuide = () => {
   const { id } = useParams();
   const [Courses, setCourses] = React.useState();
   const { setModal } = useModal();
+  const { courses } = useCourses();
 
   const router = useRouter();
 
   useEffect(() => {
-    const fetchCourses = async () => {
-      try {
-        const data = await getCourses();
-        const response = data.filter((item) => item.id === +id);
-        setCourses(response[0]);
-      } catch (error) {
-        console.error("Error fetching courses:", error.message);
-      }
-    };
-
-    fetchCourses();
-  }, [id]);
+    const response = courses.filter((item) => item.id === +id);
+    setCourses(response[0]);
+  }, [id, courses]);
 
   const handleOpenModal = () => {
     setModal(true);

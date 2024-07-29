@@ -13,13 +13,13 @@ import {
 } from "@/components/svgs";
 import Image from "next/image";
 
-const CourseCard = ({ item }) => {
+const EnrolledCourseCard = ({ item }) => {
   const router = useRouter();
 
   return (
     <div className="bg-pri1 rounded-md shadow-md">
-      <div className="bg-pri1 grid lg:flex gap-x-3 lg:items-center p-2 w-full rounded-md">
-        <div className="lg:w-1/3">
+      <div className="bg-pri1 w-fit p-2 rounded-md">
+        <div className="">
           <Image
             src={
               item?.cover_image.includes("path-to-image")
@@ -27,25 +27,25 @@ const CourseCard = ({ item }) => {
                 : item?.cover_image || ""
             }
             alt={item?.title}
-            className="w-full h-full rounded-md "
+            className="w-full h-full rounded-md object-cover"
             width={300}
             height={300}
             // layout="fill"
           />
         </div>
 
-        <div className="pl-3 lg:w-2/3 grid lg:gap-y-6 gap-y-3 py-2">
-          <div className="flex justify-between items-start w-[90%]">
-            <h1 className="text-2xl text-darkblue font-semibold">
+        <div className="pl-3 grid lg:gap-y-6 gap-y-3 py-2">
+          <div className="flex justify-between items-center w-[90%] text-sm">
+            <h1 className=" text-darkblue font-semibold text-base">
               {item?.title}
             </h1>
-            <Rating rating={5} />
+            Training fee: #{Number(item?.price).toFixed(0)}
           </div>
           <div className="text-gray-900">
-            <p className="">{item?.description}</p>
+            <p className="line-clamp-2 text-sm">{item?.description}</p>
           </div>
 
-          <div className="grid grid-cols-2 gap-3 text-darkblue font-semibold">
+          <div className="grid grid-cols-1 gap-3 text-darkblue font-semibold">
             <p className="flex items-center gap-x-3">
               <TimeIcon /> <span className="">Duration: {item?.duration}</span>
             </p>
@@ -55,9 +55,7 @@ const CourseCard = ({ item }) => {
             </p>
             <p className="flex items-center gap-x-3">
               <ModuleIcon />{" "}
-              <span className="">
-                Module: {item?.number_of_modules || item?.modules.length}
-              </span>
+              <span className="">Instructor: {item?.instructor || "-"}</span>
             </p>
             <p className="flex items-center gap-x-3">
               <CertificateIcon />{" "}
@@ -67,12 +65,12 @@ const CourseCard = ({ item }) => {
             </p>
           </div>
 
-          <div className="flex justify-center lg:justify-end lg:mr-4">
+          <div className="flex justify-center">
             <Button
               className="bg-primary text-white"
               onClick={() => router.push(`/courses/${item?.id}`)}
             >
-              More training details
+              Course overview
             </Button>
           </div>
         </div>
@@ -81,4 +79,4 @@ const CourseCard = ({ item }) => {
   );
 };
 
-export default CourseCard;
+export default EnrolledCourseCard;

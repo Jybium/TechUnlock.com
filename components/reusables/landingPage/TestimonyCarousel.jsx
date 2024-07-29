@@ -30,13 +30,13 @@ const TestimonyCarousel = () => {
   }, [currentIndex]);
 
   return (
-    <div className="bg-pri1 w-[95%] mx-auto shadow-md relative z-20">
+    <div className="bg-pri1 w-[95%] mx-auto shadow-md relative overflow-hidden z-20">
       <div
         className="flex transition-transform duration-500 ease-in-out"
         style={{ transform: `translateX(-${currentIndex * 100}%)` }}
       >
         {testimony.map((testimony, index) => (
-          <div key={index} className="min-w-full">
+          <div key={index} className="w-full flex-shrink-0">
             <TestimonyCard data={testimony} />
           </div>
         ))}

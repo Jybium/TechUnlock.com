@@ -3,7 +3,7 @@ import testimony from "@/assets/course-page/feedback.svg";
 import Image from "next/image";
 import { categoryMap } from "./Banner";
 
-const FeedbackCard = ({ course, image }) => {
+const FeedbackCard = ({ course, image, name, review }) => {
   const fullCategoryName = categoryMap[course?.category] || course?.category;
 
   return (
@@ -20,7 +20,7 @@ const FeedbackCard = ({ course, image }) => {
           />
           {/* reviewer information */}
           <div className="grid gap-1">
-            <p className="text-base font-semibold">James Gareth</p>
+            <p className="text-base font-semibold">{name}</p>
             <p className="text-darkblue text-sm">{fullCategoryName} Student</p>
           </div>
         </div>
@@ -31,11 +31,7 @@ const FeedbackCard = ({ course, image }) => {
           <div className="font-semibold text-4xl grid gap-y-2">
             <p className="">“</p>
 
-            <h3 className="font-normal text-base">
-              This is the best beginner friendly course I have ever enrolled
-              for. From the tutors down to the conducive learning environment,
-              everything was just made for seamless interaction.
-            </h3>
+            <h3 className="font-normal text-base">{review}</h3>
 
             <p className="text-right">”</p>
           </div>

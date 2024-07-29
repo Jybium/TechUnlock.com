@@ -7,7 +7,7 @@ import Image from "next/image";
 
 const CarouselContainer = styled.div.attrs({
   className:
-    "relative flex flex-col md:flex-row items-center gap-x-5 pt-[1rem] pt-[1rem] md:px-[2rem] pb-[2rem] justify-center w-full w-[90%] mx-auto bg-transparent",
+    "relative flex flex-col-reverse md:flex-row items-center gap-x-5 pt-[1rem] pt-[1rem] md:px-[2rem] pb-[2rem] justify-center w-full w-[90%] mx-auto bg-transparent",
 })``;
 
 const SlideContainer = styled.div.attrs({
@@ -81,7 +81,7 @@ const Carousel = ({ slides }) => {
   const slideInterval = useRef(null);
 
   const nextSlide = () => {
-    setCurrentSlide((currentSlide + 1) % slides.length);
+    setCurrentSlide((currentSlide + 1) % slides?.length);
   };
 
   const prevSlide = () => {
@@ -100,9 +100,15 @@ const Carousel = ({ slides }) => {
           <h1 className="text-2xl lg:text-4xl font-semibold">Course add-ons</h1>
           <div className="grid gap-y-1">
             <h2 className="text-2xl font-semibold">
-              {slides[currentSlide].title}
+              {slides &&
+                currentSlide < slides.length &&
+                slides[currentSlide].title}
             </h2>
-            <p className="text-white">{slides[currentSlide].description}</p>
+            <p className="text-white">
+              {slides &&
+                currentSlide < slides.length &&
+                slides?.[currentSlide].description}
+            </p>
           </div>
         </TextContent>
         <NavigationButtons>
@@ -116,7 +122,7 @@ const Carousel = ({ slides }) => {
       </ContentContainer>
       <SlideContainer>
         <SlideWrapper currentSlide={currentSlide}>
-          {slides.map((slide, index) => (
+          {slides?.map((slide, index) => (
             <ImageWrapper key={index}>
               <StyledImage
                 src={slide?.add_on_image}
@@ -129,7 +135,7 @@ const Carousel = ({ slides }) => {
         </SlideWrapper>
       </SlideContainer>
       <DotsContainer>
-        {slides.map((_, index) => (
+        {slides?.map((_, index) => (
           <Dot
             key={index}
             active={index === currentSlide}

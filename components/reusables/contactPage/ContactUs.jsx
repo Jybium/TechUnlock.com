@@ -9,7 +9,7 @@ const ContactUs = () => {
       <div className="lg:flex lg:justify-between items-center w-[95%] lg:w-[90%] mx-auto">
         <div className="lg:w-1/2 lg:ml-10 grid gap-y-12">
           <div className="grid gap-y-5 ml-6">
-            <h1 className="text-4xl text-[#101828] font-semibold">
+            <h1 className="text-3xl lg:text-4xl text-[#101828] font-semibold">
               Contact Us
             </h1>
             <p className="text-lg text-ash">
