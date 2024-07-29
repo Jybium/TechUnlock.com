@@ -77,6 +77,7 @@ const Dot = styled.div`
 `;
 
 const Carousel = ({ slides }) => {
+  console.log(slides);
   const [currentSlide, setCurrentSlide] = useState(0);
   const slideInterval = useRef(null);
 
@@ -91,7 +92,7 @@ const Carousel = ({ slides }) => {
   useEffect(() => {
     slideInterval.current = setInterval(nextSlide, 8000);
     return () => clearInterval(slideInterval.current);
-  }, [currentSlide]);
+  }, [currentSlide, slideInterval]);
 
   return (
     <CarouselContainer>
