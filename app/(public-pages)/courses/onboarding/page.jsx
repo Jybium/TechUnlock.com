@@ -30,9 +30,9 @@ const Page = () => {
     setCourses(response[0]);
   }, [id, courses]);
 
-  if (loading) {
-    return <LoadingSpinner />;
-  }
+  // if (loading) {
+  //   return <LoadingSpinner />;
+  // }
 
   return (
     <div className="my-6">
