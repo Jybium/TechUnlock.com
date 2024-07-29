@@ -14,12 +14,11 @@ import LoadingSpinner from "@/components/reusables/LoadingSpinner";
 const SpecificCoursePage = () => {
   const { id } = useParams();
   const { courses, loading } = useCourses();
-  const [Courses, setCourses] = React.useState([]);
+  const [Courses, setCourses] = React.useState();
 
   useEffect(() => {
     const response = courses.filter((item) => item.id === +id);
-
-    setCourses(response);
+    setCourses(response[0]);
   }, [id, courses]);
 
   if (loading) {
@@ -28,12 +27,12 @@ const SpecificCoursePage = () => {
 
   return (
     <div className="">
-      <Banner course={Courses[0]} />
-      <Description course={Courses[0]} />
-      <Curriculum course={Courses[0]} />
-      <CourseAddOn course={Courses[0]} />
-      <FeedbackContainer course={Courses[0]} />
-      <PromotionBanner course={Courses[0]} />
+      <Banner course={Courses} />
+      <Description course={Courses} />
+      <Curriculum course={Courses} />
+      <CourseAddOn course={Courses} />
+      <FeedbackContainer course={Courses} />
+      <PromotionBanner course={Courses} />
     </div>
   );
 };

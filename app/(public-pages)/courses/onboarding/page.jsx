@@ -12,9 +12,9 @@ import { useCourses } from "@/Context/courses";
 
 const Page = () => {
   const [course, setCourses] = useState();
-  const { courses } = useCourses();
+  const { courses, loading } = useCourses();
   const [id, setId] = useState();
-  const [loading, setLoading] = useState(true);
+
   const { auth } = useAuth();
 
   const router = useRouter();
