@@ -30,7 +30,7 @@ const TestimonyCarousel = () => {
   }, [currentIndex]);
 
   return (
-    <div className="bg-pri1 w-[95%] mx-auto shadow-md relative overflow-hidden z-20">
+    <div className="bg-pri1 w-[95%] mx-auto shadow-md relative overflow-x-hidden overflow-auto z-20">
       <div
         className="flex transition-transform duration-500 ease-in-out"
         style={{ transform: `translateX(-${currentIndex * 100}%)` }}

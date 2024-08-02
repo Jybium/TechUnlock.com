@@ -60,7 +60,7 @@ const Overview = ({ course }) => {
                   Skills you will learn
                 </h4>
                 <div className="flex flex-wrap gap-3 text-xs mt-2">
-                  {course?.course_skills.map((item) => (
+                  {course?.course_skills?.map((item) => (
                     <span
                       className="border border-primary py-1 px-2 rounded text-primary font-medium cursor-pointer"
                       key={item?.id}
