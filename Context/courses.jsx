@@ -13,6 +13,7 @@ export const CoursesProvider = ({ children }) => {
   useEffect(() => {
     const fetchCourses = async () => {
       try {
+        setLoading(true);
         const data = await getCourses();
         setCourses(data);
       } catch (error) {
@@ -32,8 +33,6 @@ export const CoursesProvider = ({ children }) => {
         setEnrolledCourses(data.enrolled_courses);
       } catch (error) {
         console.error("Error fetching courses:", error.message);
-      } finally {
-        setLoading(false);
       }
     };
 

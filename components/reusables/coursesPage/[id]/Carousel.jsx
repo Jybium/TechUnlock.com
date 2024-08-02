@@ -107,7 +107,7 @@ const Carousel = ({ slides }) => {
             </h2>
             <p className="text-white">
               {slides &&
-                currentSlide < slides.length &&
+                currentSlide < slides?.length &&
                 slides?.[currentSlide].description}
             </p>
           </div>
