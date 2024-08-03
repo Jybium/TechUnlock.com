@@ -21,7 +21,7 @@ const StatsCard = () => {
           }
           return newCounts;
         });
-      }, 80); // Adjust the interval time based on your needs
+      }, 100); // Adjust the interval time based on your needs
     });
 
     return () => intervals.forEach(clearInterval);

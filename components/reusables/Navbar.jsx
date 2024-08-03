@@ -86,8 +86,11 @@ const Navbar = () => {
   };
 
   const toggleMenu = () => {
-    setOpen(!Open);
     setIsMobileMenuOpen(false);
+  };
+
+  const openProfile = () => {
+    setOpen(!Open);
   };
 
   const handleLogout = async () => {
@@ -98,6 +101,7 @@ const Navbar = () => {
 
   const handleNavLinkClick = () => {
     setIsMobileMenuOpen(false);
+    setOpen(false);
   };
 
   return (
@@ -136,7 +140,7 @@ const Navbar = () => {
         {token && Object.entries(token).length !== 0 ? (
           <div className="relative">
             <div
-              onClick={() => setOpen(!open)}
+              onClick={openProfile}
               className="flex gap-x-3 items-center shadow rounded-md border border-sec10 py-2 px-4 bg-white cursor-pointer"
             >
               <p className="flex items-center capitalize">
@@ -218,7 +222,7 @@ const Navbar = () => {
           {token && Object.entries(token).length !== 0 ? (
             <div className="relative">
               <div
-                onClick={toggleMenu}
+                onClick={openProfile}
                 className="flex gap-x-3 w-fit items-center shadow rounded-md border border-sec10 py-2 px-4 bg-white cursor-pointer"
               >
                 <p className="flex items-center capitalize">
