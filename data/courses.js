@@ -48,11 +48,12 @@ const courses = [
 ];
 
 export const course = [
-  { id: 1, name: "Web Development", value: "WEB" },
-  { id: 2, name: "Cyber Security", value: "CYBER" },
-  { id: 3, name: "Digital Marketing", value: "DM" },
-  { id: 4, name: "UI/UX Design", value: "UI/UX" },
-  { id: 5, name: "Artificial Intelligence", value: "AI" },
+  { id: 1, name: "All", value: "all" },
+  { id: 2, name: "Web Development", value: "WEB" },
+  { id: 3, name: "Cyber Security", value: "CYBER" },
+  { id: 4, name: "Digital Marketing", value: "DM" },
+  { id: 5, name: "UI/UX Design", value: "UI/UX" },
+  { id: 6, name: "Artificial Intelligence", value: "AI" },
 ];
 
 export default courses;

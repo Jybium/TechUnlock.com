@@ -3,7 +3,7 @@
 import { showErrorToast, showSuccessToast } from "@/helpers/toastUtil";
 import { registerForCourse } from "@/services/course";
 import { ArrowRight } from "lucide-react";
-import { useParams } from "next/navigation";
+import { useParams, useRouter } from "next/navigation";
 import React, { useEffect, useState } from "react";
 import LoadingSpinner from "../LoadingSpinner";
 import { fetchToken } from "@/helpers/getToken";
@@ -12,6 +12,7 @@ const PaymentTypeSelect = () => {
   const { id } = useParams();
   const [selectedPayment, setSelectedPayment] = useState("Paystack");
   const [loading, setLoading] = useState(false);
+  const router = useRouter();
   const [token, setToken] = useState("");
 
   useEffect(() => {
@@ -45,6 +46,7 @@ const PaymentTypeSelect = () => {
     try {
       // Make payment using selected payment type
       const response = await registerForCourse(formData);
+
       if (response?.status === true) {
         localStorage.setItem("reference", response?.data?.reference);
         showSuccessToast(
@@ -53,6 +55,9 @@ const PaymentTypeSelect = () => {
         sessionStorage.setItem("course_id", id);
         // Redirect to payment confirmation page if successful
         window.location.href = response?.data?.authorization_url;
+      } else if (response && response.message.includes("already enrolled")) {
+        showSuccessToast("You have already enrolled for this course");
+        router.push("/profile");
       }
     } catch (error) {
       console.error("Error making payment:", error);

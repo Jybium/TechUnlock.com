@@ -1,10 +1,9 @@
 "use client";
 
-import React from "react";
+import React, { useEffect, useState } from "react";
 import Rating from "../landingPage/Rating";
 import { Button } from "@/components/ui/button";
 import { useRouter } from "next/navigation";
-
 import {
   CertificateIcon,
   LevelIcon,
@@ -12,9 +11,25 @@ import {
   TimeIcon,
 } from "@/components/svgs";
 import Image from "next/image";
+import { useCourses } from "@/Context/courses";
 
 const CourseCard = ({ item }) => {
   const router = useRouter();
+  const { courses } = useCourses();
+  const [Courses, setCourses] = useState([]);
+  const [enrolledCourses, setEnrolledCourses] = useState([]);
+
+  useEffect(() => {
+    if (courses) {
+      setCourses(courses.courses);
+      setEnrolledCourses(courses.enrolled_courses);
+    }
+  }, [courses]);
+
+  // Check if the current course is enrolled
+  const isEnrolled = enrolledCourses?.some(
+    (enrolled) => enrolled.id === item.id
+  );
 
   return (
     <div className="bg-pri1 rounded-md shadow-md">
@@ -22,15 +37,14 @@ const CourseCard = ({ item }) => {
         <div className="lg:w-1/3">
           <Image
             src={
-              item?.cover_image.includes("path-to-image")
+              item?.cover_image?.includes("path-to-image")
                 ? ""
                 : item?.cover_image || ""
             }
             alt={item?.title}
-            className="w-full h-full rounded-md "
+            className="w-full h-full rounded-md"
             width={300}
             height={300}
-            // layout="fill"
           />
         </div>
 
@@ -42,28 +56,25 @@ const CourseCard = ({ item }) => {
             <Rating rating={5} />
           </div>
           <div className="text-gray-900">
-            <p className="">{item?.description}</p>
+            <p>{item?.description}</p>
           </div>
 
           <div className="grid grid-cols-2 gap-3 text-darkblue font-semibold">
             <p className="flex items-center gap-x-3">
-              <TimeIcon /> <span className="">Duration: {item?.duration}</span>
+              <TimeIcon /> <span>Duration: {item?.duration}</span>
             </p>
             <p className="flex items-center gap-x-3">
-              <LevelIcon />{" "}
-              <span className="">Training level: {item?.difficulty}</span>
+              <LevelIcon /> <span>Training level: {item?.difficulty}</span>
             </p>
             <p className="flex items-center gap-x-3">
               <ModuleIcon />{" "}
-              <span className="">
-                Module: {item?.number_of_modules || item?.modules.length}
+              <span>
+                Module: {item?.number_of_modules || item?.modules?.length}
               </span>
             </p>
             <p className="flex items-center gap-x-3">
               <CertificateIcon />{" "}
-              <span className="">
-                {item?.is_certificate && "Certificate of completion"}
-              </span>
+              <span>{item?.is_certificate && "Certificate of completion"}</span>
             </p>
           </div>
 
@@ -72,7 +83,7 @@ const CourseCard = ({ item }) => {
               className="bg-primary text-white"
               onClick={() => router.push(`/courses/${item?.id}`)}
             >
-              More training details
+              {isEnrolled ? "Enrolled" : "More training details"}
             </Button>
           </div>
         </div>

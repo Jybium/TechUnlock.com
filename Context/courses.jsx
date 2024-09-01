@@ -10,32 +10,31 @@ export const CoursesProvider = ({ children }) => {
   const [enrolledCourses, setEnrolledCourses] = useState([]);
   const [loading, setLoading] = useState(false);
 
-  useEffect(() => {
-    const fetchCourses = async () => {
-      try {
-        setLoading(true);
-        const data = await getCourses();
-        setCourses(data);
-      } catch (error) {
-        console.error("Error fetching courses:", error.message);
-      } finally {
-        setLoading(false);
-      }
-    };
+  const fetchCourses = async () => {
+    try {
+      setLoading(true);
+      const data = await getCourses();
+      setCourses(data);
+      setLoading(false);
+    } catch (error) {
+      console.error("Error fetching courses:", error.message);
+      setLoading(false);
+    } finally {
+      setLoading(false);
+    }
+  };
 
+  const fetchEnrolledCourses = async () => {
+    try {
+      const data = await getEnrolledCourses();
+      setEnrolledCourses(data.enrolled_courses);
+    } catch (error) {
+      console.error("Error fetching courses:", error.message);
+    }
+  };
+
+  useEffect(() => {
     fetchCourses();
-  }, []);
-
-  useEffect(() => {
-    const fetchEnrolledCourses = async () => {
-      try {
-        const data = await getEnrolledCourses();
-        setEnrolledCourses(data.enrolled_courses);
-      } catch (error) {
-        console.error("Error fetching courses:", error.message);
-      }
-    };
-
     fetchEnrolledCourses();
   }, []);
 

@@ -96,7 +96,7 @@ const Banner = ({ course }) => {
           </div>
 
           <div className="mt-4 lg:absolute lg:-bottom-12 right-0 z-20 lg:w-[30%] lg:ml-auto">
-            <BannerCard courses={course} />
+            <BannerCard course={course} />
           </div>
         </div>
       </div>
