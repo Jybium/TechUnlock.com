@@ -19,12 +19,15 @@ import {
   SelectValue,
 } from "@/components/ui/select";
 import { course } from "@/data/courses";
+import { useSearchParams } from "next/navigation";
 
 const SelectCourse = ({ setFilter, filter }) => {
   const methods = useForm();
+  const searchParams = useSearchParams();
 
   const handleInputChange = (value) => {
     setFilter(value);
+    console.log(filter);
   };
 
   return (

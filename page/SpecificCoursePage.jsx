@@ -1,6 +1,6 @@
 "use client";
 
-import React, { useEffect } from "react";
+import React, { useEffect, useState } from "react";
 import { useParams } from "next/navigation";
 import Banner from "@/components/reusables/coursesPage/[id]/Banner";
 import Description from "@/components/reusables/coursesPage/[id]/Description";
@@ -9,41 +9,44 @@ import CourseAddOn from "@/components/reusables/coursesPage/[id]/CourseAddOn";
 import FeedbackContainer from "@/components/reusables/coursesPage/[id]/FeedbackContainer";
 import PromotionBanner from "@/components/reusables/coursesPage/[id]/PromotionBanner";
 import LoadingSpinner from "@/components/reusables/LoadingSpinner";
-import { getCourses } from "@/services/course";
+import { useCourses } from "@/Context/courses";
 
 const SpecificCoursePage = () => {
   const { id } = useParams();
-  const [Courses, setCourses] = React.useState([]);
-  const [loading, setLoading] = React.useState();
+  const { courses, loading } = useCourses();
+  const [course, setCourse] = useState(null);
+
+  const fetchCourse = () => {
+    try {
+      const allCourses = [
+        ...(courses?.courses || []),
+        ...(courses?.enrolled_courses || []),
+      ];
+      const foundCourse = allCourses.find((item) => item.id === parseInt(id)); // find the course by ID
+      setCourse(foundCourse);
+    } catch (error) {
+      console.error("Error fetching course:", error.message);
+    }
+  };
 
   useEffect(() => {
-    const fetchCourses = async () => {
-      try {
-        setLoading(true);
-        const data = await getCourses();
-        const response = data.filter((item) => item.id === +id);
-        setCourses(response[0]);
-      } catch (error) {
-        console.error("Error fetching courses:", error.message);
-      } finally {
-        setLoading(false);
-      }
-    };
-    fetchCourses();
-  }, [id]);
+    if (id) {
+      fetchCourse();
+    }
+  }, [id, courses]);
 
-  if (loading) {
+  if (loading || !course) {
     return <LoadingSpinner />;
   }
 
   return (
     <div className="">
-      <Banner course={Courses} />
-      <Description course={Courses} />
-      <Curriculum course={Courses} />
-      <CourseAddOn course={Courses} />
-      <FeedbackContainer course={Courses} />
-      <PromotionBanner course={Courses} />
+      <Banner course={course} />
+      <Description course={course} />
+      <Curriculum course={course} />
+      <CourseAddOn course={course} />
+      <FeedbackContainer course={course} />
+      <PromotionBanner course={course} />
     </div>
   );
 };

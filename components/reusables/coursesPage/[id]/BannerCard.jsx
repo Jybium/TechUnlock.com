@@ -27,8 +27,11 @@ import DMCard from "@/assets/course-page/DMCard.svg";
 // AI
 import AI from "@/assets/course-page/AICard.svg";
 import { Check } from "lucide-react";
+import { useCourses } from "@/Context/courses";
 
-export const BannerCard = ({ courses }) => {
+export const BannerCard = ({ course }) => {
+  const { courses } = useCourses();
+  const [Courses, setCourses] = React.useState();
   const [currentIndex, setCurrentIndex] = useState(0);
   const [selectedOption, setSelectedOption] = useState("onsite");
   const router = useRouter();
@@ -37,13 +40,13 @@ export const BannerCard = ({ courses }) => {
     {
       id: 1,
       image:
-        courses?.category === "UI/UX"
+        course?.category === "UI/UX"
           ? UICard
-          : courses?.category === "WEB"
+          : course?.category === "WEB"
           ? webDev
-          : courses?.category === "CYBER"
+          : course?.category === "CYBER"
           ? cyberSec
-          : courses?.category === "DM"
+          : course?.category === "DM"
           ? DMCard
           : AI,
       option: "pace",
@@ -51,6 +54,10 @@ export const BannerCard = ({ courses }) => {
     { id: 2, image: physicalClass, option: "onsite" },
     { id: 3, image: mentor, option: "tutor" },
   ];
+
+  useEffect(() => {
+    setCourses(courses);
+  }, [courses]);
 
   useEffect(() => {
     const interval = setInterval(() => {
@@ -123,7 +130,7 @@ export const BannerCard = ({ courses }) => {
           <div className="flex items-center space-x-4">
             <RadioGroupItem value="pace" id="pace" />
             <Label htmlFor="pace" className={getLabelClass("pace")}>
-              <span className="capitalize">{courses?.difficulty}</span> class
+              <span className="capitalize">{course?.difficulty}</span> class
             </Label>
           </div>
           <div className="flex items-center space-x-4">
@@ -154,10 +161,17 @@ export const BannerCard = ({ courses }) => {
       {/* Buttons */}
       <div className="w-full mt-4 px-4 pb-3">
         <Button
-          onClick={() => router.push(`/courses/${courses.id}/pay`)}
+          onClick={() => router.push(`/courses/${course.id}/pay`)}
           className="w-full"
+          disabled={
+            course?.id ===
+            Courses?.enrolled_courses?.find((item) => item?.id === course?.id)
+          }
         >
-          Apply Now
+          {course?.id ===
+          Courses?.enrolled_courses?.find((item) => item?.id === course?.id)
+            ? "Already enrolled"
+            : "Apply Now"}
         </Button>
         {/* <Button variant="outline">Save for Later</Button> */}
       </div>

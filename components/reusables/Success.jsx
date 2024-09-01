@@ -38,8 +38,8 @@ const Success = () => {
   const fullCategoryName = categoryMap[Courses?.category] || Courses?.category;
 
   useEffect(() => {
-    const response = courses.filter((item) => item.id === +id);
-    setCourses(response[0]);
+    const response = courses?.courses?.find((item) => item.id === +id);
+    setCourses(response);
   }, [id, courses]);
 
   useEffect(() => {
@@ -53,7 +53,6 @@ const Success = () => {
         const response = await fetch(
           `${BASE_URL}/payment/verify-payment/${params.get("trxref")}/`
         );
-
         const data = await response.json();
         console.log(data);
 

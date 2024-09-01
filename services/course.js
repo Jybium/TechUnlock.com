@@ -79,19 +79,21 @@ export async function registerForCourse(paymentData) {
 export async function getEnrolledCourses() {
   const token = await fetchToken();
   try {
-    const response = await axios.get(`${BASE_URL}/course/enrolled-courses/`, {
-      headers: {
-        Authorization: `Bearer ${token}`,
-      },
-      timeout: 5000,
-    });
+    if (token) {
+      const response = await axios.get(`${BASE_URL}/course/enrolled-courses/`, {
+        headers: {
+          Authorization: `Bearer ${token}`,
+        },
+        timeout: 5000,
+      });
 
-    if (response.status === 200) {
-      return response.data;
-    } else {
-      // Handle unexpected response status
-      console.error(`Unexpected response status: ${response.status}`);
-      return "An error occurred while getting enrolled courses.";
+      if (response.status === 200) {
+        return response.data;
+      } else {
+        // Handle unexpected response status
+        console.error(`Unexpected response status: ${response.status}`);
+        return "An error occurred while getting enrolled courses.";
+      }
     }
   } catch (error) {
     console.error("Error during getting enrolled course:", error);

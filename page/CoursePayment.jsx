@@ -13,16 +13,16 @@ import { Button } from "@/components/ui/button";
 import { useCourses } from "@/Context/courses";
 
 const SelectPaymentGuide = () => {
+  const { courses } = useCourses();
   const { id } = useParams();
   const [Courses, setCourses] = React.useState();
   const { setModal } = useModal();
-  const { courses } = useCourses();
-
-  const router = useRouter();
 
   useEffect(() => {
-    const response = courses.filter((item) => item.id === +id);
-    setCourses(response[0]);
+    const response = courses?.courses
+      ?.concat(courses?.enrolled_courses)
+      ?.find((item) => item.id === +id);
+    setCourses(response);
   }, [id, courses]);
 
   const handleOpenModal = () => {

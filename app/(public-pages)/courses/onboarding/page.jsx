@@ -25,9 +25,9 @@ const Page = () => {
   }, []);
 
   useEffect(() => {
-    const response = courses.filter((item) => item.id === +id);
+    const response = courses?.courses?.find((item) => item.id === +id);
 
-    setCourses(response[0]);
+    setCourses(response);
   }, [id, courses]);
 
   // if (loading) {

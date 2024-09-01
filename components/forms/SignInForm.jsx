@@ -60,37 +60,33 @@ const SignInForm = () => {
     },
   });
 
-  const onSubmit = useCallback(
-    async (values) => {
-      if (!isOnline) {
-        showErrorToast(
-          "You are offline. Please check your network connection."
-        );
-        return;
-      }
-
-      try {
-        setIsLoading(true);
-        const result = await signIn(values);
-        showSuccessToast(result.message || "Account login successfully.");
-        // On successful login, redirect back to the original page
-        if (redirect) {
-          let redirectUrl = redirect;
-          if (redirect === "/courses/verify" && trxref) {
-            redirectUrl += `?trxref=${trxref}`;
-          }
-          router.replace(redirectUrl);
-        } else {
-          router.push("/courses"); // Default to courses page if no redirect is specified
+  const onSubmit = async (values) => {
+    if (!isOnline) {
+      showErrorToast("You are offline. Please check your network connection.");
+      return;
+    }
+    try {
+      setIsLoading(true);
+      const result = await signIn(values);
+      showSuccessToast(result.message || "Account login successfully.");
+      // On successful login, redirect back to the original page
+      if (redirect) {
+        let redirectUrl = redirect;
+        if (redirect === "/courses/verify" && trxref) {
+          redirectUrl += `?trxref=${trxref}`;
         }
-      } catch (error) {
-        showErrorToast("Check credentials and try again");
-      } finally {
-        setIsLoading(false);
+
+        router.replace(redirectUrl);
+      } else {
+        router.push("/courses"); // Default to courses page if no redirect is specified
       }
-    },
-    [isOnline, router, redirect, trxref]
-  );
+    } catch (error) {
+      console.log(error);
+      showErrorToast("Check credentials and try again");
+    } finally {
+      setIsLoading(false);
+    }
+  };
 
   return (
     <div className="">
