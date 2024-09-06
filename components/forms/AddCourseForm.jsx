@@ -12,8 +12,10 @@ import {
 import { zodResolver } from "@hookform/resolvers/zod";
 import { z } from "zod";
 import courseSchema from "@/schema/AddCourse";
+
 const ReactQuill = dynamic(() => import("react-quill"), { ssr: false });
 import "react-quill/dist/quill.snow.css";
+
 import Select from "react-select";
 import { IoMdImage } from "react-icons/io";
 import { CiCirclePlus } from "react-icons/ci";
@@ -113,6 +115,8 @@ const CourseForm = () => {
       duration: "",
       is_certificate: "",
       instructor_name: "",
+      start_date: "",
+      start_time: "",
       price: 0,
       modules: [],
       addon: [],
@@ -446,6 +450,49 @@ const CourseForm = () => {
                   {errors.instructor_name && (
                     <span className="text-red-500">
                       {errors.instructor_name.message}
+                    </span>
+                  )}
+                </div>
+
+                <div>
+                  <label htmlFor="start_date">Start Date</label>
+                  <Controller
+                    name="start_date"
+                    control={control}
+                    render={({ field }) => (
+                      <input
+                        {...field}
+                        type="date"
+                        className="w-full"
+                        placeholder="Select start date"
+                      />
+                    )}
+                  />
+                  {errors.start_date && (
+                    <span className="text-red-500">
+                      {errors.start_date.message}
+                    </span>
+                  )}
+                </div>
+                {/* Start Date */}
+                {/* Start Time */}
+                <div>
+                  <label htmlFor="start_time">Start Time</label>
+                  <Controller
+                    name="start_time"
+                    control={control}
+                    render={({ field }) => (
+                      <input
+                        {...field}
+                        type="time"
+                        className="w-full"
+                        placeholder="Select start time"
+                      />
+                    )}
+                  />
+                  {errors.start_time && (
+                    <span className="text-red-500">
+                      {errors.start_time.message}
                     </span>
                   )}
                 </div>
