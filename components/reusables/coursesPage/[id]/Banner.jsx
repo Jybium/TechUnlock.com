@@ -72,8 +72,8 @@ const Banner = ({ course }) => {
                 : "Start your journey to becoming and AI Certified professional. From Beginner to intermediate level of proficiency. Our Applied Artificial Intelligence course module builds the foundation for you to excel in your career and professional pursuit."}
             </p>
 
-            <div className="lg:w-2/4 bg-[#FFFFFF]/40 backdrop-blur-lg drop-shadow-md px-5 py-3 rounded-md text-sm">
-              <div className="mb-4 flex justify-between items-start">
+            <div className="lg:w-2/4 bg-[#FFFFFF]/40 backdrop-blur-lg drop-shadow-md px-5 py-3 rounded-md text-sm space-y-4">
+              <div className="flex justify-between items-start">
                 <p className="text-sm">
                   {course?.title}{" "}
                   <span>
@@ -90,6 +90,15 @@ const Banner = ({ course }) => {
                 </p>
                 <p className="">
                   Total Enrolled: <span>{course?.enrolled || "1, 500"}</span>
+                </p>
+              </div>
+
+              <div className="flex justify-between items-center">
+                <p className="">
+                  Start Date: <span>{course?.start_date || ""}</span>
+                </p>
+                <p className="">
+                  Start Time: <span>{course?.start_time || ""}</span>
                 </p>
               </div>
             </div>

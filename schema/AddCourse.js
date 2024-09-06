@@ -19,6 +19,35 @@ const courseSchema = z.object({
   price: z
     .number()
     .nonnegative({ message: "Price must be a non-negative number" }),
+  start_date: z.date().refine((date) => date >= new Date(), {
+    message: "Start date cannot be in the past",
+  }),
+  start_time: z
+    .string()
+    .nonempty({ message: "Start time is required" })
+    .refine(
+      (time) => /^([01]\d|2[0-3]):([0-5]\d)$/.test(time), // 24-hour format "HH:MM"
+      {
+        message: "Start time must be in 24-hour format HH:MM",
+      }
+    )
+    // Uncomment below for 12-hour format
+    // .refine(
+    //   (time) => /^(0[1-9]|1[0-2]):[0-5][0-9] (AM|PM)$/i.test(time), // 12-hour format "HH:MM AM/PM"
+    //   {
+    //     message: "Start time must be in 12-hour format HH:MM AM/PM",
+    //   }
+    // )
+    .refine(
+      (time) => {
+        const [hours, minutes] = time.split(":").map(Number);
+        // Business hours: 09:00 - 17:59
+        return hours >= 9 && hours < 18;
+      },
+      {
+        message: "Start time must be between 09:00 and 17:59",
+      }
+    ),
   modules: z
     .array(
       z.object({
