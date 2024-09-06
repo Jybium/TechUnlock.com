@@ -19,9 +19,18 @@ const courseSchema = z.object({
   price: z
     .number()
     .nonnegative({ message: "Price must be a non-negative number" }),
-  start_date: z.date().refine((date) => date >= new Date(), {
-    message: "Start date cannot be in the past",
-  }),
+  start_date: z.string().refine(
+    (val) => {
+      const date = new Date(val);
+      const today = new Date();
+      today.setHours(0, 0, 0, 0); // Set time to the start of the day
+      return !isNaN(date.getTime()) && date >= today;
+    },
+    {
+      message:
+        "Expiry date must be a valid date and not less than today's date.",
+    }
+  ),
   start_time: z
     .string()
     .nonempty({ message: "Start time is required" })
