@@ -19,8 +19,8 @@ const FilterBar = () => {
   };
 
   return (
-    <div className="bg-primary py-4 px-5">
-      <div className="flex flex-col justify-between md:flex-row space-y-2 md:space-y-0 md:space-x-4">
+    <div className="bg-primary py-4">
+      <div className="flex flex-col justify-between md:flex-row space-y-2 md:space-y-0 md:space-x-4 lg:w-[90%] lg:mx-auto">
         <div className="hidden items-center gap-x-5 ">
           <p className="text-white">Featured:</p>
 

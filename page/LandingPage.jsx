@@ -10,6 +10,9 @@ const Footer = React.lazy(() => import("@/components/reusables/Footer"));
 const Header = dynamic(() =>
   import("@/components/reusables/landingPage/Header")
 );
+const OurAlumni = dynamic(() =>
+  import("@/components/reusables/landingPage/OurAlumni")
+);
 const Main = dynamic(() => import("@/components/reusables/landingPage/Main"));
 const FindConnect = dynamic(
   () => import("@/components/reusables/landingPage/FindConnect"),
@@ -38,6 +41,10 @@ const LandingPage = () => {
         <Navbar />
       </React.Suspense>
       <Header />
+
+      <OnScrollView>
+        <OurAlumni />
+      </OnScrollView>
       <section className="bg-gradient-to-b from-white via-gray-100 to-gray-300">
         <OnScrollView>
           <Main />

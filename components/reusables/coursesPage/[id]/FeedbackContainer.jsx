@@ -114,7 +114,7 @@ const FeedbackContainer = ({ course }) => {
 
   return (
     <div className="relative mb-[2rem] lg:h-[60vh] lg:mb-[4rem]">
-      <div className="absolute hidden lg:block -top-1/4 left-0 w-1/5 h-[60vh] overflow-hidden ">
+      {/* <div className="absolute hidden lg:block -top-1/4 left-0 w-1/5 h-[60vh] overflow-hidden ">
         <Image
           src={angleDown}
           alt="Decorative angle"
@@ -122,7 +122,7 @@ const FeedbackContainer = ({ course }) => {
           objectFit="contain"
           objectPosition="top left"
         />
-      </div>
+      </div> */}
 
       <div className="relative mb-6 ml-5 lg:ml-16">
         <p className="relative grid">
@@ -171,7 +171,7 @@ const FeedbackContainer = ({ course }) => {
           review={reviewTwo?.review}
         />
       </div>
-      <div className="absolute hidden lg:block -bottom-1/2 right-0 w-1/5 h-[60vh] overflow-hidden ">
+      {/* <div className="absolute hidden lg:block -bottom-1/2 right-0 w-1/5 h-[60vh] overflow-hidden ">
         <Image
           src={angleUp}
           alt="Decorative angle"
@@ -179,7 +179,7 @@ const FeedbackContainer = ({ course }) => {
           objectFit="contain"
           objectPosition="bottom right"
         />
-      </div>
+      </div> */}
     </div>
   );
 };
