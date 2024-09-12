@@ -2,7 +2,7 @@
 
 import React, { useState } from "react";
 import { Prog } from "@/data/Links";
-import { ChevronUp } from "lucide-react";
+import { ChevronDown } from "lucide-react";
 import Link from "next/link";
 
 const Programs = ({ onclick }) => {
@@ -21,7 +21,7 @@ const Programs = ({ onclick }) => {
             >
               {link.name}
               <span className="text-lg md:mt-1 md:ml-2 inline group-hover:rotate-180 group-hover:">
-                <ChevronUp />
+                <ChevronDown />
               </span>
             </h1>
             {link.submenu && heading === link.name && (

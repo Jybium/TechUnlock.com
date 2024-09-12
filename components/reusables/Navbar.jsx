@@ -112,7 +112,7 @@ const Navbar = () => {
         </div>
       </Link>
 
-      <div className="md:hidden flex items-center">
+      <div className="lg:hidden flex items-center">
         <button onClick={toggleMobileMenu} className="focus:outline-none">
           {isMobileMenuOpen ? (
             <X className="h-6 w-6 text-sec10" />
@@ -122,7 +122,7 @@ const Navbar = () => {
         </button>
       </div>
 
-      <div className="md:flex hidden items-center gap-12 text-sec10">
+      <div className="lg:flex hidden items-center gap-12 text-sec10">
         <Link href="/about-us" className="text-lg font-semibold cursor-pointer">
           About
         </Link>
@@ -196,7 +196,7 @@ const Navbar = () => {
       <div
         className={`lg:hidden items-center gap-12 text-sec10 ${
           isMobileMenuOpen ? "grid bg-pri1 z-50" : "hidden"
-        } flex-col md:flex-row absolute md:relative  top-16 left-0 right-0 md:top-auto md:left-auto md:right-auto bg-pri1 md:bg-pri1`}
+        } flex-col lg:flex-row absolute md:relative  top-16 left-0 right-0 md:top-auto md:left-auto md:right-auto bg-pri1 md:bg-pri1`}
       >
         <div className="w-5/6 mx-auto py-6">
           <Link

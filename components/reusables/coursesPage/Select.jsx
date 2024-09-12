@@ -40,7 +40,7 @@ const SelectCourse = ({ setFilter, filter }) => {
       <div className="space-y-4 w-5/6 mx-auto">
         <FormProvider>
           <Form {...methods}>
-            <FormItem className="flex w-full gap-x-4 items-center">
+            <FormItem className="flex w-full lg:w-[90%] lg:mx-auto gap-x-4 items-center">
               <FormLabel className="text-base whitespace-nowrap">
                 All Courses:
               </FormLabel>
