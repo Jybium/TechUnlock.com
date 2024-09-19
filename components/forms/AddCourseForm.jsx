@@ -283,17 +283,22 @@ const CourseForm = () => {
                       <Controller
                         name="cover_image"
                         control={control}
-                        render={({ field }) => (
-                          <input
-                            type="file"
-                            accept="image/*"
-                            className="w-full h-60 relative opacity-0 z-10"
-                            onChange={(e) => {
-                              field.onChange(e.target.files[0]); // Store the file object directly
-                            }}
-                          />
-                        )}
+                        render={({ field }) =>
+                          typeof window !== "undefined" && ( // Ensure it only runs on the client side
+                            <input
+                              type="file"
+                              accept="image/*"
+                              className="w-full h-60 relative opacity-0 z-10"
+                              onChange={(e) => {
+                                if (e.target.files && e.target.files[0]) {
+                                  field.onChange(e.target.files[0]); // Store the file object directly
+                                }
+                              }}
+                            />
+                          )
+                        }
                       />
+
                       <div className="absolute top-0 left-0 w-full h-60 bg-[#EAF7FC] rounded-md flex items-center justify-center">
                         <div className="h-1/2">
                           <IoMdImage
@@ -654,17 +659,22 @@ const CourseForm = () => {
                       <Controller
                         name={`addon.${index}.add_on_image`}
                         control={control}
-                        render={({ field }) => (
-                          <input
-                            type="file"
-                            accept="image/*"
-                            className="w-full h-60 relative opacity-0 z-10"
-                            onChange={(e) => {
-                              field.onChange(e.target.files[0]); // Store the file object directly
-                            }}
-                          />
-                        )}
+                        render={({ field }) =>
+                          typeof window !== "undefined" && ( // Ensure this only runs in the client environment
+                            <input
+                              type="file"
+                              accept="image/*"
+                              className="w-full h-60 relative opacity-0 z-10"
+                              onChange={(e) => {
+                                if (e.target.files && e.target.files[0]) {
+                                  field.onChange(e.target.files[0]); // Store the file object directly
+                                }
+                              }}
+                            />
+                          )
+                        }
                       />
+
                       <div className="absolute top-0 left-0 w-full h-60 bg-[#EAF7FC] rounded-md flex items-center justify-center">
                         <div className="h-1/2">
                           <IoMdImage
