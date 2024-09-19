@@ -5,7 +5,6 @@ import logo from "@/assets/images/logo.svg";
 import { Button } from "@/components/ui/button";
 import Image from "next/image";
 import { usePathname, useRouter } from "next/navigation";
-import LoadingSpinner from "@/components/reusables/LoadingSpinner";
 import { removeToken } from "@/helpers/removeToken";
 import { useAuth } from "@/Context/auth";
 import { useCourses } from "@/Context/courses";

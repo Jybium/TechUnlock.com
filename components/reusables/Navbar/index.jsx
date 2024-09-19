@@ -9,11 +9,7 @@ const Navbar = () => {
   return (
     <nav className="flex items-center justify-around bg-pri1 font-sora py-2 rounded-md">
       <div className="md:cursor-pointer z-50 md:w-auto w-full flex items-center justify-between">
-        <Image
-          src={image}
-          alt="techUnlock logo"
-          className="w-60"
-        />
+        <Image src={image} alt="techUnlock logo" className="w-60" />
       </div>
       <div className="md:flex hidden items-center gap-12 text-sec10">
         <span className="text-xl font-semibold">About</span>

@@ -1,7 +1,7 @@
 /* eslint-disable @next/next/no-img-element */
 
 import Image from "next/image";
-import image from "@/assets/landing-page/headerImage.png";
+import image from "@/assets/images/headerImage.png";
 import Link from "next/link";
 
 const Header = () => {

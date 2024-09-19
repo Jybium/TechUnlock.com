@@ -3,21 +3,21 @@
 @tailwind utilities;
 
 .header-img {
-  background-image: url("../assets/landing-page/headerbg.svg");
+  background-image: url("../assets/images/headerbg.svg");
   background-repeat: no-repeat;
   background-position: center;
   background-size: cover;
 }
 
 .find-connect {
-  background-image: url("../assets/landing-page/find_and_connect.jpg");
+  background-image: url("../assets/images/find_and_connect.jpg");
   background-position: center;
   background-repeat: no-repeat;
   background-size: cover;
 }
 
 .metrics {
-  background-image: url("../assets/landing-page/metricsBg.png");
+  background-image: url("../assets/images/metricsBg.png");
   background-position: center;
   background-repeat: no-repeat;
   background-size: cover;

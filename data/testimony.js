@@ -1,5 +1,5 @@
-import firstImage from "@/assets/landing-page/trainee.svg";
-import secondImage from "@/assets/landing-page/secondImage.png";
+import firstImage from "@/assets/images/trainee.svg";
+import secondImage from "@/assets/images/secondImage.png";
 
 const testimony = [
   {

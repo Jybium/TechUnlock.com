@@ -1,10 +1,10 @@
 "use client";
 
 import { useEffect, useState } from "react";
-import Programs from "./landingPage/Programs";
+import Programs from "@/components/reusables/Programs";
 import { removeToken } from "@/helpers/removeToken";
 import { useRouter, usePathname } from "next/navigation";
-import More from "./landingPage/More";
+import More from "@/components/reusables/More";
 import image from "@/assets/images/logo.svg";
 import Image from "next/image";
 import Link from "next/link";
@@ -15,7 +15,7 @@ import axios from "axios";
 import { IoIosArrowDown, IoIosArrowUp } from "react-icons/io";
 import { CgProfile } from "react-icons/cg";
 
-import logout from "@/assets/landing-page/logout.svg";
+import logout from "@/assets/images/logout.svg";
 
 const Navbar = () => {
   const [token, setToken] = useState("");
