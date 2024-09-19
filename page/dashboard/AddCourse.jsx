@@ -1,7 +1,8 @@
 "use client";
 
 import React from "react";
-import AddCourseForm from "@/components/forms/AddCourseForm";
+import dynamic from "next/dynamic";
+const AddCourseForm = dynamic(()=>  import("@/components/forms/AddCourseForm"),{ssr: false});
 
 const AddCourse = () => {
   return (
