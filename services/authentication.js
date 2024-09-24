@@ -67,7 +67,7 @@ export async function signUp(data) {
   const host = getHost("prod"); // Example hardcoded to 'prod'
 
   return handleRequest(
-    (data) => axios.post(`https://${host}/account/sign-up/`, data),
+    (data) => axios.post(`${host}/account/sign-up/`, data),
     data,
     formSchema
   );
@@ -84,10 +84,7 @@ export async function signIn(data) {
 
   return handleRequest(
     async (data) => {
-      const response = await axios.post(
-        `https://${host}/account/sign-in/`,
-        data
-      );
+      const response = await axios.post(`${host}/account/sign-in/`, data);
 
       // Extract token from response and set cookie
       const token = { token: response.data.token.access };
@@ -116,7 +113,7 @@ export async function resetPassword(data) {
   const host = getHost("prod");
 
   return handleRequest(
-    (data) => axios.post(`https://${host}/account/set-password/`, data),
+    (data) => axios.post(`${host}/account/set-password/`, data),
     data,
     resetFormSchema
   );
@@ -132,7 +129,7 @@ export async function forgotPassword(data) {
   const host = getHost("prod");
 
   return handleRequest(
-    (data) => axios.post(`https://${host}/account/recover-password/`, data),
+    (data) => axios.post(`${host}/account/recover-password/`, data),
     data,
     forgotFormSchema
   );
