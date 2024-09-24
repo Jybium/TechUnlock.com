@@ -60,6 +60,7 @@ export async function middleware(request) {
       const allowedUrls = new Set([
         "https://techunlock.org/api",
         "http://localhost:3000",
+        "http://localhost:3001",
       ]);
 
       // Validate the request URL

@@ -10,7 +10,7 @@ const BASE_URL = process.env.NEXT_PUBLIC_BASE_URL;
 // Allowed hosts to prevent SSRF
 const allowedHosts = new Map([
   ["prod", BASE_URL],
-  ["dev", "dev.api.com"],
+  ["dev", "https://techunlock.pythonanywhere.com"],
 ]);
 
 // Helper function to get the host
@@ -68,8 +68,8 @@ export async function signUp(data) {
 
   return handleRequest(
     (data) => axios.post(`${host}/account/sign-up/`, data),
-    data,
-    formSchema
+    data
+    // formSchema
   );
 }
 

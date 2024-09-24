@@ -73,7 +73,7 @@ const SignUpForm = () => {
         setIsLoading(true);
         const result = await signUp(values);
         showSuccessToast(result.message || "Account login successfully.");
-        router.push("/courses");
+        router.push("/login");
       } catch (error) {
         showErrorToast(error.message || "An error occurred. Please try again.");
       } finally {
