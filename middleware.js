@@ -37,9 +37,7 @@ export async function middleware(request) {
 
     if (!token) {
       // Allow the request to proceed even if the token is not present
-      console.log(
-        "No token found, but proceeding with the request to /courses/verify"
-      );
+
       return NextResponse.next();
     }
 
@@ -59,27 +57,43 @@ export async function middleware(request) {
 
     try {
       // Send the request to the server to check token validity
+      const allowedUrls = new Set([
+        "https://techunlock.org/api",
+        "http://localhost:3000",
+      ]);
+
+      // Validate the request URL
+      if (!allowedUrls.has(request.url)) {
+        throw new Error("Unauthorized request URL");
+      }
+
       const response = await fetch(request.url, {
         method: request.method,
         headers: {
           ...Object.fromEntries(request.headers.entries()),
-          Authorization: `Bearer ${token}`,
+          Authorization: `Bearer ${token}`, // Ensure the token is properly scoped
         },
         body: request.body,
       });
 
+      // Handle response errors
+      if (!response.ok) {
+        const errorData = await response.json();
+        throw new Error(
+          errorData.message || "An error occurred while processing the request."
+        );
+      }
+
       if (response.ok) {
-        console.log("Token validation successful");
         // Continue with the request
         return NextResponse.next();
       } else {
-        console.log("Token validation failed with status:", response.status);
         // Redirect to login on unauthorized or bad request, with redirect URL parameter
         return redirectToLogin();
       }
     } catch (error) {
       // Handle fetch errors
-      console.error("Token validation failed with error:", error);
+
       return redirectToLogin();
     }
   }

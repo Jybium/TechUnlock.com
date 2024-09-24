@@ -24,9 +24,7 @@ const SpecificCoursePage = () => {
       ];
       const foundCourse = allCourses.find((item) => item.id === parseInt(id)); // find the course by ID
       setCourse(foundCourse);
-    } catch (error) {
-      console.error("Error fetching course:", error.message);
-    }
+    } catch (error) {}
   };
 
   useEffect(() => {

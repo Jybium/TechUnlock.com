@@ -54,7 +54,7 @@ const Success = () => {
           `${BASE_URL}/payment/verify-payment/${params.get("trxref")}/`
         );
         const data = await response.json();
-        console.log(data);
+  
 
         if (response.status === 400 || response.status === 401) {
           router.push("/login");

@@ -41,7 +41,6 @@ export const AuthProvider = ({ children }) => {
       if (error.response?.status === 401 || error.response?.status === 400) {
         handleInvalidToken();
       } else {
-        console.error("Failed to fetch account details:", error);
         // Optionally handle other errors
       }
     } finally {

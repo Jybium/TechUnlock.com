@@ -81,7 +81,6 @@ const SignInForm = () => {
         router.push("/courses"); // Default to courses page if no redirect is specified
       }
     } catch (error) {
-      console.log(error);
       showErrorToast("Check credentials and try again");
     } finally {
       setIsLoading(false);

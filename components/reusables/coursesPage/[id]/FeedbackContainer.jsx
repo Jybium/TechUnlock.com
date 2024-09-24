@@ -104,7 +104,8 @@ const reviews = {
 
 const getRandomReview = (category) => {
   const categoryReviews = reviews[category] || reviews["default"];
-  const randomIndex = Math.floor(Math.random() * categoryReviews.length);
+  const randomIndex =
+    crypto.getRandomValues(new Uint32Array(1))[0] % categoryReviews.length;
   return categoryReviews[randomIndex];
 };
 

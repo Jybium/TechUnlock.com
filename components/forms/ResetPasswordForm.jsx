@@ -65,7 +65,7 @@ export default function ResetPasswordForm({ id }) {
       setIsLoading(true);
 
       const result = await resetPassword(data);
-      console.log(result);
+  
 
       showSuccessToast(result.message || "Password reset successfully.");
 

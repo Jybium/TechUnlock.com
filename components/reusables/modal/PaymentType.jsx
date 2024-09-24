@@ -60,7 +60,6 @@ const PaymentTypeSelect = () => {
         router.push("/profile");
       }
     } catch (error) {
-      console.error("Error making payment:", error);
       // Show error message to user
       showErrorToast("An error occurred while making payment");
     } finally {

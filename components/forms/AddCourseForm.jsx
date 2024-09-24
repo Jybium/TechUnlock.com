@@ -147,10 +147,9 @@ const CourseForm = () => {
     name: "course_skills",
   });
 
-  // console.log(errors);
 
   const onSubmit = async (data) => {
-    console.log(data);
+
 
     // Handle offline state
     if (!navigator.onLine) {

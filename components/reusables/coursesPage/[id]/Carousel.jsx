@@ -77,7 +77,6 @@ const Dot = styled.div`
 `;
 
 const Carousel = ({ slides }) => {
-  console.log(slides);
   const [currentSlide, setCurrentSlide] = useState(0);
   const slideInterval = useRef(null);
 

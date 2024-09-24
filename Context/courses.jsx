@@ -17,7 +17,6 @@ export const CoursesProvider = ({ children }) => {
       setCourses(data);
       setLoading(false);
     } catch (error) {
-      console.error("Error fetching courses:", error.message);
       setLoading(false);
     } finally {
       setLoading(false);
@@ -28,9 +27,7 @@ export const CoursesProvider = ({ children }) => {
     try {
       const data = await getEnrolledCourses();
       setEnrolledCourses(data.enrolled_courses);
-    } catch (error) {
-      console.error("Error fetching courses:", error.message);
-    }
+    } catch (error) {}
   };
 
   useEffect(() => {

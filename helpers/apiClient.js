@@ -1,8 +1,13 @@
 import axios from "axios";
 import { fetchToken } from "./getToken";
 
+
+
+const BASE_URL = process.env.NEXT_PUBLIC_BASE_URL;
+
+
 const apiClient = axios.create({
-  baseURL: "https://techunlock.pythonanywhere.com",
+  baseURL: BASE_URL,
 });
 
 let cachedToken = null;

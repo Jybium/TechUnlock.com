@@ -27,17 +27,16 @@ const SelectCourse = ({ setFilter, filter }) => {
 
   const handleInputChange = (value) => {
     setFilter(value);
-    console.log(filter);
   };
 
   return (
     <motion.div
-      className="w-full max-w-md"
+      className="max-w-md"
       initial={{ opacity: 0, y: 20 }}
       animate={{ opacity: 1, y: 0 }}
       transition={{ duration: 0.5 }}
     >
-      <div className="space-y-4 w-5/6 mx-auto">
+      <div className="flex justify-between mx-16 w-5/6">
         <FormProvider>
           <Form {...methods}>
             <FormItem className="flex w-full lg:w-[90%] lg:mx-auto gap-x-4 items-center">
@@ -70,6 +69,8 @@ const SelectCourse = ({ setFilter, filter }) => {
             </FormItem>
           </Form>
         </FormProvider>
+
+        <div className=""></div>
       </div>
     </motion.div>
   );

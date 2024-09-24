@@ -27,9 +27,7 @@ const SkillsToGainFieldArray = () => {
     name: "skills_to_gain",
   });
 
-  const onSubmit = (data) => {
-    console.log(data);
-  };
+  const onSubmit = (data) => {};
 
   const handleSelectChange = (selectedOptions) => {
     setValue(

@@ -1,8 +1,8 @@
-"use client"
+"use client";
 
 import React, { ReactNode } from "react";
 
-class NotFoundBoundary extends React.Component{
+class NotFoundBoundary extends React.Component {
   constructor(props) {
     super(props);
     this.state = { hasError: false, error: null };
@@ -12,9 +12,7 @@ class NotFoundBoundary extends React.Component{
     return { hasError: true, error };
   }
 
-  componentDidCatch(error, errorInfo) {
-    console.error("Error caught in NotFoundBoundary:", error, errorInfo);
-  }
+  componentDidCatch(error, errorInfo) {}
 
   render() {
     if (this.state.hasError) {

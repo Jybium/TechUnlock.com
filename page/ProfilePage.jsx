@@ -10,7 +10,7 @@ const ProfilePage = () => {
   const { enrolledCourses } = useCourses();
   const { auth, loading } = useAuth();
 
-  console.log(enrolledCourses)
+
 
   if (loading) {
     return <LoadingSpinner />;
