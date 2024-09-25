@@ -10,7 +10,11 @@ const ProfilePage = () => {
   const { enrolledCourses } = useCourses();
   const { auth, loading } = useAuth();
 
+  const [userDetails, setUserDetails] = React.useState();
 
+  React.useEffect(() => {
+    setUserDetails(auth);
+  }, [auth]);
 
   if (loading) {
     return <LoadingSpinner />;
@@ -38,24 +42,24 @@ const ProfilePage = () => {
 
             <div className="flex flex-col gap-y-4 ml-auto">
               <p className="text-semibold text-xl text-gray-900 capitalize">
-                {auth?.first_name}
+                {userDetails?.first_name}
               </p>
               <p className="text-semibold text-xl text-gray-900 capitalize">
-                {auth?.last_name}
+                {userDetails?.last_name}
               </p>
               <p className="text-semibold text-xl text-gray-900 lowercase">
-                {auth?.email || "-"}
+                {userDetails?.email || "-"}
               </p>
               <p className="text-semibold text-xl text-gray-900">
-                {auth?.phone_number || "-"}
+                {userDetails?.phone_number || "-"}
               </p>
               <p className="text-semibold text-xl text-gray-900">
-                {auth?.gender || "-"}
+                {userDetails?.gender || "-"}
               </p>
               <p className="text-semibold text-xl text-gray-900">
-                {`${auth?.home_address || ""} ${auth?.state || ""} ${
-                  auth?.country
-                }` || "-"}
+                {`${userDetails?.home_address || ""} ${
+                  userDetails?.state || ""
+                } ${userDetails?.country}` || "-"}
               </p>
             </div>
           </div>
@@ -64,13 +68,13 @@ const ProfilePage = () => {
             <div className="grid gap-y-2">
               <p className="text-semibold text-xl text-gray-900">First name:</p>
               <p className="text-semibold text-xl text-gray-900 capitalize">
-                {auth?.first_name}
+                {userDetails?.first_name}
               </p>
             </div>
             <div className="grid gap-y-2">
               <p className="text-semibold text-xl text-gray-900">Last name:</p>
               <p className="text-semibold text-xl text-gray-900 capitalize">
-                {auth?.last_name}
+                {userDetails?.last_name}
               </p>
             </div>
             <div className="grid gap-y-2">
@@ -78,22 +82,22 @@ const ProfilePage = () => {
                 Email address:
               </p>
               <p className="text-semibold text-xl text-gray-900 lowercase">
-                {auth?.email || "-"}
+                {userDetails?.email || "-"}
               </p>
             </div>
             <div className="grid gap-y-2">
               <p className="text-semibold text-xl text-gray-900">Gender:</p>
               <p className="text-semibold text-xl text-gray-900">
-                {auth?.gender || "-"}
+                {userDetails?.gender || "-"}
               </p>
             </div>
 
             <div className="grid gap-y-2">
               <p className="text-semibold text-xl text-gray-900">Location:</p>
               <p className="text-semibold text-xl text-gray-900">
-                {`${auth?.home_address || ""} ${auth?.state || ""} ${
-                  auth?.country
-                }` || "-"}
+                {`${userDetails?.home_address || ""} ${
+                  userDetails?.state || ""
+                } ${userDetails?.country}` || "-"}
               </p>
             </div>
             <div className="grid gap-y-2">
@@ -101,7 +105,7 @@ const ProfilePage = () => {
                 Phone number:
               </p>
               <p className="text-semibold text-xl text-gray-900">
-                {auth?.phone_number || "-"}
+                {userDetails?.phone_number || "-"}
               </p>
             </div>
           </div>

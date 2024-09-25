@@ -162,7 +162,7 @@ const Navbar = () => {
               <Link
                 href="/profile"
                 className="cursor-pointer text-pri9 py-1 flex items-center gap-x-4"
-                onClick={toggleMenu}
+                onClick={openProfile}
               >
                 <CgProfile size={20} /> View profile
               </Link>
@@ -244,7 +244,7 @@ const Navbar = () => {
                 <Link
                   href="/profile"
                   className="cursor-pointer text-pri9 py-1 flex items-center gap-x-4"
-                  onClick={toggleMenu}
+                  onClick={openProfile}
                 >
                   <CgProfile size={20} /> View profile
                 </Link>

@@ -59,7 +59,6 @@ export const AuthProvider = ({ children }) => {
         router.push("/login");
       });
     } else {
-      // Optionally, handle other cases if needed
       removeToken();
     }
   };
