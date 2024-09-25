@@ -29,7 +29,7 @@ export const AuthProvider = ({ children }) => {
     try {
       setLoading(true);
       const response = await axios.get(
-        "https://techunlock.pythonanywhere.com/account/account-details/",
+        "https://techunlock.org/api/account/account-details/",
         {
           headers: {
             Authorization: `Bearer ${token}`,

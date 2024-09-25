@@ -16,7 +16,7 @@ import { Button } from "../ui/button";
 import { showErrorToast, showSuccessToast } from "@/helpers/toastUtil";
 import Link from "next/link";
 
-const BASE_URL = "https://techunlock.pythonanywhere.com";
+const BASE_URL = "https://techunlock.org/api";
 
 const Success = () => {
   const params = useSearchParams();
@@ -54,7 +54,6 @@ const Success = () => {
           `${BASE_URL}/payment/verify-payment/${params.get("trxref")}/`
         );
         const data = await response.json();
-  
 
         if (response.status === 400 || response.status === 401) {
           router.push("/login");
