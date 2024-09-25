@@ -45,7 +45,7 @@ const Navbar = () => {
     try {
       setLoading(true);
       const response = await axios.get(
-        "https://techunlock.org/account/account-details/",
+        "https://techunlock.org/api/account/account-details/",
         {
           headers: {
             Authorization: `Bearer ${token}`,
