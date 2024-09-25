@@ -95,7 +95,7 @@ export async function signIn(data) {
       });
 
       if (!apiResponse.ok) throw new Error("Failed to set cookie");
-
+      console.log(response);
       return response;
     },
     data,

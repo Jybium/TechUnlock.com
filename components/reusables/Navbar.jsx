@@ -45,7 +45,7 @@ const Navbar = () => {
     try {
       setLoading(true);
       const response = await axios.get(
-        "https://techunlock.pythonanywhere.com/account/account-details/",
+        "https://techunlock.org/account/account-details/",
         {
           headers: {
             Authorization: `Bearer ${token}`,
@@ -57,7 +57,6 @@ const Navbar = () => {
       if (error.response?.status === 401 || error.response?.status === 400) {
         handleInvalidToken();
       } else {
-
         // Optionally handle other errors
       }
     } finally {
