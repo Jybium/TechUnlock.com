@@ -8,7 +8,7 @@ const SearchBar = ({ setData }) => {
   };
 
   return (
-    <div className="max-w-xl lg:max-w-3xl w-full mx-auto my-2 lg:my-4">
+    <div className="max-w-xl lg:max-w-4xl w-full mx-auto my-2 lg:my-4">
       <div className="flex items-center justify-between gap-x-4 rounded border border-gray-900 w-5/6 lg:w-4/6 mx-auto p-1">
         <Input
           type="text"

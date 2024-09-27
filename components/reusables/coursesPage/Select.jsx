@@ -31,15 +31,15 @@ const SelectCourse = ({ setFilter, filter }) => {
 
   return (
     <motion.div
-      className="max-w-md"
+      className="mx-[6.5%] max-w-md"
       initial={{ opacity: 0, y: 20 }}
       animate={{ opacity: 1, y: 0 }}
       transition={{ duration: 0.5 }}
     >
-      <div className="flex justify-between mx-16 w-5/6">
+      <div className="flex justify-between">
         <FormProvider>
           <Form {...methods}>
-            <FormItem className="flex w-full lg:w-[90%] lg:mx-auto gap-x-4 items-center">
+            <FormItem className="flex w-full gap-x-4 items-center">
               <FormLabel className="text-base whitespace-nowrap">
                 All Courses:
               </FormLabel>
@@ -69,8 +69,6 @@ const SelectCourse = ({ setFilter, filter }) => {
             </FormItem>
           </Form>
         </FormProvider>
-
-        <div className=""></div>
       </div>
     </motion.div>
   );
