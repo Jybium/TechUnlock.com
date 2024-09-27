@@ -31,7 +31,7 @@ import { useCourses } from "@/Context/courses";
 
 export const BannerCard = ({ course }) => {
   const { courses } = useCourses();
-  const [Courses, setCourses] = React.useState();
+  const [enrolledCourses, setEnrolledCourses] = useState();
   const [currentIndex, setCurrentIndex] = useState(0);
   const [selectedOption, setSelectedOption] = useState("onsite");
   const router = useRouter();
@@ -56,8 +56,15 @@ export const BannerCard = ({ course }) => {
   ];
 
   useEffect(() => {
-    setCourses(courses);
+    if (courses) {
+      setEnrolledCourses(courses.enrolled_courses);
+    }
   }, [courses]);
+
+  // Check if the current course is enrolled
+  const isEnrolled = enrolledCourses?.some(
+    (enrolled) => enrolled.id === course.id
+  );
 
   useEffect(() => {
     const interval = setInterval(() => {
@@ -163,15 +170,9 @@ export const BannerCard = ({ course }) => {
         <Button
           onClick={() => router.push(`/courses/${course.id}/pay`)}
           className="w-full"
-          disabled={
-            course?.id ===
-            Courses?.enrolled_courses?.find((item) => item?.id === course?.id)
-          }
+          disabled={isEnrolled}
         >
-          {course?.id ===
-          Courses?.enrolled_courses?.find((item) => item?.id === course?.id)
-            ? "Already enrolled"
-            : "Apply Now"}
+          {isEnrolled ? "Already enrolled" : "Apply Now"}
         </Button>
         {/* <Button variant="outline">Save for Later</Button> */}
       </div>

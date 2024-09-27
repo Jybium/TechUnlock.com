@@ -25,70 +25,11 @@ import LoadingSpinner from "../reusables/LoadingSpinner";
 import { useRouter } from "next/navigation";
 import { Button } from "../ui/button";
 import axios from "axios";
-
-const skillSuggestions = [
-  { value: "JavaScript", label: "JavaScript" },
-  { value: "React", label: "React" },
-  { value: "Node.js", label: "Node.js" },
-  { value: "Python", label: "Python" },
-  { value: "Django", label: "Django" },
-  { value: "AI Concepts", label: "AI Concepts" },
-  { value: "Data types and structures", label: "Data types and structures" },
-  { value: "Predictive Models", label: "Predictive Models" },
-  { value: "Dependencies", label: "Dependencies" },
-  { value: "CSV, JSON, text files", label: "CSV, JSON, text files" },
-  { value: "NumPy", label: "NumPy" },
-  { value: "Matplotlib", label: "Matplotlib" },
-  { value: "Pandas", label: "Pandas" },
-  { value: "HTML Basics", label: "HTML Basics" },
-  { value: "Domain & Hosting", label: "Domain & Hosting" },
-  { value: "HTTPS", label: "HTTPS" },
-  { value: "URL", label: "URL" },
-  { value: "HTML", label: "HTML" },
-  { value: "CSS", label: "CSS" },
-  { value: "GIT", label: "GIT" },
-  { value: "Backend Logic", label: "Backend Logic" },
-  { value: "Frontend Logic", label: "Frontend Logic" },
-  { value: "UI/UX Design", label: "UI/UX Design" },
-  { value: "Responsive Design", label: "Responsive Design" },
-  { value: "CSS Frameworks", label: "CSS Frameworks" },
-  { value: "Bootstrap", label: "Bootstrap" },
-  { value: "UI Design", label: "UI Design" },
-  { value: "User Experience", label: "User Experience" },
-  { value: "Design Thinking", label: "Design Thinking" },
-  { value: "Figma", label: "Figma" },
-  { value: "Prototyping", label: "Prototyping" },
-  { value: "Wireframing", label: "Wireframing" },
-  { value: "Design Principles", label: "Design Principles" },
-  { value: "Product Design", label: "Product Design" },
-  { value: "Mock-up Design", label: "Mock-up Design" },
-  { value: "Design Systems", label: "Design Systems" },
-  { value: "Social Media", label: "Social Media" },
-  { value: "Content Creation", label: "Content Creation" },
-  { value: "Digital Media", label: "Digital Media" },
-  {
-    value: "Ideal Customer Profile (ICP)",
-    label: "Ideal Customer Profile (ICP)",
-  },
-  { value: "Sponsored Advert", label: "Sponsored Advert" },
-  { value: "Target Audience", label: "Target Audience" },
-  { value: "SEO", label: "SEO" },
-  { value: "PPC", label: "PPC" },
-  { value: "Content Marketing", label: "Content Marketing" },
-  { value: "Analytics", label: "Analytics" },
-  { value: "Content Writing", label: "Content Writing" },
-  { value: "Copywriting", label: "Copywriting" },
-  { value: "Technical Writing", label: "Technical Writing" },
-  { value: "Branding", label: "Branding" },
-  { value: "Marketing Strategy", label: "Marketing Strategy" },
-  { value: "Marketing Research", label: "Marketing Research" },
-  { value: "Marketing Analysis", label: "Marketing Analysis" },
-  { value: "KPIs", label: "KPIs" },
-  { value: "Reporting", label: "Reporting" },
-  { value: "Insights", label: "Insights" },
-];
+import skillSuggestions from "@/data/skills";
+import AddonsSection from "./AddOnSection";
 
 const CourseForm = () => {
+  const [imagePreview, setImagePreview] = useState();
   const [isLoading, setIsLoading] = useState(false);
   const [isOnline, setIsOnline] = useState(true);
   const router = useRouter();
@@ -147,10 +88,7 @@ const CourseForm = () => {
     name: "course_skills",
   });
 
-
   const onSubmit = async (data) => {
-
-
     // Handle offline state
     if (!navigator.onLine) {
       showErrorToast("You are offline. Please check your network connection.");
@@ -283,14 +221,19 @@ const CourseForm = () => {
                         name="cover_image"
                         control={control}
                         render={({ field }) =>
-                          typeof window !== "undefined" && ( // Ensure it only runs on the client side
+                          typeof window !== "undefined" && (
                             <input
                               type="file"
                               accept="image/*"
                               className="w-full h-60 relative opacity-0 z-10"
                               onChange={(e) => {
                                 if (e.target.files && e.target.files[0]) {
-                                  field.onChange(e.target.files[0]); // Store the file object directly
+                                  const file = e.target.files[0];
+                                  field.onChange(file); // Store the file object directly
+
+                                  // Generate a preview URL for the selected image
+                                  const previewUrl = URL.createObjectURL(file);
+                                  setImagePreview(previewUrl); // Set the preview URL
                                 }
                               }}
                             />
@@ -298,22 +241,38 @@ const CourseForm = () => {
                         }
                       />
 
-                      <div className="absolute top-0 left-0 w-full h-60 bg-[#EAF7FC] rounded-md flex items-center justify-center">
-                        <div className="h-1/2">
-                          <IoMdImage
-                            size={100}
-                            className="text-gray-400 mx-auto"
-                          />
-                          <p className="text-sm text-[#5249C5] text-center flex items-center gap-x-2">
-                            <span className="">
-                              <CiCirclePlus className="text-gray-600 text-lg" />
-                            </span>{" "}
-                            Add Photo
-                          </p>
-                        </div>
+                      {/* Image Preview or Default UI */}
+                      <div
+                        className={`absolute top-0 left-0 w-full h-60 rounded-md flex items-center justify-center ${
+                          imagePreview ? "" : "bg-[#EAF7FC]"
+                        }`}
+                        style={{
+                          backgroundImage: imagePreview
+                            ? `url(${imagePreview})`
+                            : "none",
+                          backgroundSize: "cover",
+                          backgroundPosition: "center",
+                        }}
+                      >
+                        {/* If no image preview, show the default "Add Photo" UI */}
+                        {!imagePreview && (
+                          <div className="h-1/2">
+                            <IoMdImage
+                              size={100}
+                              className="text-gray-400 mx-auto"
+                            />
+                            <p className="text-sm text-[#5249C5] text-center flex items-center gap-x-2">
+                              <span>
+                                <CiCirclePlus className="text-gray-600 text-lg" />
+                              </span>{" "}
+                              Add Photo
+                            </p>
+                          </div>
+                        )}
                       </div>
                     </div>
                   </div>
+
                   {errors.cover_image && (
                     <span className="text-red-500">
                       {errors.cover_image.message}
@@ -624,115 +583,11 @@ const CourseForm = () => {
             </div>
 
             {/* Add-ons Section */}
-            <div className="space-y-3">
-              <h1 className="text-pri10 text-3xl font-semibold">Add-ons</h1>
-              {methods.watch("addon")?.map((_, index) => (
-                <div key={index} className="grid gap-5">
-                  {/* Addon Title */}
-                  <div className="w-1/2">
-                    <label htmlFor={`addon.${index}.title`}>Addon Title</label>
-                    <Controller
-                      name={`addon.${index}.title`}
-                      control={control}
-                      render={({ field }) => (
-                        <input
-                          {...field}
-                          type="text"
-                          placeholder="Enter addon title"
-                        />
-                      )}
-                    />
-                    {errors.addon?.[index]?.title && (
-                      <span className="text-red-500">
-                        {errors.addon[index].title.message}
-                      </span>
-                    )}
-                  </div>
-
-                  {/* Addon Image */}
-                  <div>
-                    <label htmlFor={`addon.${index}.add_on_image`}>
-                      Addon Image
-                    </label>
-                    <div className="relative w-[30%] h-60">
-                      <Controller
-                        name={`addon.${index}.add_on_image`}
-                        control={control}
-                        render={({ field }) =>
-                          typeof window !== "undefined" && ( // Ensure this only runs in the client environment
-                            <input
-                              type="file"
-                              accept="image/*"
-                              className="w-full h-60 relative opacity-0 z-10"
-                              onChange={(e) => {
-                                if (e.target.files && e.target.files[0]) {
-                                  field.onChange(e.target.files[0]); // Store the file object directly
-                                }
-                              }}
-                            />
-                          )
-                        }
-                      />
-
-                      <div className="absolute top-0 left-0 w-full h-60 bg-[#EAF7FC] rounded-md flex items-center justify-center">
-                        <div className="h-1/2">
-                          <IoMdImage
-                            size={100}
-                            className="text-gray-400 mx-auto"
-                          />
-                          <p className="text-sm text-[#5249C5] text-center flex items-center gap-x-2">
-                            <span className="">
-                              <CiCirclePlus className="text-gray-600 text-lg" />
-                            </span>{" "}
-                            Add Photo
-                          </p>
-                        </div>
-                      </div>
-                    </div>
-                    {errors.addon?.[index]?.add_on_image && (
-                      <span className="text-red-500">
-                        {errors.addon[index].add_on_image.message}
-                      </span>
-                    )}
-                  </div>
-
-                  {/* Addon Description */}
-                  <div className="">
-                    <label htmlFor={`addon.${index}.description`}>
-                      Addon Description
-                    </label>
-                    <Controller
-                      name={`addon.${index}.description`}
-                      control={control}
-                      render={({ field }) => (
-                        <textarea
-                          {...field}
-                          placeholder="Enter addon description"
-                        ></textarea>
-                      )}
-                    />
-                    {errors.addon?.[index]?.description && (
-                      <span className="text-red-500">
-                        {errors.addon[index].description.message}
-                      </span>
-                    )}
-                  </div>
-                </div>
-              ))}
-
-              <Button
-                type="button"
-                className="bg-pri1 text-[#1C6B88] border border-primary mt-4"
-                onClick={() =>
-                  methods.setValue("addon", [
-                    ...(methods.getValues("addon") || []),
-                    { title: "", add_on_image: "", description: "" },
-                  ])
-                }
-              >
-                Add Add-on
-              </Button>
-            </div>
+            <AddonsSection
+              control={control}
+              methods={methods}
+              errors={errors}
+            />
 
             {/* Submit Button */}
             <div className="flex justify-end">

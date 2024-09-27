@@ -1,25 +1,69 @@
 "use client";
 
-import React from "react";
+import React, { useState, useEffect } from "react";
 import { useCourses } from "@/Context/courses";
 import { useAuth } from "@/Context/auth";
 import LoadingSpinner from "@/components/reusables/LoadingSpinner";
 import EnrolledCourseCard from "@/components/reusables/profilePage/EnrolledCourseCard";
+import { fetchToken } from "@/helpers/getToken";
+import axios from "axios";
 
 const ProfilePage = () => {
   const { enrolledCourses } = useCourses();
-  const { auth, loading } = useAuth();
+  const [userDetails, setUserDetails] = useState(null); // Manage user details state
+  const [loading, setLoading] = useState(true); // Manage loading state
+  const [error, setError] = useState(null); // Manage error state
 
-  const [userDetails, setUserDetails] = React.useState();
+  useEffect(() => {
+    const fetchTokens = async () => {
+      const token = await fetchToken();
+      if (token) {
+        await fetchAccountDetails(token);
+      }
+      setLoading(false); // Set loading to false after fetching user details
+    };
 
-  React.useEffect(() => {
-    setUserDetails(auth);
-  }, [auth]);
+    fetchTokens();
+  }, []);
 
+  const fetchAccountDetails = async (token) => {
+    try {
+      const response = await axios.get(
+        "https://techunlock.org/api/account/account-details/",
+        {
+          headers: {
+            Authorization: `Bearer ${token}`,
+          },
+        }
+      );
+      setUserDetails(response.data);
+    } catch (error) {
+      setError("Failed to load account details. Please try again.");
+      if (error.response?.status === 401 || error.response?.status === 400) {
+        handleInvalidToken();
+      }
+    }
+  };
+
+  // Show spinner while loading data
   if (loading) {
-    return <LoadingSpinner />;
+    return (
+      <div className="flex justify-center items-center min-h-screen">
+        <LoadingSpinner />
+      </div>
+    );
   }
 
+  // Show error message if any error occurred
+  if (error) {
+    return (
+      <div className="flex justify-center items-center min-h-screen">
+        <p className="text-red-500">{error}</p>
+      </div>
+    );
+  }
+
+  // Show the UI once data is available
   return (
     <div className="w-[90%] lg:w-[85%] mx-auto">
       <div className="grid gap-y-8">
@@ -59,11 +103,12 @@ const ProfilePage = () => {
               <p className="text-semibold text-xl text-gray-900">
                 {`${userDetails?.home_address || ""} ${
                   userDetails?.state || ""
-                } ${userDetails?.country}` || "-"}
+                } ${userDetails?.country || ""}` || "-"}
               </p>
             </div>
           </div>
 
+          {/* Mobile view */}
           <div className="grid gap-y-5 lg:hidden mt-5">
             <div className="grid gap-y-2">
               <p className="text-semibold text-xl text-gray-900">First name:</p>
@@ -97,7 +142,7 @@ const ProfilePage = () => {
               <p className="text-semibold text-xl text-gray-900">
                 {`${userDetails?.home_address || ""} ${
                   userDetails?.state || ""
-                } ${userDetails?.country}` || "-"}
+                } ${userDetails?.country || ""}` || "-"}
               </p>
             </div>
             <div className="grid gap-y-2">
@@ -111,6 +156,7 @@ const ProfilePage = () => {
           </div>
         </div>
 
+        {/* Enrolled Courses */}
         <div className="space-y-9">
           <div className="flex items-center gap-x-5">
             <p className="text-pri10 font-semibold text-2xl">

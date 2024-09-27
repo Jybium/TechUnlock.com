@@ -134,3 +134,26 @@ export async function forgotPassword(data) {
     forgotFormSchema
   );
 }
+
+export async function whoami() {
+  const fetchAccountDetails = async (token) => {
+    try {
+      const response = await axios.get(
+        "https://techunlock.org/api/account/account-details/",
+        {
+          headers: {
+            Authorization: `Bearer ${token}`,
+          },
+        }
+      );
+
+      return response.data;
+    } catch (error) {
+      if (error.response?.status === 401 || error.response?.status === 400) {
+        handleInvalidToken();
+      } else {
+      }
+    } finally {
+    }
+  };
+}

@@ -74,7 +74,7 @@ const ForgotPasswordForm = () => {
         );
 
         setTimeout(() => {
-          router.push("/success");
+          router.push("/login");
         }, 3000);
       } catch (error) {
         showSuccessToast(
