@@ -51,8 +51,12 @@ export const BannerCard = ({ course }) => {
           : AI,
       option: "pace",
     },
-    { id: 2, image: physicalClass, option: "onsite" },
-    { id: 3, image: mentor, option: "tutor" },
+    // Include onsite image if is_physical is true
+    ...(course?.is_physical
+      ? [{ id: 2, image: physicalClass, option: "onsite" }]
+      : []),
+    // Include tutor image if is_physical is false
+    ...(course?.is_physical ? [] : [{ id: 3, image: mentor, option: "tutor" }]),
   ];
 
   useEffect(() => {
