@@ -140,18 +140,23 @@ export const BannerCard = ({ course }) => {
               <span className="capitalize">{course?.difficulty}</span> class
             </Label>
           </div>
-          <div className="flex items-center space-x-4">
-            <RadioGroupItem value="onsite" id="onsite" />
-            <Label htmlFor="onsite" className={getLabelClass("onsite")}>
-              Physical classes are available
-            </Label>
-          </div>
-          <div className="flex items-center space-x-4">
-            <RadioGroupItem value="tutor" id="tutor" />
-            <Label htmlFor="tutor" className={getLabelClass("tutor")}>
-              Online class with a tutor
-            </Label>
-          </div>
+          {course?.is_physical && (
+            <div className="flex items-center space-x-4">
+              <RadioGroupItem value="onsite" id="onsite" />
+              <Label htmlFor="onsite" className={getLabelClass("onsite")}>
+                Physical classes are available
+              </Label>
+            </div>
+          )}
+
+          {!course?.is_physical && (
+            <div className="flex items-center space-x-4">
+              <RadioGroupItem value="tutor" id="tutor" />
+              <Label htmlFor="tutor" className={getLabelClass("tutor")}>
+                Online class with a tutor
+              </Label>
+            </div>
+          )}
         </RadioGroup>
         <div className="text-sm text-white font-medium space-y-2 mt-3">
           <p className="flex items-center gap-x-4">

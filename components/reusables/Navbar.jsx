@@ -9,7 +9,7 @@ import image from "@/assets/images/logo.svg";
 import Image from "next/image";
 import Link from "next/link";
 import { fetchToken } from "@/helpers/getToken";
-import { Menu, X } from "lucide-react";
+import { CirclePlus, Menu, X } from "lucide-react";
 import { showSuccessToast } from "@/helpers/toastUtil";
 import axios from "axios";
 import { IoIosArrowDown, IoIosArrowUp } from "react-icons/io";
@@ -166,6 +166,16 @@ const Navbar = () => {
               >
                 <CgProfile size={20} /> View profile
               </Link>
+
+              {accountDetails && accountDetails.is_admin_user && (
+                <Link
+                  href="/dashboard/add-course"
+                  className="cursor-pointer text-pri9 py-1 flex items-center gap-x-4"
+                  onClick={openProfile}
+                >
+                  <CirclePlus size={20} /> Add course
+                </Link>
+              )}
 
               <p
                 className={`cursor-pointer text-red-500 py-1 flex items-center gap-x-4`}
