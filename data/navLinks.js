@@ -60,13 +60,13 @@ const navLinks = [
       //   },
     ],
   },
-  {
-    id: 3,
-    name: "Notifications",
-    to: "/dashboard/notifications",
-    iconActive: NotificationIcon,
-    iconInactive: "",
-  },
+  // {
+  //   id: 3,
+  //   name: "Notifications",
+  //   to: "/dashboard/notifications",
+  //   iconActive: NotificationIcon,
+  //   iconInactive: "",
+  // },
 ];
 
 export default navLinks;
