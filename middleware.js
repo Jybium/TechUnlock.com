@@ -50,13 +50,16 @@ export async function middleware(request) {
       }
 
       // Validate the token by making an API request to the backend
-      const response = await fetch(`${requestUrl}`, {
-        method: "POST",
-        headers: {
-          Authorization: `Bearer ${token}`,
-        },
-      });
-
+      const response = await fetch(
+        "https://techunlock.org/api/account/account-details/",
+        {
+          method: "GET",
+          headers: {
+            Authorization: `Bearer ${token}`,
+          },
+        }
+      );
+      console.log(response.json());
       if (!response.ok) {
         throw new Error("Token validation failed");
       }
