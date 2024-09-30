@@ -7,45 +7,26 @@ export async function middleware(request) {
   // Define the login route
   const loginRoute = "/login";
 
-  // Extract the token from the cookies
+  // Extract the token from cookies or query parameters
   let token = request.cookies.get("access_token")?.value;
-
-  // Check if the token is in the query parameters
   if (!token) {
     token = url.searchParams.get("token");
-  } else {
-  }
-
-  // Add a new header to check for token in session storage
-  const tokenFromHeader = request.headers.get("x-access-token");
-
-  if (!token && tokenFromHeader) {
-    token = tokenFromHeader;
   }
 
   // Function to redirect to login with redirect URL parameter
   const redirectToLogin = () => {
     url.pathname = loginRoute;
     url.searchParams.set("redirect", pathname);
-
     return NextResponse.redirect(url);
   };
 
-  // Handle /courses/verify route specifically for redirects and search parameter extraction
+  // Handle /courses/verify route specifically for redirects
   if (pathname === "/courses/verify") {
     const trxref = url.searchParams.get("trxref");
-
-    if (!token) {
-      // Allow the request to proceed even if the token is not present
-
-      return NextResponse.next();
-    }
-
-    // Skip token validation and continue with the request
-    return NextResponse.next();
+    return NextResponse.next(); // Allow request without token
   }
 
-  // General handling for other protected routes
+  // Handle other protected routes
   if (
     pathname.includes("register") ||
     pathname.includes("pay") ||
@@ -56,54 +37,40 @@ export async function middleware(request) {
     }
 
     try {
-      // Send the request to the server to check token validity
+      // Remove allowed URLs check or refine it to check only the base origin
+      const requestUrl = new URL(request.url).origin;
       const allowedUrls = new Set([
-        "https://techunlock.org/api",
+        "https://techunlock.org",
         "http://localhost:3000",
         "http://localhost:3001",
       ]);
 
-      // Validate the request URL
-      if (!allowedUrls.has(request.url)) {
+      if (!allowedUrls.has(requestUrl)) {
         throw new Error("Unauthorized request URL");
       }
 
-      const response = await fetch(request.url, {
-        method: request.method,
+      // Validate the token by making an API request to the backend
+      const response = await fetch(`${requestUrl}`, {
+        method: "POST",
         headers: {
-          ...Object.fromEntries(request.headers.entries()),
-          Authorization: `Bearer ${token}`, // Ensure the token is properly scoped
+          Authorization: `Bearer ${token}`,
         },
-        body: request.body,
       });
 
-      // Handle response errors
       if (!response.ok) {
-        const errorData = await response.json();
-        throw new Error(
-          errorData.message || "An error occurred while processing the request."
-        );
+        throw new Error("Token validation failed");
       }
 
-      if (response.ok) {
-        // Continue with the request
-        return NextResponse.next();
-      } else {
-        // Redirect to login on unauthorized or bad request, with redirect URL parameter
-        return redirectToLogin();
-      }
+      return NextResponse.next();
     } catch (error) {
-      // Handle fetch errors
-
       return redirectToLogin();
     }
   }
 
-  // If the request is for the login route or other non-protected routes, continue with the request
+  // Continue with the request for non-protected routes
   return NextResponse.next();
 }
 
-// Specify the paths where the middleware should run
 export const config = {
-  matcher: ["/courses/:id/:path*", "/dashboard/my-courses", "/courses/verify"],
+  matcher: ["/courses/:id/:path*", "/dashboard/:path*", "/courses/verify"],
 };

@@ -24,6 +24,13 @@ const AddonsSection = ({ methods, control, errors }) => {
     }
   };
 
+  const handleRemoveAddon = (index) => {
+    // Remove the addon at the specified index
+    const currentAddons = methods.getValues("addon") || [];
+    currentAddons.splice(index, 1); // Remove the addon
+    methods.setValue("addon", currentAddons); // Update the form state
+  };
+
   return (
     <div className="space-y-3">
       <h1 className="text-pri10 text-3xl font-semibold">Add-ons</h1>
@@ -120,6 +127,15 @@ const AddonsSection = ({ methods, control, errors }) => {
               </span>
             )}
           </div>
+
+          {/* Remove Addon Button */}
+          <Button
+            type="button"
+            className="bg-red-500 text-white mt-2 w-fit"
+            onClick={() => handleRemoveAddon(index)}
+          >
+            Remove Add-on
+          </Button>
         </div>
       ))}
 

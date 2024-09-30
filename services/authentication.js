@@ -74,6 +74,21 @@ export async function signUp(data) {
 }
 
 /**
+ * Performs a sign-up operation.
+ *
+ * @param {Object} data - The user's sign-up data.
+ * @returns {Promise} - The server response data.
+ */
+export async function adminSignUp(data) {
+  const host = getHost("prod"); // Example hardcoded to 'prod'
+
+  return handleRequest(
+    (data) => axios.post(`${host}/account/admin-sign-up/`, data),
+    data
+  );
+}
+
+/**
  * Performs a sign-in operation.
  *
  * @param {Object} data - The user's sign-in data.
@@ -95,7 +110,7 @@ export async function signIn(data) {
       });
 
       if (!apiResponse.ok) throw new Error("Failed to set cookie");
-      console.log(response);
+
       return response;
     },
     data,

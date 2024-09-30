@@ -16,11 +16,13 @@ const AuthLayout = ({ children, title, message, action, to }) => {
       {/* This is the whole page content */}
       <div className="flex flex-col justify-between w-full space-y-10">
         {/* This is for the Logo header */}
-        <Image
-          src={logo}
-          alt="logo"
-          className="object-contain w-[10rem] md:w-[13rem] lg:w-[16.38rem]"
-        />
+        <Link href="/">
+          <Image
+            src={logo}
+            alt="logo"
+            className="object-contain w-[10rem] md:w-[13rem] lg:w-[16.38rem]"
+          />
+        </Link>
 
         <div className="flex justify-between items-start">
           {/* This space is for the form */}

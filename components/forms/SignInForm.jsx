@@ -60,38 +60,44 @@ const SignInForm = () => {
     },
   });
 
-  const onSubmit = async (values) => {
-    if (!isOnline) {
-      showErrorToast("You are offline. Please check your network connection.");
-      return;
-    }
-    try {
-      setIsLoading(true);
-      const result = await signIn(values);
-      showSuccessToast(result.message || "Account login successfully.");
-      // On successful login, redirect back to the original page
-      if (redirect) {
-        let redirectUrl = redirect;
-        if (redirect === "/courses/verify" && trxref) {
-          redirectUrl += `?trxref=${trxref}`;
-        }
+const onSubmit = async (values) => {
+  if (!isOnline) {
+    showErrorToast("You are offline. Please check your network connection.");
+    return;
+  }
 
-        router.replace(redirectUrl);
-      } else {
-        router.push("/courses"); // Default to courses page if no redirect is specified
+  try {
+    setIsLoading(true);
+    const result = await signIn(values);
+
+    showSuccessToast(result.message || "Account login successful.");
+
+    // On successful login, redirect back to the original page
+    if (redirect) {
+      let redirectUrl = redirect;
+      if (redirect === "/courses/verify" && trxref) {
+        redirectUrl += `?trxref=${trxref}`;
       }
-    } catch (error) {
-      showErrorToast("Check credentials and try again");
-    } finally {
-      setIsLoading(false);
+      
+      // Using `window.location.href` for a full page reload (important for authentication)
+      window.location.href = redirectUrl || '/'; // Ensure redirectUrl is valid, or fallback to home page
+    } else {
+      router.push("/courses");
     }
-  };
+  } catch (error) {
+    showErrorToast("Check credentials and try again");
+  } finally {
+    setIsLoading(false);
+  }
+};
+
+
 
   return (
     <div className="">
       {isLoading && <LoadingSpinner />}
       <motion.div
-        className="mx-auto max-w-lg lg:max-w-xl shadow-0 drop-shadow-none"
+        className=" mx-auto lg:mx-0 max-w-lg lg:max-w-xl shadow-0 drop-shadow-none"
         initial={{ opacity: 0, y: 20 }}
         animate={{ opacity: 1, y: 0 }}
         transition={{ duration: 0.5 }}

@@ -81,7 +81,7 @@ export default function ResetPasswordForm({ id }) {
     <div className="">
       {isLoading && <LoadingSpinner />}
       <motion.div
-        className="mx-auto max-w-lg"
+        className="mx-auto lg:mx-0 max-w-lg"
         initial={{ opacity: 0, y: 20 }}
         animate={{ opacity: 1, y: 0 }}
         transition={{ duration: 0.5 }}

@@ -13,9 +13,8 @@ const courseSchema = z.object({
   difficulty: z.string().nonempty({ message: "Difficulty is required" }),
   duration: z.string().nonempty({ message: "Duration is required" }),
   is_certificate: z.string().nonempty({ message: "Certificate is required" }),
-  instructor_name: z
-    .string()
-    .nonempty({ message: "Instructor name is required" }),
+  is_physical: z.string().nonempty({ message: "Mode of delivery is required" }),
+  instructor: z.string().nonempty({ message: "Instructor name is required" }),
   price: z
     .number()
     .nonnegative({ message: "Price must be a non-negative number" }),

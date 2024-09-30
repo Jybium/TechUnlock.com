@@ -91,7 +91,7 @@ const ForgotPasswordForm = () => {
     <div className="">
       {isLoading && <LoadingSpinner />}
       <motion.div
-        className="mx-auto max-w-lg"
+        className="mx-auto lg:mx-auto max-w-lg"
         initial={{ opacity: 0, y: 20 }}
         animate={{ opacity: 1, y: 0 }}
         transition={{ duration: 0.5 }}

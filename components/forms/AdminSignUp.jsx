@@ -23,10 +23,10 @@ import formSchema from "@/schema/Signup";
 import Logo from "@/components/reusables/Logo";
 import LoadingSpinner from "@/components/reusables/LoadingSpinner";
 import { ArrowLeft, Eye, EyeOff } from "lucide-react";
-import { signUp } from "@/services/authentication";
+import { adminSignUp } from "@/services/authentication";
 import { showErrorToast, showSuccessToast } from "@/helpers/toastUtil";
 
-const SignUpForm = () => {
+const AdminSignUpForm = () => {
   const [showPassword, setShowPassword] = useState(false);
   const [isLoading, setIsLoading] = useState(false);
   const [isOnline, setIsOnline] = useState(true);
@@ -71,7 +71,7 @@ const SignUpForm = () => {
 
       try {
         setIsLoading(true);
-        const result = await signUp(values);
+        const result = await adminSignUp(values);
         showSuccessToast(result.message || "Account login successfully.");
         router.push("/login");
       } catch (error) {
@@ -299,4 +299,4 @@ const SignUpForm = () => {
   );
 };
 
-export default SignUpForm;
+export default AdminSignUpForm;

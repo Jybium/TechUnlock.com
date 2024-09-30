@@ -13,9 +13,6 @@ import { zodResolver } from "@hookform/resolvers/zod";
 import { z } from "zod";
 import courseSchema from "@/schema/AddCourse";
 
-const ReactQuill = dynamic(() => import("react-quill"), { ssr: false });
-import "react-quill/dist/quill.snow.css";
-
 import Select from "react-select";
 import { IoMdImage } from "react-icons/io";
 import { CiCirclePlus } from "react-icons/ci";
@@ -27,6 +24,7 @@ import { Button } from "../ui/button";
 import axios from "axios";
 import skillSuggestions from "@/data/skills";
 import AddonsSection from "./AddOnSection";
+import CurriculumSection from "./CurriculumSection";
 
 const CourseForm = () => {
   const [imagePreview, setImagePreview] = useState();
@@ -55,9 +53,10 @@ const CourseForm = () => {
       difficulty: "",
       duration: "",
       is_certificate: "",
-      instructor_name: "",
+      instructor: "",
       start_date: "",
       start_time: "",
+      is_physical: false,
       price: 0,
       modules: [],
       addon: [],
@@ -373,6 +372,27 @@ const CourseForm = () => {
                   )}
                 </div>
 
+                {/* Course Mode */}
+                <div className="">
+                  <label htmlFor="is_physical">Mode of delivery</label>
+                  <Controller
+                    name="is_physical"
+                    control={control}
+                    render={({ field }) => (
+                      <select {...field}>
+                        <option value="">Select</option>
+                        <option value="true">Physical</option>
+                        <option value="false">Online</option>
+                      </select>
+                    )}
+                  />
+                  {errors.is_physical && (
+                    <span className="text-red-500">
+                      {errors.is_physical.message}
+                    </span>
+                  )}
+                </div>
+
                 {/* Price */}
                 <div>
                   <label htmlFor="price">Price</label>
@@ -398,9 +418,9 @@ const CourseForm = () => {
 
                 {/* Instructor Name */}
                 <div>
-                  <label htmlFor="instructor_name">Instructor Name</label>
+                  <label htmlFor="instructor">Instructor Name</label>
                   <Controller
-                    name="instructor_name"
+                    name="instructor"
                     control={control}
                     render={({ field }) => (
                       <input
@@ -410,9 +430,9 @@ const CourseForm = () => {
                       />
                     )}
                   />
-                  {errors.instructor_name && (
+                  {errors.instructor && (
                     <span className="text-red-500">
-                      {errors.instructor_name.message}
+                      {errors.instructor.message}
                     </span>
                   )}
                 </div>
@@ -490,97 +510,11 @@ const CourseForm = () => {
             </div>
 
             {/* Curriculum Section */}
-            <div className="space-y-3">
-              <h1 className="text-pri10 text-3xl font-semibold">Curriculum</h1>
-              {methods.watch("modules")?.map((_, index) => (
-                <div key={index} className="grid grid-cols-2 gap-4">
-                  {/* Module */}
-                  <div>
-                    <label htmlFor={`modules.${index}.selectModule`}>
-                      Module
-                    </label>
-                    <Controller
-                      name={`modules.${index}.selectModule`}
-                      control={control}
-                      render={({ field }) => (
-                        <select {...field}>
-                          <option value="">Select module</option>
-                          <option value="Module 1">Module 1</option>
-                          <option value="Module 2">Module 2</option>
-                          <option value="Module 3">Module 3</option>
-                          <option value="Module 4">Module 4</option>
-                          <option value="Module 5">Module 5</option>
-                        </select>
-                      )}
-                    />
-                    {errors.modules?.[index]?.selectModule && (
-                      <span className="text-red-500">
-                        {errors.modules[index].selectModule.message}
-                      </span>
-                    )}
-                  </div>
-
-                  {/* Module Title */}
-                  <div>
-                    <label htmlFor={`modules.${index}.title`}>
-                      Module Title
-                    </label>
-                    <Controller
-                      name={`modules.${index}.title`}
-                      control={control}
-                      render={({ field }) => (
-                        <input
-                          {...field}
-                          type="text"
-                          placeholder="Enter module title"
-                        />
-                      )}
-                    />
-                    {errors.modules?.[index]?.title && (
-                      <span className="text-red-500">
-                        {errors.modules[index].title.message}
-                      </span>
-                    )}
-                  </div>
-
-                  {/* Module Description */}
-                  <div className="col-span-2">
-                    <label htmlFor={`modules.${index}.description`}>
-                      Module Description
-                    </label>
-                    <Controller
-                      name={`modules.${index}.description`}
-                      control={control}
-                      render={({ field }) => (
-                        <ReactQuill
-                          value={field.value}
-                          onChange={field.onChange}
-                          placeholder="Enter module description"
-                          className="mt-2"
-                        />
-                      )}
-                    />
-                    {errors.modules?.[index]?.description && (
-                      <span className="text-red-500">
-                        {errors.modules[index].description.message}
-                      </span>
-                    )}
-                  </div>
-                </div>
-              ))}
-              <Button
-                type="button"
-                className="bg-pri1 text-[#1C6B88] border border-primary mt-4"
-                onClick={() =>
-                  methods.setValue("modules", [
-                    ...(methods.getValues("modules") || []),
-                    { selectModule: "", title: "", description: "" },
-                  ])
-                }
-              >
-                Add Module
-              </Button>
-            </div>
+            <CurriculumSection
+              control={control}
+              methods={methods}
+              errors={errors}
+            />
 
             {/* Add-ons Section */}
             <AddonsSection
