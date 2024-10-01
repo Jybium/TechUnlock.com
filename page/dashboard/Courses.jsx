@@ -22,7 +22,7 @@ const Courses = () => {
       <div className="flex justify-between items-center">
         <h1 className="text-xl font-bold text-pri10">All Courses</h1>
         <h1 className="text-xl font-bold text-pri10">
-          {filteredCourses.length}
+          {filteredCourses?.length}
         </h1>
       </div>
 
