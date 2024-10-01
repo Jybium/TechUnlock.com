@@ -70,7 +70,7 @@ const SelectPaymentGuide = () => {
                 </span>
                 , your payment fee is{" "}
                 <span className="text-pri10 font-bold">
-                  NGN {Number(Courses?.price).toFixed(0)}
+                  NGN{Number(Courses?.price).toFixed(0)}
                 </span>
               </span>
             </label>

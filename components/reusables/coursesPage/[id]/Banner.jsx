@@ -93,7 +93,7 @@ const Banner = ({ course }) => {
                   <span>
                     {!course?.price
                       ? "(Free)"
-                      : `(NGN ${Number(course?.price).toFixed(0)})`}
+                      : `(NGN${Number(course?.price).toFixed(0)})`}
                   </span>
                 </p>
                 <Rating rating={course?.rating || 4.5} />
