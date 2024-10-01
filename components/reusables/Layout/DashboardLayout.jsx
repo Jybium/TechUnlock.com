@@ -8,13 +8,14 @@ import LoadingSpinner from "@/components/reusables/LoadingSpinner";
 import { fetchToken } from "@/helpers/getToken";
 import { showErrorToast } from "@/helpers/toastUtil";
 import axios from "axios";
-import { useRouter } from "next/navigation";
+import { usePathname, useRouter } from "next/navigation";
 import { removeToken } from "@/helpers/removeToken";
 
 const DashboardLayout = ({ children }) => {
   const [userDetails, setUserDetails] = useState(null); // Manage user details state
   const [loading, setLoading] = useState(true); // Manage loading state
   const [error, setError] = useState(null); // Manage error state
+  const pathname = usePathname();
 
   const router = useRouter();
 
