@@ -43,7 +43,7 @@ const SelectPaymentGuide = () => {
       <main className="py-10 bg-cover bg-[url('@/assets/images/payment-bg.svg')] flex flex-col gap-y-8 w-[90%] mx-auto p-4">
         <div className="flex items-center">
           <p
-            onClick={() => router.push("/courses")}
+            onClick={() => router.push(`/courses/${id}`)}
             className="flex gap-x-2 items-center justify-start text-primary border shadow-md rounded-md bg-amber-50 py-2 px-4 text-sm cursor-pointer"
           >
             <span className="text-primary">←</span> <span>Go Back</span>
