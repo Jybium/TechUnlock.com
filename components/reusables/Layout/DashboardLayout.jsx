@@ -9,6 +9,7 @@ import { fetchToken } from "@/helpers/getToken";
 import { showErrorToast } from "@/helpers/toastUtil";
 import axios from "axios";
 import { useRouter } from "next/navigation";
+import { removeToken } from "@/helpers/removeToken";
 
 const DashboardLayout = ({ children }) => {
   const [userDetails, setUserDetails] = useState(null); // Manage user details state
@@ -28,6 +29,22 @@ const DashboardLayout = ({ children }) => {
 
     fetchTokens();
   }, []);
+
+  const handleInvalidToken = () => {
+    // Remove token and redirect to login if pathname matches
+    if (
+      pathname.includes("pay") ||
+      pathname.includes("register") ||
+      pathname.includes("verify")
+    ) {
+      removeToken().then(() => {
+        router.push("/login");
+      });
+    } else {
+      // Optionally, handle other cases if needed
+      removeToken();
+    }
+  };
 
   const fetchAccountDetails = async (token) => {
     try {
