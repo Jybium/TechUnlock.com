@@ -209,7 +209,7 @@ const Description = ({ course }) => {
           </div>
         </div>
 
-        <div className="lg:w-[40%]">
+        <div className="lg:w-[40%] mx-auto">
           <Image
             src={
               course?.category === "UI/UX"

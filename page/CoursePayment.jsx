@@ -56,80 +56,41 @@ const SelectPaymentGuide = () => {
             course
           </h1>
           <div className="flex flex-col justify-between gap-y-3 max-w-4xl mx-auto">
-            <label className="inline-flex items-center mt-3 space-x-4">
-              <input
-                type="radio"
-                className="form-radio h-6 w-6 text-blue-600 custom-radio"
-                checked
-                readOnly
-              />
-              <span>
-                For your selected course and level{" "}
-                <span className="text-primary">
-                  {Courses?.title} {Courses?.difficulty} level
-                </span>
-                , your payment fee is{" "}
-                <span className="text-pri10 font-bold">
-                  NGN{Number(Courses?.price).toFixed(0)}
-                </span>
-              </span>
-            </label>
-            <label className="inline-flex items-center mt-3 space-x-4">
-              <input
-                type="radio"
-                className="form-radio h-6 w-6 text-blue-600 custom-radio"
-                checked
-                readOnly
-              />
-              <span>
-                You are expected to pay before you get enlisted in the training.
-              </span>
-            </label>
-            <label className="inline-flex items-center mt-3 space-x-4">
-              <input
-                type="radio"
-                className="form-radio h-6 w-6 text-blue-600 custom-radio"
-                checked
-                readOnly
-              />
-              <span>
-                You get access to the courses modules, email notification, and
-                constant updates just before the training.
-              </span>
-            </label>
-            <label className="inline-flex items-center mt-3 space-x-4">
-              <input
-                type="radio"
-                className="form-radio h-6 w-6 text-blue-600 custom-radio"
-                checked
-                readOnly
-              />
-              <span>This training will be held virtually.</span>
-            </label>
-            <label className="inline-flex items-center mt-3 space-x-4">
-              <input
-                type="radio"
-                className="form-radio h-6 w-6 text-blue-600 custom-radio"
-                checked
-                readOnly
-              />
-              <span>
-                Trainers will communicate the time and space for the training
-                with you as soon as you make payment
-              </span>
-            </label>
-            <label className="inline-flex items-center mt-3 space-x-4">
-              <input
-                type="radio"
-                className="form-radio h-6 w-6 text-[#561e8f] custom-radio"
-                checked
-                readOnly
-              />
-              <span>
-                You will receive a confirmation mail after a successful
-                transaction.
-              </span>
-            </label>
+            {[
+              {
+                text: `For your selected course and level ${Courses?.title} ${
+                  Courses?.difficulty
+                } level, your payment fee is NGN${Number(
+                  Courses?.price
+                ).toFixed(0)}`,
+              },
+              {
+                text: "You are expected to pay before you get enlisted in the training.",
+              },
+              {
+                text: "You get access to the courses modules, email notification, and constant updates just before the training.",
+              },
+              { text: "This training will be held virtually." },
+              {
+                text: "Trainers will communicate the time and space for the training with you as soon as you make payment",
+              },
+              {
+                text: "You will receive a confirmation mail after a successful transaction.",
+              },
+            ].map((item, index) => (
+              <label
+                key={index}
+                className="inline-flex items-center mt-3 space-x-4"
+              >
+                <input
+                  type="radio"
+                  className="form-radio h-6 w-6 text-blue-600" // Removed custom-radio for debugging
+                  checked
+                  readOnly
+                />
+                <span>{item.text}</span>
+              </label>
+            ))}
           </div>
 
           <div className="flex justify-center mt-8">

@@ -59,13 +59,14 @@ const AccordionItem = memo(({ item, index }) => {
         className="w-full flex justify-between items-center px-4 py-3 focus:outline-none text-sm"
         aria-expanded={isOpen}
       >
-        <span className="text-sm font-medium text-left">
+        <span className="text-sm font-medium text-left lg:w-[80%]">
           Module {index + 1}: {item.title}
         </span>
-        <span className="text-sm h-8 w-8 hover:bg-primary hover:text-white rounded-full flex items-center justify-center border border-primary">
+        <span className="h-8 w-8 flex items-center justify-center rounded-full border border-primary shrink-0 hover:bg-primary hover:text-white">
           {isOpen ? <IoIosArrowUp /> : <IoIosArrowDown />}
         </span>
       </button>
+
       <AnimatePresence>
         {isOpen && (
           <motion.div
