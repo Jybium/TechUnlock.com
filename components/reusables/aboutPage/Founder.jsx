@@ -14,7 +14,7 @@ const Founder = () => {
             A visionary leader multiplying skilled Tech Talents in Africa.
           </p>
           <p className="mt-[1rem] lg:mt-[2rem] text-lg font-thin">
-            David is the Fo-Founder and Project Leader at TechUnlock Nigeria. He
+            David is the Co-Founder and Project Leader at TechUnlock Nigeria. He
             has led over 400 projects at various scales to successful
             completion. He currently is an Innovation Project lead, implementing
             the digital skill training and development program in partnership
