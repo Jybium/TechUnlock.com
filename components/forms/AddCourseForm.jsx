@@ -196,6 +196,7 @@ const CourseForm = () => {
                         <select {...field}>
                           <option value="">Select Category</option>
                           <option value="AI">Artificial Intelligence</option>
+                          <option value="DA">Data Analysis</option>
                           <option value="CYBER">Cyber Security</option>
                           <option value="DM">Digital Marketing</option>
                           <option value="WEB">Web Development</option>

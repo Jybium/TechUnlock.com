@@ -67,6 +67,34 @@ const navLinks = [
   //   iconActive: NotificationIcon,
   //   iconInactive: "",
   // },
+  {
+    id: 3,
+    name: "Add course",
+    to: "/dashboard/add-course",
+    iconActive: NotificationIcon,
+    iconInactive: "",
+  },
+  {
+    id: 4,
+    name: "All courses",
+    to: "/dashboard/courses",
+    iconActive: NotificationIcon,
+    iconInactive: "",
+  },
+  {
+    id: 5,
+    name: "Delete User",
+    to: "/dashboard/user-delete",
+    iconActive: NotificationIcon,
+    iconInactive: "",
+  },
+  {
+    id: 6,
+    name: "Make admin",
+    to: "/dashboard/make-admin",
+    iconActive: NotificationIcon,
+    iconInactive: "",
+  },
 ];
 
 export default navLinks;

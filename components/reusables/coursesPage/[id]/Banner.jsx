@@ -22,12 +22,16 @@ import cyber from "@/assets/course-page/cyber.jpg";
 // DM
 import DM from "@/assets/course-page/DMCard.svg";
 
+// DA
+import DA from "@/assets/course-page/da.jpg";
+
 export const categoryMap = {
   CYBER: "Cybersecurity",
   WEB: "Web Development",
   DM: "Digital Marketing",
   "UI/UX": "UI/UX Design",
   AI: "Artificial Intelligence",
+  DA: "Data Analysis",
 };
 
 const Banner = ({ course }) => {
@@ -45,6 +49,8 @@ const Banner = ({ course }) => {
               ? cyber
               : course?.category === "DM"
               ? DM
+              : course?.category === "DA"
+              ? DA
               : AIBanner
           }
           alt="course banner"
@@ -61,15 +67,23 @@ const Banner = ({ course }) => {
             </h1>
 
             <p className="text-lg">
-              {course?.description === "UI/UX"
-                ? "Learn how to design user friendly digital products that work, in this intensive course. Understand the fundamentals of design processes and how you can transform user experiences through functional product designs."
-                : course?.description === "WEB"
-                ? "Unleash your web development potential with our expert-led course. Master Python, HTML, & CSS through hands-on projects, gaining skills for a career in web design or enhancing your current abilities."
-                : course?.description === "CYBER"
-                ? "Designed for individuals with little to no prior experience in the field, this course provides a solid foundation in cybersecurity essentials. Whether you're a curious enthusiast or considering a career switch, you'll gain practical knowledge and skills to navigate the digital landscape securely."
-                : course?.description === "DM"
-                ? "Explore the possibilities of building and growing a business and scaling using social media marketing channels, email marketing affiliate marketing, SMS marketing, content marketing and other social media channels."
-                : "Start your journey to becoming and AI Certified professional. From Beginner to intermediate level of proficiency. Our Applied Artificial Intelligence course module builds the foundation for you to excel in your career and professional pursuit."}
+              {course?.category === "UI/UX"
+                ? course?.description ||
+                  "Learn how to design user friendly digital products that work, in this intensive course. Understand the fundamentals of design processes and how you can transform user experiences through functional product designs."
+                : course?.category === "WEB"
+                ? course?.description ||
+                  "Unleash your web development potential with our expert-led course. Master Python, HTML, & CSS through hands-on projects, gaining skills for a career in web design or enhancing your current abilities."
+                : course?.category === "CYBER"
+                ? course?.description ||
+                  "Designed for individuals with little to no prior experience in the field, this course provides a solid foundation in cybersecurity essentials. Whether you're a curious enthusiast or considering a career switch, you'll gain practical knowledge and skills to navigate the digital landscape securely."
+                : course?.category === "DM"
+                ? course?.description ||
+                  "Explore the possibilities of building and growing a business and scaling using social media marketing channels, email marketing affiliate marketing, SMS marketing, content marketing and other social media channels."
+                : course?.category === "DA"
+                ? course?.description ||
+                  "Dive into the world of data analysis with our comprehensive course. Learn to gather, clean, and interpret data using tools like Python, Excel, and SQL, turning raw information into actionable insights to drive business decisions."
+                : course?.description ||
+                  "Start your journey to becoming an AI Certified professional. From Beginner to intermediate level of proficiency. Our Applied Artificial Intelligence course module builds the foundation for you to excel in your career and professional pursuit."}
             </p>
 
             <div className="lg:w-2/4 bg-[#FFFFFF]/40 backdrop-blur-lg drop-shadow-md px-5 py-3 rounded-md text-sm space-y-4">

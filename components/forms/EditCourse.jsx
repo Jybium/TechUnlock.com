@@ -83,11 +83,11 @@ const EditCourseForm = () => {
         start_time: filteredCourses?.start_time || "",
         is_physical: filteredCourses?.is_physical ? "true" : "false",
         price: filteredCourses?.price || 0,
-        modules: filteredCourses?.modules || [],
-        addon: filteredCourses?.addon || [],
-        course_skills: filteredCourses.course_skills?.map((skill) => ({
-          name: skill.name,
-        })),
+        // modules: filteredCourses?.modules || [],
+        // addon: filteredCourses?.addon || [],
+        // course_skills: filteredCourses.course_skills?.map((skill) => ({
+        //   name: skill.name,
+        // })),
       });
 
       // Set cover image preview if available
@@ -131,34 +131,35 @@ const EditCourseForm = () => {
       );
       const coverImageUrl = cloudinaryResponse.data.secure_url;
 
-      // Secure addon images upload
-      const addonImagesPromises = data.addon?.map(async (addon) => {
-        const addonFormData = new FormData();
-        addonFormData.append("file", addon.add_on_image);
-        addonFormData.append("upload_preset", "ml_default");
+      // // Secure addon images upload
+      // const addonImagesPromises = data.addon?.map(async (addon) => {
+      //   const addonFormData = new FormData();
+      //   addonFormData.append("file", addon.add_on_image);
+      //   addonFormData.append("upload_preset", "ml_default");
 
-        const addonCloudinaryResponse = await axios.post(
-          "https://api.cloudinary.com/v1_1/ddynvenje/image/upload",
-          addonFormData
-        );
+      //   const addonCloudinaryResponse = await axios.post(
+      //     "https://api.cloudinary.com/v1_1/ddynvenje/image/upload",
+      //     addonFormData
+      //   );
 
-        return {
-          ...addon,
-          add_on_image: addonCloudinaryResponse.data.secure_url,
-        };
-      });
+      //   return {
+      //     ...addon,
+      //     add_on_image: addonCloudinaryResponse.data.secure_url,
+      //   };
+      // });
 
-      const addonImages = await Promise.all(addonImagesPromises || []);
+      // const addonImages = await Promise.all(addonImagesPromises || []);
 
       const updatedData = {
         ...data,
         cover_image: coverImageUrl,
-        addon: addonImages.length > 0 ? addonImages : undefined,
+        // addon: addonImages.length > 0 ? addonImages : undefined,
       };
 
       const result = await editCourses(editId, updatedData);
       showSuccessToast(result.message || "Course updated successfully.");
       reset();
+      router.push("/dashboard/courses");
     } catch (error) {
       showErrorToast(error.message || "An error occurred. Please try again.");
     } finally {
@@ -220,6 +221,7 @@ const EditCourseForm = () => {
                         <select {...field}>
                           <option value="">Select Category</option>
                           <option value="AI">Artificial Intelligence</option>
+                          <option value="DA">Data Analysis</option>
                           <option value="CYBER">Cyber Security</option>
                           <option value="DM">Digital Marketing</option>
                           <option value="WEB">Web Development</option>
@@ -461,6 +463,7 @@ const EditCourseForm = () => {
                   )}
                 </div>
 
+                {/* Start Date */}
                 <div>
                   <label htmlFor="start_date">Start Date</label>
                   <Controller
@@ -481,7 +484,7 @@ const EditCourseForm = () => {
                     </span>
                   )}
                 </div>
-                {/* Start Date */}
+
                 {/* Start Time */}
                 <div>
                   <label htmlFor="start_time">Start Time</label>
@@ -506,7 +509,7 @@ const EditCourseForm = () => {
               </div>
 
               {/* Skills to Gain */}
-              <div className="w-full space-y-2">
+              {/* <div className="w-full space-y-2">
                 <label className="font-semibold" id="course_skills">
                   Skills to Gain
                 </label>
@@ -530,22 +533,22 @@ const EditCourseForm = () => {
                     />
                   )}
                 />
-              </div>
+              </div> */}
             </div>
 
             {/* Curriculum Section */}
-            <CurriculumSection
+            {/* <CurriculumSection
               control={control}
               methods={methods}
               errors={errors}
-            />
+            /> */}
 
             {/* Add-ons Section */}
-            <AddonsSection
+            {/* <AddonsSection
               control={control}
               methods={methods}
               errors={errors}
-            />
+            /> */}
 
             {/* Submit Button */}
             <div className="flex justify-end">

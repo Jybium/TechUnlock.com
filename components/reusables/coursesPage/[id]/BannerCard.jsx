@@ -26,6 +26,10 @@ import DMCard from "@/assets/course-page/DMCard.svg";
 
 // AI
 import AI from "@/assets/course-page/AICard.svg";
+
+// DA
+import DA from "@/assets/course-page/da.jpg";
+
 import { Check } from "lucide-react";
 import { useCourses } from "@/Context/courses";
 
@@ -48,6 +52,8 @@ export const BannerCard = ({ course }) => {
           ? cyberSec
           : course?.category === "DM"
           ? DMCard
+          : course?.category === "DA"
+          ? DA
           : AI,
       option: "pace",
     },

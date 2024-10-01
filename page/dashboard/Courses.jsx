@@ -11,7 +11,6 @@ const Courses = () => {
 
   useEffect(() => {
     setFilteredCourses(courses.courses);
-    console.log(filteredCourses);
   }, [courses]);
 
   if (loading) {
@@ -20,7 +19,12 @@ const Courses = () => {
 
   return (
     <div className="w-[90%] mx-auto space-y-7 my-5">
-      <h1 className="text-xl font-bold text-pri10">All Courses</h1>
+      <div className="flex justify-between items-center">
+        <h1 className="text-xl font-bold text-pri10">All Courses</h1>
+        <h1 className="text-xl font-bold text-pri10">
+          {filteredCourses.length}
+        </h1>
+      </div>
 
       <div className="">
         <div className="grid gap-y-5 mb-5 lg:mb-10">

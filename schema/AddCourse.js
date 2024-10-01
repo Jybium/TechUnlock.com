@@ -83,7 +83,7 @@ const courseSchema = z.object({
       })
     )
     .optional(),
-  course_skills: z.array(z.object({ name: z.string() })),
+  course_skills: z.array(z.object({ name: z.string() })).optional(),
 });
 
 export default courseSchema;

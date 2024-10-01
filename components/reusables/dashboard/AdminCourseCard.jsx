@@ -57,7 +57,7 @@ const CourseCard = ({ item }) => {
             <Rating rating={5} />
           </div>
           <div className="text-gray-900">
-            <p>{item?.description}</p>
+            <p className="line-clamp-4">{item?.description}</p>
           </div>
 
           <div className="grid grid-cols-2 gap-3 text-darkblue font-semibold">

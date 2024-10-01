@@ -72,10 +72,13 @@ const SignUpForm = () => {
       try {
         setIsLoading(true);
         const result = await signUp(values);
-        showSuccessToast(result.message || "Account login successfully.");
+        showSuccessToast(result?.message || "Account login successfully.");
         router.push("/login");
       } catch (error) {
-        showErrorToast(error.message || "An error occurred. Please try again.");
+        showErrorToast(
+          "This email already exists." || "An error occurred. Please try again."
+        );
+        console.log(error);
       } finally {
         setIsLoading(false);
       }
