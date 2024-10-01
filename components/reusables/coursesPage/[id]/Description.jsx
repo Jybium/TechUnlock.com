@@ -60,6 +60,8 @@ const Description = ({ course }) => {
                   ? "Are you looking to learn the basics of cyber security? Are you an aspiring IT professional that needs to better understand how cybersecurity works? If so, this is the perfect course for you!"
                   : course?.category === "DM"
                   ? "This dynamic digital marketing course will equip you with the strategies, tools, and knowledge to create a powerful online presence, attract new customers, and drive business growth."
+                  : course?.category === "DA"
+                  ? "This Data Analysis course provides a comprehensive introduction to data-driven decision-making. You will learn essential skills in data collection, cleaning, and visualization using tools like Excel, and Power BI. The course covers statistical techniques to interpret data and uncover insights, enabling you to make informed decisions."
                   : "This comprehensive AI course will introduce you to the fascinating world of Artificial Intelligence, empowering you to understand, explore, and even build AI applications. "}
               </p>
 
@@ -89,6 +91,25 @@ const Description = ({ course }) => {
                       <li className="">
                         Develop a strong portfolio showcasing your UI/UX design
                         skills.
+                      </li>
+                    </ul>
+                  </div>
+                ) : course?.category === "DA" ? (
+                  <div className="">
+                    <p className="">
+                      By the end of this course, you will be able to:
+                    </p>
+                    <ul className="list-disc">
+                      <li className="">
+                        Clean data and use spreadsheets to transform data.
+                      </li>
+                      <li className="">
+                        Use power BI to transform and visualize data.
+                      </li>
+                      <li className="">Report accurate data.</li>
+                      <li className="">Create relationships across data.</li>
+                      <li className="">
+                        Gain hands-on experience with data analytical tools.
                       </li>
                     </ul>
                   </div>
