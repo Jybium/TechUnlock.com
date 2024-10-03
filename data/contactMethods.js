@@ -5,7 +5,7 @@ const methods = [
     id: 1,
     title: "Chat to sales",
     description: "Speak to our friendly team.",
-    action: "sales@untitledui.com",
+    action: "admin@techunlock.org",
     icon: <Mail color="#ffff" />,
   },
   {

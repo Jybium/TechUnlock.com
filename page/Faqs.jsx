@@ -102,6 +102,19 @@ const faqs = [
           "Our courses are tutor-led courses and require physical attendance or virtual attendance. Self-paced learning feature will be launched soon.",
       },
     ],
+    category: "Accounts and Miscellaneous",
+    questions: [
+      {
+        question: "How do I access my account?",
+        answer:
+          "You can access your account by logging in with your email address and password. If you have forgotten your password, you can reset it through our password reset feature.",
+      },
+      {
+        question: "Can I delete my account?",
+        answer:
+          "Yes, you have the right to deletion of your account and erasure of your personal data. Simply write ua an email to admin@techunlock.org make this request.",
+      },
+    ],
   },
 ];
 

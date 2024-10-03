@@ -17,21 +17,21 @@ const Footer = () => {
   return (
     <footer className="text-white relative w-full">
       <div className="absolute inset-0 bg-gradient-to-r from-sky-500 to-sky-800 opacity-50"></div>
-      <section className="w-full mx-auto z-10 px-4 flex flex-col md:flex-row justify-between items-start py-8 bg-[#1886AD] lg:h-[50vh]">
-        <div className="flex justify-between w-full md:w-2/5">
-          <div className="z-10 lg:pl-10 mb-6 md:mb-0 md:w-2/5 flex justify-start">
+      <section className="w-full mx-auto z-10 px-4 flex flex-col lg:flex-row justify-between items-start py-8 bg-[#1886AD] lg:h-[50vh]">
+        <div className="flex justify-between w-full lg:w-2/5">
+          <div className="z-10 lg:pl-10 mb-6 lg:mb-0 lg:w-2/5 flex justify-start">
             <Image src={FooterImage} alt="Logo" className="w-38" />
           </div>
 
           <button
             onClick={scrollToTop}
-            className="flex items-center justify-center md:hidden w-10 h-10 border font-bold border-white text-white rounded-full"
+            className="flex items-center justify-center lg:hidden w-10 h-10 border font-bold border-white text-white rounded-full"
           >
             <ArrowUp />
           </button>
         </div>
-        <div className="w-full md:w-3/5 grid grid-cols-2 md:grid-cols-3 gap-x-5 z-10 md:flex md:justify-between">
-          <div className="mb-6 md:mb-0 md:ml-auto md:w-1/3 text-left text-lg">
+        <div className="w-full lg:w-3/5 grid grid-cols-2 lg:grid-cols-3 gap-x-5 z-10 lg:flex lg:justify-between">
+          <div className="mb-6 lg:mb-0 lg:ml-auto lg:w-1/3 text-left text-lg">
             <h3 className="font-bold mb-2 text-[#0A3747]">Company</h3>
             <ul>
               <li>
@@ -51,7 +51,7 @@ const Footer = () => {
               </li>
             </ul>
           </div>
-          <div className="mb-6 md:mb-0 md:w-1/3 text-left text-lg">
+          <div className="mb-6 lg:mb-0 lg:w-1/3 text-left text-lg">
             <h3 className="font-bold mb-2 text-[#0A3747]">Programs</h3>
             <ul>
               <li>
@@ -87,7 +87,7 @@ const Footer = () => {
               </li>
             </ul>
           </div>
-          <div className="md:w-1/3 text-left text-lg">
+          <div className="lg:w-1/3 text-left text-lg">
             <h3 className="font-bold mb-2 text-[#0A3747]">Contacts</h3>
             <ul>
               <li>

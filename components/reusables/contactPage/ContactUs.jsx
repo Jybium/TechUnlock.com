@@ -7,7 +7,7 @@ const ContactUs = () => {
   return (
     <div className="w-full my-[2rem] lg:my-[3rem]">
       <div className="lg:flex lg:justify-between items-center w-[95%] lg:w-[90%] mx-auto">
-        <div className="lg:w-1/2 lg:ml-10 grid gap-y-12">
+        <div className="lg:w-1/2 grid gap-y-12">
           <div className="grid gap-y-5 ml-6">
             <h1 className="text-3xl lg:text-4xl text-[#101828] font-semibold">
               Contact Us

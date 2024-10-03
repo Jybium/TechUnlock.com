@@ -20,11 +20,19 @@ const ContactMethods = () => {
 
         <div className="grid gap-y-[2rem] lg:gap-y-[4rem]">
           <div className="w-full">
-            <Image src={discussion} alt="People in a round table Discussion" />
+            <Image
+              src={discussion}
+              alt="People in a round table Discussion"
+              className="mx-auto"
+            />
           </div>
-          <div className="grid gap-x-8 gap-y-4 lg:gap-y-0 lg:flex lg:justify-between items-center">
+
+          <div className="flex flex-wrap justify-between 2xl:justify-center 2xl:items-center gap-x-8 gap-y-4 2xl:mx-auto">
             {methods.map((item) => (
-              <div key={item.id} className="w-full">
+              <div
+                key={item.id}
+                className="w-full lg:w-auto flex justify-center"
+              >
                 <MethodCards item={item} />
               </div>
             ))}

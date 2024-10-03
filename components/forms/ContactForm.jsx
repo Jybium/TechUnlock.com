@@ -57,7 +57,7 @@ const ContactUsForm = () => {
     <div>
       {isLoading && <LoadingSpinner />}
       <motion.div
-        className="mx-auto w-full max-w-lg lg:max-w-full shadow-0 drop-shadow-none"
+        className="mx-aut w-full max-w-lg lg:max-w-full shadow-0 drop-shadow-none"
         initial={{ opacity: 0, y: 20 }}
         animate={{ opacity: 1, y: 0 }}
         transition={{ duration: 0.5 }}
