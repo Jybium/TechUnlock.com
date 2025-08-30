@@ -3,7 +3,7 @@ import { Input } from "@/components/ui/input";
 import { useForm } from "react-hook-form";
 import { Search } from "lucide-react";
 
-const SearchBar = ({ setData }) => {
+const SearchBar = React.memo(({ setData }) => {
   const { register, handleSubmit, reset } = useForm();
 
   const onSubmit = (data) => {
@@ -28,6 +28,8 @@ const SearchBar = ({ setData }) => {
       </form>
     </div>
   );
-};
+});
+
+SearchBar.displayName = "SearchBar";
 
 export default SearchBar;

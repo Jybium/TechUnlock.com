@@ -8,10 +8,11 @@ const RecentlyEnrolledCourseCard = ({
   title,
   description,
   currentModule,
+  progressPercentage,
   completedLessons,
   totalLessons,
 }) => {
-  const progressPercentage = (completedLessons / totalLessons) * 100;
+  // const progressPercentage = (completedLessons / totalLessons) * 100;
 
   return (
     <div className="max-w-sm rounded-md overflow-hidden bg-white shadow flex flex-col justify-between">

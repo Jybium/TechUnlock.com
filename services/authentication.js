@@ -5,7 +5,7 @@ import forgotFormSchema from "@/schema/Forgot";
 import axios from "axios";
 import { z } from "zod";
 
-const BASE_URL = "https://techunlock.pythonanywhere.com";
+const BASE_URL = "https://test.techunlock.org/test/api";
 
 /**
  * Performs a sign-up operation.
@@ -127,9 +127,7 @@ export async function resetPassword(data) {
 
     if (error.response) {
       // Server responded with a status other than 200 range
-      throw new Error(
-        error.response.data.message || "An error has occurred."
-      );
+      throw new Error(error.response.data.message || "An error has occurred.");
     } else if (error.request) {
       // Request was made but no response received
       throw new Error(

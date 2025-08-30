@@ -31,7 +31,7 @@ const ImageWrapper = styled.div`
   @apply lg:relative;
 `;
 
-const StyledImage = styled(Image)`
+const StyledImage = styled.img`
   width: 100%;
   height: 100%;
   object-fit: cover;

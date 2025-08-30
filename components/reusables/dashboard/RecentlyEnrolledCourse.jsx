@@ -1,15 +1,18 @@
 import React from "react";
 import Link from "next/link";
-import data from "@/data/recentlyEnrolledCourse.json";
 import RecentlyEnrolledCourseCard from "./RecentlyEnrolledCourseCard";
+import { useCourses } from "@/Context/courses";
 
 const RecentlyEnrolledCourse = ({ isNotEnrolled }) => {
+  const { enrolledCourses } = useCourses();
+  console.log(enrolledCourses);
+
   return (
     <div className="bg-pri1 py-4 px-5 rounded-md mb-6">
       <div className="space-y-5">
         <p className="font-semibold text-pri10 flex item-center justify-between">
           Recently enrolled courses{" "}
-          <Link href="" className="underline">
+          <Link href="/dashboard/courses" className="underline">
             View more
           </Link>
         </p>
@@ -22,15 +25,16 @@ const RecentlyEnrolledCourse = ({ isNotEnrolled }) => {
           </div>
         ) : (
           <div className="grid grid-cols-2 lg:grid-cols-3 gap-4">
-            {data.map((item, index) => (
+            {enrolledCourses.map((item, index) => (
               <RecentlyEnrolledCourseCard
                 key={index}
-                imageSrc={item.imageSrc}
+                imageSrc={item.image_url}
                 title={item.title}
-                description={item.description}
-                currentModule={item.currentModule}
-                completedLessons={item.completedLessons}
-                totalLessons={item.totalLessons}
+                description={item.description || ""}
+                currentModule={item.total_modules}
+                completedLessons={item.completed_modules}
+                progressPercentage={item.progress_percentage}
+                totalLessons={item.total_modules}
               />
             ))}
           </div>

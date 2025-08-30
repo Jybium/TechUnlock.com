@@ -82,7 +82,7 @@ const SignInForm = () => {
       }
     } catch (error) {
       console.log(error);
-      showErrorToast("Check credentials and try again");
+      showErrorToast(error.message || "Check credentials and try again");
     } finally {
       setIsLoading(false);
     }

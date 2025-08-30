@@ -1,12 +1,13 @@
 import React from "react";
 
-const LoadingSpinner = () => (
-  <div className="fixed inset-0 flex items-center justify-center bg-black bg-opacity-50 z-50">
-    <div
-      className="spinner-border animate-spin inline-block w-8 h-8 border-4 rounded-full text-white"
-      role="status"
-    ></div>
-  </div>
-);
+const LoadingSpinner = React.memo(() => {
+  return (
+    <div className="flex items-center justify-center min-h-screen">
+      <div className="animate-spin rounded-full h-32 w-32 border-b-2 border-[#268FB6]"></div>
+    </div>
+  );
+});
+
+LoadingSpinner.displayName = "LoadingSpinner";
 
 export default LoadingSpinner;

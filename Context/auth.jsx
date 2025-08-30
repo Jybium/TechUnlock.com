@@ -3,7 +3,14 @@ import axios from "axios";
 import { fetchToken } from "@/helpers/getToken";
 import { removeToken } from "@/helpers/removeToken";
 import { usePathname, useRouter } from "next/navigation";
-import React, { createContext, useContext, useEffect, useState } from "react";
+import React, {
+  createContext,
+  useContext,
+  useEffect,
+  useState,
+  useMemo,
+  useCallback,
+} from "react";
 
 const AuthContext = createContext();
 
@@ -14,22 +21,13 @@ export const AuthProvider = ({ children }) => {
   const router = useRouter();
   const pathname = usePathname();
 
-  useEffect(() => {
-    const fetchTokens = async () => {
-      const token = await fetchToken();
-      if (token) {
-        fetchAccountDetails(token);
-      }
-    };
-
-    fetchTokens();
-  }, []);
-
-  const fetchAccountDetails = async (token) => {
+  const fetchAccountDetails = useCallback(async () => {
     try {
       setLoading(true);
+      const token = await fetchToken();
+      if (!token) return;
       const response = await axios.get(
-        "https://techunlock.pythonanywhere.com/account/account-details/",
+        "https://test.techunlock.org/test/api/account/account-details/",
         {
           headers: {
             Authorization: `Bearer ${token}`,
@@ -47,9 +45,9 @@ export const AuthProvider = ({ children }) => {
     } finally {
       setLoading(false);
     }
-  };
+  }, [pathname]);
 
-  const handleInvalidToken = () => {
+  const handleInvalidToken = useCallback(() => {
     // Remove token and redirect to login if pathname matches
     if (
       pathname.includes("pay") ||
@@ -63,14 +61,21 @@ export const AuthProvider = ({ children }) => {
       // Optionally, handle other cases if needed
       removeToken();
     }
-  };
+  }, [pathname, router]);
 
-  const contextValue = {
-    auth,
-    setAuth,
-    loading,
-    setLoading,
-  };
+  useEffect(() => {
+    fetchAccountDetails();
+  }, [fetchAccountDetails]);
+
+  const contextValue = useMemo(
+    () => ({
+      auth,
+      setAuth,
+      loading,
+      setLoading,
+    }),
+    [auth, loading]
+  );
 
   return (
     <AuthContext.Provider value={contextValue}>{children}</AuthContext.Provider>

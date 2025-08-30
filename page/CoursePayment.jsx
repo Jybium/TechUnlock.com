@@ -58,7 +58,7 @@ const SelectPaymentGuide = () => {
             <label className="inline-flex items-center mt-3 space-x-4">
               <input
                 type="radio"
-                className="form-radio h-6 w-6 text-blue-600 custom-radio"
+                className="form-radio h-6 w-6 text-[#13485B] custom-radio"
                 checked
                 readOnly
               />
@@ -76,7 +76,7 @@ const SelectPaymentGuide = () => {
             <label className="inline-flex items-center mt-3 space-x-4">
               <input
                 type="radio"
-                className="form-radio h-6 w-6 text-blue-600 custom-radio"
+                className="form-radio h-6 w-6 text-[#13485B] custom-radio"
                 checked
                 readOnly
               />
@@ -87,7 +87,7 @@ const SelectPaymentGuide = () => {
             <label className="inline-flex items-center mt-3 space-x-4">
               <input
                 type="radio"
-                className="form-radio h-6 w-6 text-blue-600 custom-radio"
+                className="form-radio h-6 w-6 text-[#13485B] custom-radio"
                 checked
                 readOnly
               />
@@ -99,7 +99,7 @@ const SelectPaymentGuide = () => {
             <label className="inline-flex items-center mt-3 space-x-4">
               <input
                 type="radio"
-                className="form-radio h-6 w-6 text-blue-600 custom-radio"
+                className="form-radio h-6 w-6 text-[#13485B] custom-radio"
                 checked
                 readOnly
               />
@@ -108,7 +108,7 @@ const SelectPaymentGuide = () => {
             <label className="inline-flex items-center mt-3 space-x-4">
               <input
                 type="radio"
-                className="form-radio h-6 w-6 text-blue-600 custom-radio"
+                className="form-radio h-6 w-6 text-[#13485B] custom-radio"
                 checked
                 readOnly
               />

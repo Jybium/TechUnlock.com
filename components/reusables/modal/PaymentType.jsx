@@ -6,27 +6,12 @@ import { ArrowRight } from "lucide-react";
 import { useParams, useRouter } from "next/navigation";
 import React, { useEffect, useState } from "react";
 import LoadingSpinner from "../LoadingSpinner";
-import { fetchToken } from "@/helpers/getToken";
 
 const PaymentTypeSelect = () => {
   const { id } = useParams();
   const [selectedPayment, setSelectedPayment] = useState("Paystack");
   const [loading, setLoading] = useState(false);
   const router = useRouter();
-  const [token, setToken] = useState("");
-
-  useEffect(() => {
-    const fetchTokens = async () => {
-      const token = await fetchToken();
-      if (token) {
-        setToken(token);
-      } else {
-        setToken("");
-      }
-    };
-
-    fetchTokens();
-  }, []);
 
   const handlePaymentSelect = (event) => {
     const paymentType = event.target.value;
@@ -53,8 +38,20 @@ const PaymentTypeSelect = () => {
           "Successfully, you are now being redirected to the payment page"
         );
         sessionStorage.setItem("course_id", id);
-        // Redirect to payment confirmation page if successful
-        window.location.href = response?.data?.authorization_url;
+        // Redirect to payment confirmation page if successful (allowlisted only)
+        const url = response?.data?.authorization_url || "";
+        const allowlistEnv =
+          process.env.NEXT_PUBLIC_PAYMENT_REDIRECT_ALLOWLIST ||
+          "https://checkout.paystack.com,https://paystack.com";
+        const allowed = allowlistEnv
+          .split(",")
+          .map((s) => s.trim())
+          .filter(Boolean);
+        if (allowed.some((allowedHost) => url.startsWith(allowedHost))) {
+          window.location.href = url;
+        } else {
+          showErrorToast("Unexpected redirect URL. Contact support.");
+        }
       } else if (response && response.message.includes("already enrolled")) {
         showSuccessToast("You have already enrolled for this course");
         router.push("/profile");
@@ -91,7 +88,7 @@ const PaymentTypeSelect = () => {
               value={type}
               checked={selectedPayment === type}
               onChange={handlePaymentSelect}
-              className="form-radio h-4 w-4 text-blue-600 transition duration-150 ease-in-out"
+              className="form-radio h-4 w-4 text-[#13485B] transition duration-150 ease-in-out"
             />
             <div className="w-full">
               <div className="flex justify-between items-start w-full">

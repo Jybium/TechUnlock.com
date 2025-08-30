@@ -44,7 +44,7 @@ const SpecificCoursePage = () => {
       <Banner course={course} />
       <Description course={course} />
       <Curriculum course={course} />
-      <CourseAddOn course={course} />
+      {/* <CourseAddOn course={course} /> */}
       <FeedbackContainer course={course} />
       <PromotionBanner course={course} />
     </div>

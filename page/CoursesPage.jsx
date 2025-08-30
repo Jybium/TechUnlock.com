@@ -1,6 +1,6 @@
 "use client";
 
-import React, { useEffect } from "react";
+import React, { useEffect, useMemo, useCallback } from "react";
 import { useCourses } from "@/Context/courses";
 import SearchBar from "@/components/reusables/coursesPage/SearchBar";
 import FilterBar from "@/components/reusables/coursesPage/FilterBar";
@@ -13,7 +13,6 @@ const CoursesPage = () => {
   const { courses, loading } = useCourses();
   const [search, setSearch] = React.useState("");
   const [filter, setFilter] = React.useState("");
-  const [filteredCourses, setFilteredCourses] = React.useState([]);
   const searchParams = useSearchParams();
   const router = useRouter();
 
@@ -21,8 +20,9 @@ const CoursesPage = () => {
   const difficultyFilter = searchParams.get("difficulty") || "all";
   const categoryFilter = searchParams.get("category") || "all";
 
-  useEffect(() => {
-    const updatedFilteredCourses = courses?.courses?.filter((course) => {
+  // Memoize filtered courses to prevent recalculation on every render
+  const filteredCourses = useMemo(() => {
+    return courses?.courses?.filter((course) => {
       if (featureFilter !== "all" && course.category !== featureFilter) {
         return false;
       }
@@ -46,8 +46,6 @@ const CoursesPage = () => {
       }
       return true;
     });
-
-    setFilteredCourses(updatedFilteredCourses);
   }, [
     courses,
     featureFilter,
@@ -57,8 +55,8 @@ const CoursesPage = () => {
     categoryFilter,
   ]);
 
-  // Effect to update the URL parameters whenever the filter state changes
-  useEffect(() => {
+  // Memoize URL update function
+  const updateUrl = useCallback(() => {
     const params = new URLSearchParams(
       searchParams ? searchParams.toString() : ""
     );
@@ -69,6 +67,11 @@ const CoursesPage = () => {
     }
     router.replace(`${window.location.pathname}?${params.toString()}`);
   }, [filter, router, searchParams]);
+
+  // Effect to update the URL parameters whenever the filter state changes
+  useEffect(() => {
+    updateUrl();
+  }, [updateUrl]);
 
   if (loading) {
     return <LoadingSpinner />;

@@ -19,8 +19,9 @@ import "react-quill/dist/quill.snow.css";
 import Select from "react-select";
 import { IoMdImage } from "react-icons/io";
 import { CiCirclePlus } from "react-icons/ci";
+import { MdDelete, MdAdd } from "react-icons/md";
 import { showErrorToast, showSuccessToast } from "@/helpers/toastUtil";
-import { addCourse } from "@/services/register";
+import { createCourse } from "@/services/admin";
 import LoadingSpinner from "../reusables/LoadingSpinner";
 import { useRouter } from "next/navigation";
 import { Button } from "../ui/button";
@@ -95,7 +96,7 @@ const CourseForm = () => {
 
   useEffect(() => {
     const handleOnlineStatus = () => setIsOnline(navigator.onLine);
-    handleOnlineStatus(); // Initial check
+    handleOnlineStatus();
     window.addEventListener("online", handleOnlineStatus);
     window.addEventListener("offline", handleOnlineStatus);
     return () => {
@@ -108,19 +109,33 @@ const CourseForm = () => {
     resolver: zodResolver(courseSchema),
     defaultValues: {
       title: "",
-      category: "",
-      cover_image: "",
+      short_description: "",
       description: "",
-      difficulty: "",
       duration: "",
+      is_published: false,
+      is_paid: true,
+      price: 0,
+      cover_image: "",
+      tags: [],
+      modules: [],
+      badge: {
+        title: "",
+        description: "",
+        icon: "",
+      },
+      community_link: {
+        description: "",
+        link: "",
+      },
+      // Legacy fields
+      category: "",
+      difficulty: "",
       is_certificate: "",
       instructor_name: "",
       start_date: "",
       start_time: "",
-      price: 0,
-      modules: [],
-      addon: [],
       course_skills: [],
+      addon: [],
     },
   });
 
@@ -129,6 +144,7 @@ const CourseForm = () => {
     control,
     register,
     setValue,
+    watch,
     formState: { errors },
     reset,
   } = methods;
@@ -142,17 +158,61 @@ const CourseForm = () => {
     );
   };
 
-  const { fields, append, remove } = useFieldArray({
+  const handleTagsChange = (selectedOptions) => {
+    setValue(
+      "tags",
+      selectedOptions ? selectedOptions.map((option) => option.value) : []
+    );
+  };
+
+  const { fields: skillFields } = useFieldArray({
     control,
     name: "course_skills",
   });
 
-  // console.log(errors);
+  const {
+    fields: moduleFields,
+    append: appendModule,
+    remove: removeModule,
+  } = useFieldArray({
+    control,
+    name: "modules",
+  });
+
+  const {
+    fields: addonFields,
+    append: appendAddon,
+    remove: removeAddon,
+  } = useFieldArray({
+    control,
+    name: "addon",
+  });
+
+  const uploadToBunny = async (
+    file,
+    type = "image",
+    courseTitle = "",
+    index = ""
+  ) => {
+    try {
+      const { uploadToBunny: uploadBunny, uploadCourseMedia } = await import(
+        "@/helpers/bunny-uploader"
+      );
+
+      if (type === "video" || type === "badge") {
+        return await uploadCourseMedia(file, type, courseTitle, index);
+      } else {
+        return await uploadBunny(file, type);
+      }
+    } catch (error) {
+      console.error("Upload failed:", error);
+      throw error;
+    }
+  };
 
   const onSubmit = async (data) => {
-    console.log(data);
+    console.log("Form data:", data);
 
-    // Handle offline state
     if (!navigator.onLine) {
       showErrorToast("You are offline. Please check your network connection.");
       return;
@@ -161,49 +221,94 @@ const CourseForm = () => {
     try {
       setIsLoading(true);
 
-      // Upload cover image to Cloudinary
-      const formData = new FormData();
-      formData.append("file", data.cover_image);
-      formData.append("upload_preset", "ml_default");
-
-      const cloudinaryResponse = await axios.post(
-        "https://api.cloudinary.com/v1_1/ddynvenje/image/upload",
-        formData
-      );
-
-      const coverImageUrl = cloudinaryResponse.data.secure_url;
-
-      // Upload addon images to Cloudinary (if any)
-      const addonImagesPromises = data.addon?.map(async (addon) => {
-        const addonFormData = new FormData();
-        addonFormData.append("file", addon.add_on_image);
-        addonFormData.append("upload_preset", "ml_default");
-
-        const addonCloudinaryResponse = await axios.post(
-          "https://api.cloudinary.com/v1_1/ddynvenje/image/upload",
-          addonFormData
+      // Upload cover image to Bunny.net
+      let coverImageUrl = "";
+      if (data.cover_image instanceof File) {
+        coverImageUrl = await uploadToBunny(
+          data.cover_image,
+          "image",
+          data.title
         );
+      }
 
-        return {
-          ...addon,
-          add_on_image: addonCloudinaryResponse.data.secure_url,
-        };
+      // Upload badge icon if provided
+      let badgeIconUrl = "";
+      if (data.badge?.icon instanceof File) {
+        badgeIconUrl = await uploadToBunny(
+          data.badge.icon,
+          "badge",
+          data.title
+        );
+      }
+
+      // Upload addon images
+      const addonImagesPromises = data.addon?.map(async (addon, index) => {
+        if (addon.add_on_image instanceof File) {
+          const addonImageUrl = await uploadToBunny(
+            addon.add_on_image,
+            "image",
+            data.title,
+            `addon-${index}`
+          );
+          return {
+            ...addon,
+            add_on_image: addonImageUrl,
+          };
+        }
+        return addon;
       });
 
       const addonImages = await Promise.all(addonImagesPromises || []);
 
-      // Include image URLs in data
-      const updatedData = {
+      // Process modules - upload video files if they are File objects
+      const processedModules = await Promise.all(
+        data.modules.map(async (module, moduleIndex) => {
+          const processedVideos = await Promise.all(
+            (module.videos || []).map(async (video, videoIndex) => {
+              if (video.video_url instanceof File) {
+                const videoUrl = await uploadToBunny(
+                  video.video_url,
+                  "video",
+                  data.title,
+                  `module-${moduleIndex + 1}-video-${videoIndex + 1}`
+                );
+                return {
+                  ...video,
+                  video_url: videoUrl,
+                };
+              }
+              return video;
+            })
+          );
+
+          return {
+            ...module,
+            videos: processedVideos,
+          };
+        })
+      );
+
+      // Prepare final data
+      const finalData = {
         ...data,
         cover_image: coverImageUrl,
+        modules: processedModules,
+        badge: data.badge
+          ? {
+              ...data.badge,
+              icon: badgeIconUrl || data.badge.icon,
+            }
+          : undefined,
         addon: addonImages.length > 0 ? addonImages : undefined,
       };
 
-      // Send the updated data to your server
-      const result = await addCourse(updatedData);
+      // Send to server
+      const result = await createCourse(finalData);
       showSuccessToast(result.message || "Course created successfully.");
       reset();
+      router.push("/admin/courses");
     } catch (error) {
+      console.error("Error creating course:", error);
       showErrorToast(error.message || "An error occurred. Please try again.");
     } finally {
       setIsLoading(false);
@@ -250,26 +355,23 @@ const CourseForm = () => {
                     )}
                   </div>
 
-                  {/* Category */}
+                  {/* Short Description */}
                   <div className="w-full">
-                    <label htmlFor="category">Category</label>
+                    <label htmlFor="short_description">Short Description</label>
                     <Controller
-                      name="category"
+                      name="short_description"
                       control={control}
                       render={({ field }) => (
-                        <select {...field}>
-                          <option value="">Select Category</option>
-                          <option value="AI">Artificial Intelligence</option>
-                          <option value="CYBER">Cyber Security</option>
-                          <option value="DM">Digital Marketing</option>
-                          <option value="WEB">Web Development</option>
-                          <option value="UI/UX">UI/UX Design</option>
-                        </select>
+                        <input
+                          {...field}
+                          type="text"
+                          placeholder="Brief course description"
+                        />
                       )}
                     />
-                    {errors.category && (
+                    {errors.short_description && (
                       <span className="text-red-500">
-                        {errors.category.message}
+                        {errors.short_description.message}
                       </span>
                     )}
                   </div>
@@ -284,14 +386,14 @@ const CourseForm = () => {
                         name="cover_image"
                         control={control}
                         render={({ field }) =>
-                          typeof window !== "undefined" && ( // Ensure it only runs on the client side
+                          typeof window !== "undefined" && (
                             <input
                               type="file"
                               accept="image/*"
                               className="w-full h-60 relative opacity-0 z-10"
                               onChange={(e) => {
                                 if (e.target.files && e.target.files[0]) {
-                                  field.onChange(e.target.files[0]); // Store the file object directly
+                                  field.onChange(e.target.files[0]);
                                 }
                               }}
                             />
@@ -331,7 +433,8 @@ const CourseForm = () => {
                     render={({ field }) => (
                       <textarea
                         {...field}
-                        placeholder="Enter course description"
+                        placeholder="Enter detailed course description"
+                        rows={4}
                       ></textarea>
                     )}
                   />
@@ -344,12 +447,671 @@ const CourseForm = () => {
               </div>
             </div>
 
-            {/* Course Overview Section */}
+            {/* Course Settings Section */}
             <div className="space-y-3">
               <h1 className="text-pri10 text-3xl font-semibold">
-                Course Overview
+                Course Settings
               </h1>
               <div className="grid grid-cols-3 gap-x-4 gap-y-5">
+                {/* Duration */}
+                <div>
+                  <label htmlFor="duration">Duration</label>
+                  <Controller
+                    name="duration"
+                    control={control}
+                    render={({ field }) => (
+                      <select {...field}>
+                        <option value="">Select Duration</option>
+                        <option value="4 weeks">4 weeks</option>
+                        <option value="6 weeks">6 weeks</option>
+                        <option value="10 weeks">10 weeks</option>
+                        <option value="12 weeks">12 weeks</option>
+                      </select>
+                    )}
+                  />
+                  {errors.duration && (
+                    <span className="text-red-500">
+                      {errors.duration.message}
+                    </span>
+                  )}
+                </div>
+
+                {/* Price */}
+                <div>
+                  <label htmlFor="price">Price (₦)</label>
+                  <Controller
+                    name="price"
+                    control={control}
+                    render={({ field }) => (
+                      <input
+                        {...field}
+                        type="number"
+                        step="0.01"
+                        placeholder="Enter course price"
+                        onChange={(e) =>
+                          field.onChange(parseFloat(e.target.value))
+                        }
+                      />
+                    )}
+                  />
+                  {errors.price && (
+                    <span className="text-red-500">{errors.price.message}</span>
+                  )}
+                </div>
+
+                {/* Is Paid */}
+                <div>
+                  <label htmlFor="is_paid">Paid Course</label>
+                  <Controller
+                    name="is_paid"
+                    control={control}
+                    render={({ field }) => (
+                      <select
+                        {...field}
+                        onChange={(e) =>
+                          field.onChange(e.target.value === "true")
+                        }
+                      >
+                        <option value="true">Yes</option>
+                        <option value="false">No</option>
+                      </select>
+                    )}
+                  />
+                  {errors.is_paid && (
+                    <span className="text-red-500">
+                      {errors.is_paid.message}
+                    </span>
+                  )}
+                </div>
+
+                {/* Is Published */}
+                <div>
+                  <label htmlFor="is_published">Published</label>
+                  <Controller
+                    name="is_published"
+                    control={control}
+                    render={({ field }) => (
+                      <select
+                        {...field}
+                        onChange={(e) =>
+                          field.onChange(e.target.value === "true")
+                        }
+                      >
+                        <option value="false">No</option>
+                        <option value="true">Yes</option>
+                      </select>
+                    )}
+                  />
+                  {errors.is_published && (
+                    <span className="text-red-500">
+                      {errors.is_published.message}
+                    </span>
+                  )}
+                </div>
+
+                {/* Tags */}
+                <div className="col-span-2">
+                  <label htmlFor="tags">Tags</label>
+                  <Controller
+                    control={control}
+                    name="tags"
+                    render={({ field }) => (
+                      <Select
+                        {...field}
+                        options={skillSuggestions}
+                        isMulti
+                        onChange={handleTagsChange}
+                        value={watch("tags")?.map((tag) => ({
+                          value: tag,
+                          label: tag,
+                        }))}
+                        placeholder="Select or type tags"
+                        className="basic-multi-select w-full"
+                        classNamePrefix="select"
+                      />
+                    )}
+                  />
+                  {errors.tags && (
+                    <span className="text-red-500">{errors.tags.message}</span>
+                  )}
+                </div>
+              </div>
+            </div>
+
+            {/* Modules Section */}
+            <div className="space-y-3">
+              <div className="flex justify-between items-center">
+                <h1 className="text-pri10 text-3xl font-semibold">Modules</h1>
+                <Button
+                  type="button"
+                  className="bg-pri1 text-[#1C6B88] border border-primary"
+                  onClick={() =>
+                    appendModule({
+                      title: "",
+                      description: "",
+                      duration: "",
+                      order: moduleFields.length + 1,
+                      videos: [],
+                      summaries: [],
+                      quizzes: [],
+                    })
+                  }
+                >
+                  <MdAdd className="mr-2" />
+                  Add Module
+                </Button>
+              </div>
+
+              {moduleFields.map((module, moduleIndex) => (
+                <div
+                  key={module.id}
+                  className="border border-gray-200 rounded-lg p-6 space-y-4"
+                >
+                  <div className="flex justify-between items-center">
+                    <h3 className="text-xl font-semibold">
+                      Module {moduleIndex + 1}
+                    </h3>
+                    <Button
+                      type="button"
+                      variant="destructive"
+                      size="sm"
+                      onClick={() => removeModule(moduleIndex)}
+                    >
+                      <MdDelete />
+                    </Button>
+                  </div>
+
+                  <div className="grid grid-cols-2 gap-4">
+                    {/* Module Title */}
+                    <div>
+                      <label htmlFor={`modules.${moduleIndex}.title`}>
+                        Module Title
+                      </label>
+                      <Controller
+                        name={`modules.${moduleIndex}.title`}
+                        control={control}
+                        render={({ field }) => (
+                          <input
+                            {...field}
+                            type="text"
+                            placeholder="Enter module title"
+                          />
+                        )}
+                      />
+                      {errors.modules?.[moduleIndex]?.title && (
+                        <span className="text-red-500">
+                          {errors.modules[moduleIndex].title.message}
+                        </span>
+                      )}
+                    </div>
+
+                    {/* Module Duration */}
+                    <div>
+                      <label htmlFor={`modules.${moduleIndex}.duration`}>
+                        Duration
+                      </label>
+                      <Controller
+                        name={`modules.${moduleIndex}.duration`}
+                        control={control}
+                        render={({ field }) => (
+                          <input
+                            {...field}
+                            type="text"
+                            placeholder="e.g., 1 week"
+                          />
+                        )}
+                      />
+                      {errors.modules?.[moduleIndex]?.duration && (
+                        <span className="text-red-500">
+                          {errors.modules[moduleIndex].duration.message}
+                        </span>
+                      )}
+                    </div>
+
+                    {/* Module Description */}
+                    <div className="col-span-2">
+                      <label htmlFor={`modules.${moduleIndex}.description`}>
+                        Description
+                      </label>
+                      <Controller
+                        name={`modules.${moduleIndex}.description`}
+                        control={control}
+                        render={({ field }) => (
+                          <textarea
+                            {...field}
+                            placeholder="Enter module description"
+                            rows={3}
+                          />
+                        )}
+                      />
+                      {errors.modules?.[moduleIndex]?.description && (
+                        <span className="text-red-500">
+                          {errors.modules[moduleIndex].description.message}
+                        </span>
+                      )}
+                    </div>
+                  </div>
+
+                  {/* Videos Section */}
+                  <div className="space-y-3">
+                    <h4 className="text-lg font-medium">Videos</h4>
+                    {watch(`modules.${moduleIndex}.videos`)?.map(
+                      (_, videoIndex) => (
+                        <div
+                          key={videoIndex}
+                          className="border border-gray-100 rounded p-4 space-y-3"
+                        >
+                          <div className="grid grid-cols-2 gap-4">
+                            <div>
+                              <label>Video Title</label>
+                              <Controller
+                                name={`modules.${moduleIndex}.videos.${videoIndex}.title`}
+                                control={control}
+                                render={({ field }) => (
+                                  <input
+                                    {...field}
+                                    type="text"
+                                    placeholder="Video title"
+                                  />
+                                )}
+                              />
+                            </div>
+                            <div>
+                              <label>Duration</label>
+                              <Controller
+                                name={`modules.${moduleIndex}.videos.${videoIndex}.duration`}
+                                control={control}
+                                render={({ field }) => (
+                                  <input
+                                    {...field}
+                                    type="text"
+                                    placeholder="e.g., 12:30"
+                                  />
+                                )}
+                              />
+                            </div>
+                            <div className="col-span-2">
+                              <label>Description</label>
+                              <Controller
+                                name={`modules.${moduleIndex}.videos.${videoIndex}.description`}
+                                control={control}
+                                render={({ field }) => (
+                                  <textarea
+                                    {...field}
+                                    placeholder="Video description"
+                                    rows={2}
+                                  />
+                                )}
+                              />
+                            </div>
+                            <div className="col-span-2">
+                              <label>Video File or URL</label>
+                              <Controller
+                                name={`modules.${moduleIndex}.videos.${videoIndex}.video_url`}
+                                control={control}
+                                render={({ field }) => (
+                                  <input
+                                    type="file"
+                                    accept="video/*"
+                                    onChange={(e) => {
+                                      if (e.target.files && e.target.files[0]) {
+                                        field.onChange(e.target.files[0]);
+                                      }
+                                    }}
+                                    className="w-full"
+                                  />
+                                )}
+                              />
+                            </div>
+                          </div>
+                        </div>
+                      )
+                    )}
+                    <Button
+                      type="button"
+                      variant="outline"
+                      size="sm"
+                      onClick={() => {
+                        const currentVideos =
+                          watch(`modules.${moduleIndex}.videos`) || [];
+                        setValue(`modules.${moduleIndex}.videos`, [
+                          ...currentVideos,
+                          {
+                            title: "",
+                            description: "",
+                            video_url: "",
+                            duration: "",
+                          },
+                        ]);
+                      }}
+                    >
+                      Add Video
+                    </Button>
+                  </div>
+
+                  {/* Summaries Section */}
+                  <div className="space-y-3">
+                    <h4 className="text-lg font-medium">Summaries</h4>
+                    {watch(`modules.${moduleIndex}.summaries`)?.map(
+                      (_, summaryIndex) => (
+                        <div
+                          key={summaryIndex}
+                          className="border border-gray-100 rounded p-4"
+                        >
+                          <label>Summary Text</label>
+                          <Controller
+                            name={`modules.${moduleIndex}.summaries.${summaryIndex}.text`}
+                            control={control}
+                            render={({ field }) => (
+                              <textarea
+                                {...field}
+                                placeholder="Enter summary text"
+                                rows={3}
+                                className="w-full"
+                              />
+                            )}
+                          />
+                        </div>
+                      )
+                    )}
+                    <Button
+                      type="button"
+                      variant="outline"
+                      size="sm"
+                      onClick={() => {
+                        const currentSummaries =
+                          watch(`modules.${moduleIndex}.summaries`) || [];
+                        setValue(`modules.${moduleIndex}.summaries`, [
+                          ...currentSummaries,
+                          { text: "" },
+                        ]);
+                      }}
+                    >
+                      Add Summary
+                    </Button>
+                  </div>
+
+                  {/* Quizzes Section */}
+                  <div className="space-y-3">
+                    <h4 className="text-lg font-medium">Quizzes</h4>
+                    {watch(`modules.${moduleIndex}.quizzes`)?.map(
+                      (_, quizIndex) => (
+                        <div
+                          key={quizIndex}
+                          className="border border-gray-100 rounded p-4 space-y-3"
+                        >
+                          <div>
+                            <label>Question</label>
+                            <Controller
+                              name={`modules.${moduleIndex}.quizzes.${quizIndex}.question`}
+                              control={control}
+                              render={({ field }) => (
+                                <input
+                                  {...field}
+                                  type="text"
+                                  placeholder="Enter question"
+                                  className="w-full"
+                                />
+                              )}
+                            />
+                          </div>
+                          <div className="grid grid-cols-2 gap-4">
+                            <div>
+                              <label>Option A</label>
+                              <Controller
+                                name={`modules.${moduleIndex}.quizzes.${quizIndex}.option_a`}
+                                control={control}
+                                render={({ field }) => (
+                                  <input
+                                    {...field}
+                                    type="text"
+                                    placeholder="Option A"
+                                  />
+                                )}
+                              />
+                            </div>
+                            <div>
+                              <label>Option B</label>
+                              <Controller
+                                name={`modules.${moduleIndex}.quizzes.${quizIndex}.option_b`}
+                                control={control}
+                                render={({ field }) => (
+                                  <input
+                                    {...field}
+                                    type="text"
+                                    placeholder="Option B"
+                                  />
+                                )}
+                              />
+                            </div>
+                            <div>
+                              <label>Option C</label>
+                              <Controller
+                                name={`modules.${moduleIndex}.quizzes.${quizIndex}.option_c`}
+                                control={control}
+                                render={({ field }) => (
+                                  <input
+                                    {...field}
+                                    type="text"
+                                    placeholder="Option C"
+                                  />
+                                )}
+                              />
+                            </div>
+                            <div>
+                              <label>Option D</label>
+                              <Controller
+                                name={`modules.${moduleIndex}.quizzes.${quizIndex}.option_d`}
+                                control={control}
+                                render={({ field }) => (
+                                  <input
+                                    {...field}
+                                    type="text"
+                                    placeholder="Option D"
+                                  />
+                                )}
+                              />
+                            </div>
+                          </div>
+                          <div>
+                            <label>Correct Answer</label>
+                            <Controller
+                              name={`modules.${moduleIndex}.quizzes.${quizIndex}.correct_answer`}
+                              control={control}
+                              render={({ field }) => (
+                                <select {...field}>
+                                  <option value="">
+                                    Select correct answer
+                                  </option>
+                                  <option value="A">A</option>
+                                  <option value="B">B</option>
+                                  <option value="C">C</option>
+                                  <option value="D">D</option>
+                                </select>
+                              )}
+                            />
+                          </div>
+                        </div>
+                      )
+                    )}
+                    <Button
+                      type="button"
+                      variant="outline"
+                      size="sm"
+                      onClick={() => {
+                        const currentQuizzes =
+                          watch(`modules.${moduleIndex}.quizzes`) || [];
+                        setValue(`modules.${moduleIndex}.quizzes`, [
+                          ...currentQuizzes,
+                          {
+                            question: "",
+                            option_a: "",
+                            option_b: "",
+                            option_c: "",
+                            option_d: "",
+                            correct_answer: "",
+                          },
+                        ]);
+                      }}
+                    >
+                      Add Quiz
+                    </Button>
+                  </div>
+                </div>
+              ))}
+            </div>
+
+            {/* Badge Section */}
+            <div className="space-y-3">
+              <h1 className="text-pri10 text-3xl font-semibold">Badge</h1>
+              <div className="grid grid-cols-2 gap-4">
+                <div>
+                  <label htmlFor="badge.title">Badge Title</label>
+                  <Controller
+                    name="badge.title"
+                    control={control}
+                    render={({ field }) => (
+                      <input
+                        {...field}
+                        type="text"
+                        placeholder="e.g., Certified Fullstack Developer"
+                      />
+                    )}
+                  />
+                  {errors.badge?.title && (
+                    <span className="text-red-500">
+                      {errors.badge.title.message}
+                    </span>
+                  )}
+                </div>
+
+                <div>
+                  <label htmlFor="badge.description">Badge Description</label>
+                  <Controller
+                    name="badge.description"
+                    control={control}
+                    render={({ field }) => (
+                      <input
+                        {...field}
+                        type="text"
+                        placeholder="e.g., Awarded after successful course completion"
+                      />
+                    )}
+                  />
+                  {errors.badge?.description && (
+                    <span className="text-red-500">
+                      {errors.badge.description.message}
+                    </span>
+                  )}
+                </div>
+
+                <div className="col-span-2">
+                  <label htmlFor="badge.icon">Badge Icon</label>
+                  <Controller
+                    name="badge.icon"
+                    control={control}
+                    render={({ field }) => (
+                      <input
+                        type="file"
+                        accept="image/*"
+                        onChange={(e) => {
+                          if (e.target.files && e.target.files[0]) {
+                            field.onChange(e.target.files[0]);
+                          }
+                        }}
+                        className="w-full"
+                      />
+                    )}
+                  />
+                  {errors.badge?.icon && (
+                    <span className="text-red-500">
+                      {errors.badge.icon.message}
+                    </span>
+                  )}
+                </div>
+              </div>
+            </div>
+
+            {/* Community Link Section */}
+            <div className="space-y-3">
+              <h1 className="text-pri10 text-3xl font-semibold">
+                Community Link
+              </h1>
+              <div className="grid grid-cols-2 gap-4">
+                <div>
+                  <label htmlFor="community_link.description">
+                    Description
+                  </label>
+                  <Controller
+                    name="community_link.description"
+                    control={control}
+                    render={({ field }) => (
+                      <input
+                        {...field}
+                        type="text"
+                        placeholder="e.g., Join the student community for help and collaboration"
+                      />
+                    )}
+                  />
+                  {errors.community_link?.description && (
+                    <span className="text-red-500">
+                      {errors.community_link.description.message}
+                    </span>
+                  )}
+                </div>
+
+                <div>
+                  <label htmlFor="community_link.link">Community URL</label>
+                  <Controller
+                    name="community_link.link"
+                    control={control}
+                    render={({ field }) => (
+                      <input
+                        {...field}
+                        type="url"
+                        placeholder="https://community.example.com/course"
+                      />
+                    )}
+                  />
+                  {errors.community_link?.link && (
+                    <span className="text-red-500">
+                      {errors.community_link.link.message}
+                    </span>
+                  )}
+                </div>
+              </div>
+            </div>
+
+            {/* Legacy Fields Section */}
+            <div className="space-y-3">
+              <h1 className="text-pri10 text-3xl font-semibold">
+                Additional Settings
+              </h1>
+              <div className="grid grid-cols-3 gap-x-4 gap-y-5">
+                {/* Category */}
+                <div>
+                  <label htmlFor="category">Category</label>
+                  <Controller
+                    name="category"
+                    control={control}
+                    render={({ field }) => (
+                      <select {...field}>
+                        <option value="">Select Category</option>
+                        <option value="AI">Artificial Intelligence</option>
+                        <option value="CYBER">Cyber Security</option>
+                        <option value="DM">Digital Marketing</option>
+                        <option value="WEB">Web Development</option>
+                        <option value="UI/UX">UI/UX Design</option>
+                      </select>
+                    )}
+                  />
+                  {errors.category && (
+                    <span className="text-red-500">
+                      {errors.category.message}
+                    </span>
+                  )}
+                </div>
+
                 {/* Difficulty Level */}
                 <div>
                   <label htmlFor="difficulty">Difficulty Level</label>
@@ -372,30 +1134,8 @@ const CourseForm = () => {
                   )}
                 </div>
 
-                {/* Duration */}
-                <div>
-                  <label htmlFor="duration">Duration</label>
-                  <Controller
-                    name="duration"
-                    control={control}
-                    render={({ field }) => (
-                      <select {...field}>
-                        <option value="">Select Duration</option>
-                        <option value="4 weeks">4 weeks</option>
-                        <option value="6 weeks">6 weeks</option>
-                        <option value="10 weeks">10 weeks</option>
-                      </select>
-                    )}
-                  />
-                  {errors.duration && (
-                    <span className="text-red-500">
-                      {errors.duration.message}
-                    </span>
-                  )}
-                </div>
-
                 {/* Certificate */}
-                <div className="">
+                <div>
                   <label htmlFor="is_certificate">Certificate</label>
                   <Controller
                     name="is_certificate"
@@ -412,29 +1152,6 @@ const CourseForm = () => {
                     <span className="text-red-500">
                       {errors.is_certificate.message}
                     </span>
-                  )}
-                </div>
-
-                {/* Price */}
-                <div>
-                  <label htmlFor="price">Price</label>
-                  <Controller
-                    name="price"
-                    control={control}
-                    render={({ field }) => (
-                      <input
-                        {...field}
-                        type="number"
-                        step="0.01"
-                        placeholder="Enter course price"
-                        onChange={(e) =>
-                          field.onChange(parseFloat(e.target.value))
-                        }
-                      />
-                    )}
-                  />
-                  {errors.price && (
-                    <span className="text-red-500">{errors.price.message}</span>
                   )}
                 </div>
 
@@ -479,8 +1196,7 @@ const CourseForm = () => {
                     </span>
                   )}
                 </div>
-                {/* Start Date */}
-                {/* Start Time */}
+
                 <div>
                   <label htmlFor="start_time">Start Time</label>
                   <Controller
@@ -518,7 +1234,7 @@ const CourseForm = () => {
                       options={skillSuggestions}
                       isMulti
                       onChange={handleSelectChange}
-                      value={fields.map((field) => ({
+                      value={skillFields.map((field) => ({
                         value: field.name,
                         label: field.name,
                       }))}
@@ -531,214 +1247,146 @@ const CourseForm = () => {
               </div>
             </div>
 
-            {/* Curriculum Section */}
-            <div className="space-y-3">
-              <h1 className="text-pri10 text-3xl font-semibold">Curriculum</h1>
-              {methods.watch("modules")?.map((_, index) => (
-                <div key={index} className="grid grid-cols-2 gap-4">
-                  {/* Module */}
-                  <div>
-                    <label htmlFor={`modules.${index}.selectModule`}>
-                      Module
-                    </label>
-                    <Controller
-                      name={`modules.${index}.selectModule`}
-                      control={control}
-                      render={({ field }) => (
-                        <select {...field}>
-                          <option value="">Select module</option>
-                          <option value="Module 1">Module 1</option>
-                          <option value="Module 2">Module 2</option>
-                          <option value="Module 3">Module 3</option>
-                          <option value="Module 4">Module 4</option>
-                          <option value="Module 5">Module 5</option>
-                        </select>
-                      )}
-                    />
-                    {errors.modules?.[index]?.selectModule && (
-                      <span className="text-red-500">
-                        {errors.modules[index].selectModule.message}
-                      </span>
-                    )}
-                  </div>
-
-                  {/* Module Title */}
-                  <div>
-                    <label htmlFor={`modules.${index}.title`}>
-                      Module Title
-                    </label>
-                    <Controller
-                      name={`modules.${index}.title`}
-                      control={control}
-                      render={({ field }) => (
-                        <input
-                          {...field}
-                          type="text"
-                          placeholder="Enter module title"
-                        />
-                      )}
-                    />
-                    {errors.modules?.[index]?.title && (
-                      <span className="text-red-500">
-                        {errors.modules[index].title.message}
-                      </span>
-                    )}
-                  </div>
-
-                  {/* Module Description */}
-                  <div className="col-span-2">
-                    <label htmlFor={`modules.${index}.description`}>
-                      Module Description
-                    </label>
-                    <Controller
-                      name={`modules.${index}.description`}
-                      control={control}
-                      render={({ field }) => (
-                        <ReactQuill
-                          value={field.value}
-                          onChange={field.onChange}
-                          placeholder="Enter module description"
-                          className="mt-2"
-                        />
-                      )}
-                    />
-                    {errors.modules?.[index]?.description && (
-                      <span className="text-red-500">
-                        {errors.modules[index].description.message}
-                      </span>
-                    )}
-                  </div>
-                </div>
-              ))}
-              <Button
-                type="button"
-                className="bg-pri1 text-[#1C6B88] border border-primary mt-4"
-                onClick={() =>
-                  methods.setValue("modules", [
-                    ...(methods.getValues("modules") || []),
-                    { selectModule: "", title: "", description: "" },
-                  ])
-                }
-              >
-                Add Module
-              </Button>
-            </div>
-
             {/* Add-ons Section */}
             <div className="space-y-3">
-              <h1 className="text-pri10 text-3xl font-semibold">Add-ons</h1>
-              {methods.watch("addon")?.map((_, index) => (
-                <div key={index} className="grid gap-5">
-                  {/* Addon Title */}
-                  <div className="w-1/2">
-                    <label htmlFor={`addon.${index}.title`}>Addon Title</label>
-                    <Controller
-                      name={`addon.${index}.title`}
-                      control={control}
-                      render={({ field }) => (
-                        <input
-                          {...field}
-                          type="text"
-                          placeholder="Enter addon title"
-                        />
-                      )}
-                    />
-                    {errors.addon?.[index]?.title && (
-                      <span className="text-red-500">
-                        {errors.addon[index].title.message}
-                      </span>
-                    )}
+              <div className="flex justify-between items-center">
+                <h1 className="text-pri10 text-3xl font-semibold">Add-ons</h1>
+                <Button
+                  type="button"
+                  className="bg-pri1 text-[#1C6B88] border border-primary"
+                  onClick={() =>
+                    appendAddon({
+                      title: "",
+                      add_on_image: "",
+                      description: "",
+                    })
+                  }
+                >
+                  <MdAdd className="mr-2" />
+                  Add Add-on
+                </Button>
+              </div>
+
+              {addonFields.map((addon, index) => (
+                <div
+                  key={addon.id}
+                  className="border border-gray-200 rounded-lg p-6 space-y-4"
+                >
+                  <div className="flex justify-between items-center">
+                    <h3 className="text-xl font-semibold">
+                      Add-on {index + 1}
+                    </h3>
+                    <Button
+                      type="button"
+                      variant="destructive"
+                      size="sm"
+                      onClick={() => removeAddon(index)}
+                    >
+                      <MdDelete />
+                    </Button>
                   </div>
 
-                  {/* Addon Image */}
-                  <div>
-                    <label htmlFor={`addon.${index}.add_on_image`}>
-                      Addon Image
-                    </label>
-                    <div className="relative w-[30%] h-60">
+                  <div className="grid gap-5">
+                    {/* Addon Title */}
+                    <div className="w-1/2">
+                      <label htmlFor={`addon.${index}.title`}>
+                        Addon Title
+                      </label>
                       <Controller
-                        name={`addon.${index}.add_on_image`}
+                        name={`addon.${index}.title`}
                         control={control}
-                        render={({ field }) =>
-                          typeof window !== "undefined" && ( // Ensure this only runs in the client environment
-                            <input
-                              type="file"
-                              accept="image/*"
-                              className="w-full h-60 relative opacity-0 z-10"
-                              onChange={(e) => {
-                                if (e.target.files && e.target.files[0]) {
-                                  field.onChange(e.target.files[0]); // Store the file object directly
-                                }
-                              }}
-                            />
-                          )
-                        }
-                      />
-
-                      <div className="absolute top-0 left-0 w-full h-60 bg-[#EAF7FC] rounded-md flex items-center justify-center">
-                        <div className="h-1/2">
-                          <IoMdImage
-                            size={100}
-                            className="text-gray-400 mx-auto"
+                        render={({ field }) => (
+                          <input
+                            {...field}
+                            type="text"
+                            placeholder="Enter addon title"
                           />
-                          <p className="text-sm text-[#5249C5] text-center flex items-center gap-x-2">
-                            <span className="">
-                              <CiCirclePlus className="text-gray-600 text-lg" />
-                            </span>{" "}
-                            Add Photo
-                          </p>
+                        )}
+                      />
+                      {errors.addon?.[index]?.title && (
+                        <span className="text-red-500">
+                          {errors.addon[index].title.message}
+                        </span>
+                      )}
+                    </div>
+
+                    {/* Addon Image */}
+                    <div>
+                      <label htmlFor={`addon.${index}.add_on_image`}>
+                        Addon Image
+                      </label>
+                      <div className="relative w-[30%] h-60">
+                        <Controller
+                          name={`addon.${index}.add_on_image`}
+                          control={control}
+                          render={({ field }) =>
+                            typeof window !== "undefined" && (
+                              <input
+                                type="file"
+                                accept="image/*"
+                                className="w-full h-60 relative opacity-0 z-10"
+                                onChange={(e) => {
+                                  if (e.target.files && e.target.files[0]) {
+                                    field.onChange(e.target.files[0]);
+                                  }
+                                }}
+                              />
+                            )
+                          }
+                        />
+
+                        <div className="absolute top-0 left-0 w-full h-60 bg-[#EAF7FC] rounded-md flex items-center justify-center">
+                          <div className="h-1/2">
+                            <IoMdImage
+                              size={100}
+                              className="text-gray-400 mx-auto"
+                            />
+                            <p className="text-sm text-[#5249C5] text-center flex items-center gap-x-2">
+                              <span className="">
+                                <CiCirclePlus className="text-gray-600 text-lg" />
+                              </span>{" "}
+                              Add Photo
+                            </p>
+                          </div>
                         </div>
                       </div>
-                    </div>
-                    {errors.addon?.[index]?.add_on_image && (
-                      <span className="text-red-500">
-                        {errors.addon[index].add_on_image.message}
-                      </span>
-                    )}
-                  </div>
-
-                  {/* Addon Description */}
-                  <div className="">
-                    <label htmlFor={`addon.${index}.description`}>
-                      Addon Description
-                    </label>
-                    <Controller
-                      name={`addon.${index}.description`}
-                      control={control}
-                      render={({ field }) => (
-                        <textarea
-                          {...field}
-                          placeholder="Enter addon description"
-                        ></textarea>
+                      {errors.addon?.[index]?.add_on_image && (
+                        <span className="text-red-500">
+                          {errors.addon[index].add_on_image.message}
+                        </span>
                       )}
-                    />
-                    {errors.addon?.[index]?.description && (
-                      <span className="text-red-500">
-                        {errors.addon[index].description.message}
-                      </span>
-                    )}
+                    </div>
+
+                    {/* Addon Description */}
+                    <div className="">
+                      <label htmlFor={`addon.${index}.description`}>
+                        Addon Description
+                      </label>
+                      <Controller
+                        name={`addon.${index}.description`}
+                        control={control}
+                        render={({ field }) => (
+                          <textarea
+                            {...field}
+                            placeholder="Enter addon description"
+                          ></textarea>
+                        )}
+                      />
+                      {errors.addon?.[index]?.description && (
+                        <span className="text-red-500">
+                          {errors.addon[index].description.message}
+                        </span>
+                      )}
+                    </div>
                   </div>
                 </div>
               ))}
-
-              <Button
-                type="button"
-                className="bg-pri1 text-[#1C6B88] border border-primary mt-4"
-                onClick={() =>
-                  methods.setValue("addon", [
-                    ...(methods.getValues("addon") || []),
-                    { title: "", add_on_image: "", description: "" },
-                  ])
-                }
-              >
-                Add Add-on
-              </Button>
             </div>
 
             {/* Submit Button */}
             <div className="flex justify-end">
               <Button type="submit" className="w-1/5 mt-4">
-                Submit
+                Create Course
               </Button>
             </div>
           </form>

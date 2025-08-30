@@ -16,7 +16,7 @@ import { Button } from "../ui/button";
 import { showErrorToast, showSuccessToast } from "@/helpers/toastUtil";
 import Link from "next/link";
 
-const BASE_URL = "https://techunlock.pythonanywhere.com";
+const BASE_URL = "https://test.techunlock.org/test/api";
 
 const Success = () => {
   const params = useSearchParams();
@@ -150,9 +150,9 @@ const Success = () => {
               <div className="text-2xl text-pri10 font-semibold">
                 If your account has been debited, please contact our support
                 service with clear proof at{" "}
-                <Link className="text-primary" passHref legacyBehavior>
-                  <a href="mailto:info@techunlock.com">admin@techunlock.com</a>
-                </Link>{" "}
+                <a className="text-primary" href="mailto:admin@techunlock.com">
+                  admin@techunlock.com
+                </a>{" "}
                 if the reversal does not occur within 24 hours.
               </div>
             )}

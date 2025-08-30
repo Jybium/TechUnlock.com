@@ -29,8 +29,58 @@ To learn more about Next.js, take a look at the following resources:
 
 You can check out [the Next.js GitHub repository](https://github.com/vercel/next.js/) - your feedback and contributions are welcome!
 
-## Deploy on Vercel
+## Deployment
 
-The easiest way to deploy your Next.js app is to use the [Vercel Platform](https://vercel.com/new?utm_medium=default-template&filter=next.js&utm_source=create-next-app&utm_campaign=create-next-app-readme) from the creators of Next.js.
+The easiest way to deploy your Next.js app is to use a managed hosting platform that supports Next.js server functions. Refer to the Next.js documentation for hosting options.
 
 Check out our [Next.js deployment documentation](https://nextjs.org/docs/deployment) for more details.
+
+## Security and Configuration
+
+### Authentication and Token Handling
+
+- The app stores the access token in an httpOnly cookie `access_token` with `SameSite=Lax`, `Secure` (in production), and `Path=/`.
+- A CSRF token is set in a readable cookie `csrf_token` with `SameSite=Lax` and `Secure` (in production). The client automatically attaches it in the `x-csrf-token` header for state-changing requests.
+- All API calls from the browser go through the internal proxy at `/api/proxy/*`. The proxy reads `access_token` and `csrf_token` cookies and forwards requests to the upstream API. The access token is never exposed to client-side JavaScript.
+- The proxy enforces CSRF for non-GET/HEAD/OPTIONS requests and rotates the `csrf_token` after each successful state-changing request.
+
+### Middleware Guards
+
+- `middleware.js` protects selected routes by checking for the presence of the `access_token` cookie and redirects to `/login` if missing.
+- Adjust the `matcher` list in `middleware.js` to add or remove protected paths.
+
+### Content Security Policy (CSP)
+
+- CSP headers are set in `next.config.js` via the `headers()` function. Defaults:
+  - `default-src 'self'`
+  - `script-src 'self' 'unsafe-inline' 'unsafe-eval'`
+  - `connect-src` allows your API domain and self
+  - `img-src 'self' data: blob: https://res.cloudinary.com`
+  - `style-src 'self' 'unsafe-inline'`
+  - `frame-ancestors 'none'`, `base-uri 'self'`, `form-action 'self'`
+- You can customize `connect-src` via the env var `NEXT_PUBLIC_CSP_CONNECT_SRC`.
+
+### Redirect Allowed List
+
+- External redirects (e.g., payment) are validated against an allowed list before navigation.
+- Configure allowed domains with `NEXT_PUBLIC_PAYMENT_REDIRECT_ALLOWLIST` as a comma-separated list. Defaults include common payment checkout domains:
+  - `NEXT_PUBLIC_PAYMENT_REDIRECT_ALLOWLIST="https://checkout.paystack.com,https://paystack.com"`
+
+### Environment Variables
+
+Create a `.env.local` file with entries like:
+
+```bash
+# CSP
+NEXT_PUBLIC_CSP_CONNECT_SRC="'self' https://test.techunlock.org"
+
+# Redirect allowlist for external payment pages
+NEXT_PUBLIC_PAYMENT_REDIRECT_ALLOWLIST="https://checkout.paystack.com,https://paystack.com"
+```
+
+### Smoke Test Checklist
+
+1. Login and confirm cookies: `access_token` (httpOnly, Lax), `csrf_token` (readable, Lax).
+2. Visit a guarded route; expect access with token, redirect without.
+3. Perform a POST/PUT/PATCH/DELETE and confirm `x-csrf-token` header is sent and a fresh `csrf_token` is issued.
+4. Logout; `access_token` is deleted and guarded routes redirect to `/login`.

@@ -2,6 +2,7 @@ import React from "react";
 import Logo from "./Logo";
 import { CloseIcon, SettingIcon } from "@/components/svgs";
 import Navigation from "./Navigation";
+import Link from "next/link";
 
 const Sidebar = () => {
   return (
@@ -23,10 +24,13 @@ const Sidebar = () => {
         </div>
 
         {/* far end bottom link */}
-        <div className="flex items-center justify-center border border-darkblue w-5/6 mx-auto rounded-md p-3 mb-4 ">
+        <Link
+          href="/dashboard/settings"
+          className="flex items-center justify-center border border-darkblue w-5/6 mx-auto rounded-md p-3 mb-4 "
+        >
           <SettingIcon />
           <p className="ml-3">Settings</p>
-        </div>
+        </Link>
       </div>
     </div>
   );

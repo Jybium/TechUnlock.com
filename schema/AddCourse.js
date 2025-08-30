@@ -1,73 +1,90 @@
 import { z } from "zod";
 
+const videoSchema = z.object({
+  title: z.string().nonempty({ message: "Video title is required" }),
+  description: z
+    .string()
+    .nonempty({ message: "Video description is required" }),
+  video_url: z.string().url({ message: "Valid video URL is required" }),
+  duration: z.string().nonempty({ message: "Video duration is required" }),
+});
+
+const summarySchema = z.object({
+  text: z.string().nonempty({ message: "Summary text is required" }),
+});
+
+const quizSchema = z.object({
+  question: z.string().nonempty({ message: "Question is required" }),
+  option_a: z.string().nonempty({ message: "Option A is required" }),
+  option_b: z.string().nonempty({ message: "Option B is required" }),
+  option_c: z.string().nonempty({ message: "Option C is required" }),
+  option_d: z.string().nonempty({ message: "Option D is required" }),
+  correct_answer: z.enum(["A", "B", "C", "D"], {
+    message: "Correct answer must be A, B, C, or D",
+  }),
+});
+
+const moduleSchema = z.object({
+  title: z.string().nonempty({ message: "Module title is required" }),
+  description: z
+    .string()
+    .nonempty({ message: "Module description is required" }),
+  duration: z.string().nonempty({ message: "Module duration is required" }),
+  order: z
+    .number()
+    .positive({ message: "Module order must be a positive number" }),
+  videos: z.array(videoSchema).optional(),
+  summaries: z.array(summarySchema).optional(),
+  quizzes: z.array(quizSchema).optional(),
+});
+
+const badgeSchema = z.object({
+  title: z.string().nonempty({ message: "Badge title is required" }),
+  description: z
+    .string()
+    .nonempty({ message: "Badge description is required" }),
+  icon: z.string().url({ message: "Valid badge icon URL is required" }),
+});
+
+const communityLinkSchema = z.object({
+  description: z
+    .string()
+    .nonempty({ message: "Community link description is required" }),
+  link: z.string().url({ message: "Valid community link URL is required" }),
+});
+
 const courseSchema = z.object({
   title: z.string().nonempty({ message: "Title is required" }),
-  category: z.string().nonempty({ message: "Category is required" }),
+  short_description: z
+    .string()
+    .nonempty({ message: "Short description is required" }),
+  description: z.string().nonempty({ message: "Description is required" }),
+  duration: z.string().nonempty({ message: "Duration is required" }),
+  is_published: z.boolean(),
+  is_paid: z.boolean(),
+  price: z
+    .number()
+    .nonnegative({ message: "Price must be a non-negative number" }),
   cover_image: z
     .instanceof(File)
     .optional()
     .refine((value) => value instanceof File || value === "", {
       message: "Image must be a File or empty",
     }),
-  description: z.string().nonempty({ message: "Description is required" }),
-  difficulty: z.string().nonempty({ message: "Difficulty is required" }),
-  duration: z.string().nonempty({ message: "Duration is required" }),
-  is_certificate: z.string().nonempty({ message: "Certificate is required" }),
-  instructor_name: z
-    .string()
-    .nonempty({ message: "Instructor name is required" }),
-  price: z
-    .number()
-    .nonnegative({ message: "Price must be a non-negative number" }),
-  start_date: z.string().refine(
-    (val) => {
-      const date = new Date(val);
-      const today = new Date();
-      today.setHours(0, 0, 0, 0); // Set time to the start of the day
-      return !isNaN(date.getTime()) && date >= today;
-    },
-    {
-      message:
-        "Expiry date must be a valid date and not less than today's date.",
-    }
-  ),
-  start_time: z
-    .string()
-    .nonempty({ message: "Start time is required" })
-    .refine(
-      (time) => /^([01]\d|2[0-3]):([0-5]\d)$/.test(time), // 24-hour format "HH:MM"
-      {
-        message: "Start time must be in 24-hour format HH:MM",
-      }
-    )
-    // Uncomment below for 12-hour format
-    // .refine(
-    //   (time) => /^(0[1-9]|1[0-2]):[0-5][0-9] (AM|PM)$/i.test(time), // 12-hour format "HH:MM AM/PM"
-    //   {
-    //     message: "Start time must be in 12-hour format HH:MM AM/PM",
-    //   }
-    // )
-    .refine(
-      (time) => {
-        const [hours, minutes] = time.split(":").map(Number);
-        // Business hours: 09:00 - 17:59
-        return hours >= 9 && hours < 18;
-      },
-      {
-        message: "Start time must be between 09:00 and 17:59",
-      }
-    ),
+  tags: z.array(z.string()).optional(),
   modules: z
-    .array(
-      z.object({
-        selectModule: z.string().nonempty({ message: "Module is required" }),
-        title: z.string().nonempty({ message: "Module title is required" }),
-        description: z
-          .string()
-          .nonempty({ message: "Module description is required" }),
-      })
-    )
-    .optional(),
+    .array(moduleSchema)
+    .min(1, { message: "At least one module is required" }),
+  badge: badgeSchema.optional(),
+  community_link: communityLinkSchema.optional(),
+  // Legacy fields for backward compatibility
+  category: z.string().optional(),
+  difficulty: z.string().optional(),
+  is_certificate: z.string().optional(),
+  instructor_name: z.string().optional(),
+  start_date: z.string().optional(),
+  start_time: z.string().optional(),
+  course_skills: z.array(z.object({ name: z.string() })).optional(),
   addon: z
     .array(
       z.object({
@@ -84,7 +101,6 @@ const courseSchema = z.object({
       })
     )
     .optional(),
-  course_skills: z.array(z.object({ name: z.string() })),
 });
 
 export default courseSchema;

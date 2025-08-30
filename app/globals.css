@@ -91,3 +91,33 @@ li {
     display: none;
   }
 }
+
+select {
+  padding: 10px 40px 10px 12px; /* Top/Right/Bottom/Left */
+  width: 200px;
+  font-size: 16px;
+  border: 1px solid #ccc;
+  border-radius: 6px;
+  background-color: #fff;
+
+  /* Remove default arrow */
+  -webkit-appearance: none;
+  -moz-appearance: none;
+  appearance: none;
+
+  /* Add custom icon */
+  background-image: url("../assets/landing-page/security.svg");
+  background-repeat: no-repeat;
+  background-position: right 12px center;
+  background-size: 16px;
+}
+
+textarea:focus,
+input:focus,
+select:focus,
+rich-text-editor:focus,
+select:active {
+  outline: none;
+  border-color: #13485b; /* Change to your desired focus color */
+  box-shadow: 0 0 0 2px rgba(19, 72, 91, 0.2); /* Optional shadow for focus */
+}

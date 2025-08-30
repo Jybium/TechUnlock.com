@@ -1,7 +1,14 @@
 "use client";
 
 import { getCourses, getEnrolledCourses } from "@/services/course";
-import React, { createContext, useContext, useEffect, useState } from "react";
+import React, {
+  createContext,
+  useContext,
+  useEffect,
+  useState,
+  useMemo,
+  useCallback,
+} from "react";
 
 const CoursesContext = createContext();
 
@@ -10,7 +17,7 @@ export const CoursesProvider = ({ children }) => {
   const [enrolledCourses, setEnrolledCourses] = useState([]);
   const [loading, setLoading] = useState(false);
 
-  const fetchCourses = async () => {
+  const fetchCourses = useCallback(async () => {
     try {
       setLoading(true);
       const data = await getCourses();
@@ -22,30 +29,34 @@ export const CoursesProvider = ({ children }) => {
     } finally {
       setLoading(false);
     }
-  };
+  }, []);
 
-  const fetchEnrolledCourses = async () => {
+  const fetchEnrolledCourses = useCallback(async () => {
     try {
       const data = await getEnrolledCourses();
       setEnrolledCourses(data.enrolled_courses);
+      console.log(data.enrolled_courses);
     } catch (error) {
       console.error("Error fetching courses:", error.message);
     }
-  };
+  }, []);
 
   useEffect(() => {
     fetchCourses();
     fetchEnrolledCourses();
-  }, []);
+  }, [fetchCourses, fetchEnrolledCourses]);
 
-  const contextValue = {
-    courses,
-    setCourses,
-    enrolledCourses,
-    setEnrolledCourses,
-    loading,
-    setLoading,
-  };
+  const contextValue = useMemo(
+    () => ({
+      courses,
+      setCourses,
+      enrolledCourses,
+      setEnrolledCourses,
+      loading,
+      setLoading,
+    }),
+    [courses, enrolledCourses, loading]
+  );
 
   return (
     <CoursesContext.Provider value={contextValue}>

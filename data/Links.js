@@ -13,8 +13,8 @@ export const Prog = [
       },
       {
         name: "Learn at your pace",
-        url: "/bootcamp",
-        isComing: true,
+        url: "/learn-at-pace",
+        // isComing: true,
       },
     ],
   },

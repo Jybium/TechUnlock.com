@@ -68,7 +68,7 @@ const EnrolledCourseCard = ({ item }) => {
           <div className="flex justify-center">
             <Button
               className="bg-primary text-white"
-              onClick={() => router.push(`/courses/${item?.id}`)}
+              onClick={() => router.push(`/dashboard/courses/${item?.id}`)}
             >
               Course overview
             </Button>

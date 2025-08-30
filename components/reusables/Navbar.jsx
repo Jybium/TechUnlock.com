@@ -16,6 +16,7 @@ import { IoIosArrowDown, IoIosArrowUp } from "react-icons/io";
 import { CgProfile } from "react-icons/cg";
 
 import logout from "@/assets/landing-page/logout.svg";
+import { LuLayoutDashboard } from "react-icons/lu";
 
 const Navbar = () => {
   const [token, setToken] = useState("");
@@ -45,7 +46,7 @@ const Navbar = () => {
     try {
       setLoading(true);
       const response = await axios.get(
-        "https://techunlock.pythonanywhere.com/account/account-details/",
+        "https://test.techunlock.org/test/api/account/account-details/",
         {
           headers: {
             Authorization: `Bearer ${token}`,
@@ -161,6 +162,14 @@ const Navbar = () => {
               } absolute top-12 z-40 cursor-pointer w-full text-red-500 px-4 py-2 bg-white rounded shadow drop-shadow font-medium`}
             >
               <Link
+                href="/dashboard"
+                className="cursor-pointer text-pri9 py-1 flex items-center gap-x-4"
+                onClick={toggleMenu}
+              >
+                <LuLayoutDashboard size={20} /> Dashboard
+              </Link>
+
+              <Link
                 href="/profile"
                 className="cursor-pointer text-pri9 py-1 flex items-center gap-x-4"
                 onClick={toggleMenu}
@@ -242,6 +251,13 @@ const Navbar = () => {
                   Open ? "block" : "hidden"
                 } absolute top-12 z-40 cursor-pointer w-full text-red-500 px-4 py-2 bg-white rounded shadow drop-shadow font-medium`}
               >
+                <Link
+                  href="/dashboard"
+                  className="cursor-pointer text-pri9 py-1 flex items-center gap-x-4"
+                  onClick={toggleMenu}
+                >
+                  <LuLayoutDashboard size={20} /> Dashboard
+                </Link>
                 <Link
                   href="/profile"
                   className="cursor-pointer text-pri9 py-1 flex items-center gap-x-4"

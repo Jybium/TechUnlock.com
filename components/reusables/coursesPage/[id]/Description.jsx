@@ -19,9 +19,9 @@ import DMCard from "@/assets/course-page/DMCard.svg";
 // AI
 import AI from "@/assets/course-page/AICard.svg";
 
-const Description = ({ course }) => {
+const Description = React.memo(({ course }) => {
   return (
-    <div className="relative mt-[3rem] mb-[2rem] lg:mt-[6.44rem] lg:mb-[5rem]">
+    <div className="w-full">
       <div className="grid gap-y-5 lg:gap-y-0 lg:flex lg:justify-between lg:items-center w-full bg-pri1 py-[2rem] px-[3rem]">
         <div className="lg:w-[55%]">
           <div className="">
@@ -30,6 +30,8 @@ const Description = ({ course }) => {
                 <Image
                   src={line}
                   alt="line"
+                  width={200}
+                  height={20}
                   className="absolute left-0 top-8 w-[54%] md:w-[25%] mx-auto"
                 />
                 <span className="text-center text-2xl font-semibold text-first-primary">
@@ -48,7 +50,7 @@ const Description = ({ course }) => {
                   ? "LEARN CYBER SECURITY FUNDAMENTALS"
                   : course?.category === "DM"
                   ? "Ready to take your business online and reach new heights?"
-                  : "Curious about the future of technology? "}
+                  : "Curious about the future of technology? "}
               </h3>
 
               <p className="text-base">
@@ -60,7 +62,7 @@ const Description = ({ course }) => {
                   ? "Are you looking to learn the basics of cyber security? Are you an aspiring IT professional that needs to better understand how cybersecurity works? If so, this is the perfect course for you!"
                   : course?.category === "DM"
                   ? "This dynamic digital marketing course will equip you with the strategies, tools, and knowledge to create a powerful online presence, attract new customers, and drive business growth."
-                  : "This comprehensive AI course will introduce you to the fascinating world of Artificial Intelligence, empowering you to understand, explore, and even build AI applications. "}
+                  : "This comprehensive AI course will introduce you to the fascinating world of Artificial Intelligence, empowering you to understand, explore, and even build AI applications. "}
               </p>
 
               <p className="text-sm">
@@ -209,6 +211,8 @@ const Description = ({ course }) => {
       </div>
     </div>
   );
-};
+});
+
+Description.displayName = "Description";
 
 export default Description;
