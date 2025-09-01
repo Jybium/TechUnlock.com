@@ -262,6 +262,15 @@ export const createModule = async (data) => {
 
 // ==================== LEARNER MANAGEMENT ====================
 // getAllLearners function removed - using learners data from getLearnersStats instead
+export const getAllLearners = async () => {
+  const token = await fetchToken();
+  const response = await apiClient.get(`${BASE_URL}/admin-app/learners/`, {
+    headers: {
+      Authorization: `Bearer ${token}`,
+    },
+  });
+  return response.data;
+};
 
 export const getLearnerDetails = async (id) => {
   const token = await fetchToken();
@@ -529,7 +538,7 @@ export const getAdminNotifications = async (status = "all") => {
       config.params = { status };
     }
     const response = await apiClient.get(
-      `${BASE_URL}/admin-app/notifications/`,
+      `${BASE_URL}/notification/user-notifications/`,
       config
     );
     if (response.data && response.data.error) {
@@ -599,5 +608,70 @@ export const changeAdminPassword = async (adminId, passwordData) => {
   } catch (error) {
     console.error("Error changing admin password:", error);
     throw new Error("Failed to change password. Please try again.");
+  }
+};
+
+// Add Admin
+export const getAdminDetails = async (data) => {
+  const token = await fetchToken();
+  try {
+    const response = await apiClient.post(
+      `${BASE_URL}/admin-app/admins/`,
+      data,
+      {
+        headers: {
+          Authorization: `Bearer ${token}`,
+        },
+      }
+    );
+    return response.data;
+  } catch (error) {
+    console.error("Error adding admin:", error);
+    throw new Error("Failed to add admin. Please try again.");
+  }
+};
+
+export const getCourseDetailsForAdmin = async (id) => {
+  const token = await fetchToken();
+  const response = await apiClient.get(
+    `${BASE_URL}/admin-app/course-details/${id}/`,
+    {
+      headers: {
+        Authorization: `Bearer ${token}`,
+      },
+    }
+  );
+  return response.data;
+};
+
+export const getModuleDetailsForAdmin = async (id) => {
+  const token = await fetchToken();
+  const response = await apiClient.get(
+    `${BASE_URL}/admin-app/module-details/${id}/`,
+    {
+      headers: {
+        Authorization: `Bearer ${token}`,
+      },
+    }
+  );
+  return response.data;
+};
+
+// Get Course Details for Editing
+export const getCourseDetailsForEditing = async (courseId) => {
+  const token = await fetchToken();
+  try {
+    const response = await apiClient.get(
+      `${BASE_URL}/admin-app/courses/${courseId}/edit/`,
+      {
+        headers: {
+          Authorization: `Bearer ${token}`,
+        },
+      }
+    );
+    return response.data;
+  } catch (error) {
+    console.error("Error fetching course for editing:", error);
+    throw new Error("Failed to fetch course details for editing.");
   }
 };

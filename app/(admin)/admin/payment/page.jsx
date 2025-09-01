@@ -8,6 +8,7 @@ import {
   MoreVertical,
   DollarSign,
   FileText,
+  CreditCard,
 } from "lucide-react";
 import { useRouter } from "next/navigation";
 import { getPaymentStats, getAllPayments } from "@/services/admin";
@@ -38,27 +39,27 @@ const PaymentPage = () => {
           {
             title: "Total Revenue",
             value: `₦${stats?.total_revenue?.toLocaleString() || "0"}`,
-            icon: DollarSign,
-            color: "bg-green-100",
-          },
-          {
-            title: "This Month",
-            value: `₦${stats?.monthly_revenue?.toLocaleString() || "0"}`,
-            icon: DollarSign,
+            icon: CreditCard,
             color: "bg-blue-100",
           },
-          {
-            title: "Total Transactions",
-            value: stats?.total_transactions?.toString() || "0",
-            icon: FileText,
-            color: "bg-purple-100",
-          },
-          {
-            title: "Success Rate",
-            value: `${stats?.success_rate?.toFixed(1) || "0"}%`,
-            icon: DollarSign,
-            color: "bg-yellow-100",
-          },
+          // {
+          //   title: "This Month",
+          //   value: `₦${stats?.monthly_revenue?.toLocaleString() || "0"}`,
+          //   icon: DollarSign,
+          //   color: "bg-blue-100",
+          // },
+          // {
+          //   title: "Total Transactions",
+          //   value: stats?.total_transactions?.toString() || "0",
+          //   icon: FileText,
+          //   color: "bg-purple-100",
+          // },
+          // {
+          //   title: "Success Rate",
+          //   value: `${stats?.success_rate?.toFixed(1) || "0"}%`,
+          //   icon: DollarSign,
+          //   color: "bg-yellow-100",
+          // },
         ];
 
         // Transform transactions

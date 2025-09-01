@@ -1,381 +1,304 @@
 "use client";
 
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
+import { useParams, useRouter } from "next/navigation";
 import {
   ArrowLeft,
-  Users,
-  Clock,
-  BookOpen,
-  Star,
+  Eye,
   Edit,
   Trash2,
-  MoreVertical,
+  Plus,
+  GraduationCap,
+  Flag,
 } from "lucide-react";
-import { useRouter } from "next/navigation";
+import { getCourseDetailsForAdmin } from "@/services/admin";
+import LoadingSpinner from "@/components/reusables/LoadingSpinner";
+import { showErrorToast } from "@/helpers/toastUtil";
 
-const CourseDetailsPage = ({ params }) => {
+const AdminCourseDetailsPage = () => {
+  const { id } = useParams();
   const router = useRouter();
+  const [courseDetails, setCourseDetails] = useState(null);
+  const [loading, setLoading] = useState(true);
+  const [error, setError] = useState(null);
 
-  // Mock data for course details
-  const courseDetails = {
-    title: "Introduction to Digital Marketing",
-    description:
-      "This beginner-friendly course introduces you to digital marketing, covering understanding audiences, social media, content creation, targeted ads, and performance measurement.",
-    rating: 4.0,
-    totalLearners: 148,
-    activeLearners: 120,
-    newLearners: 28,
-    completionRate: 85,
-    totalModules: 10,
-    totalQuizzes: 10,
-    duration: "6 hours",
-    lastUpdated: "1 week ago",
-    status: "Active",
-    enrolledLearners: [
-      {
-        id: 1,
-        name: "Daniel Ruda",
-        email: "danielruba@gmail.com",
-        progress: 75,
-        lastActivity: "2 hours ago",
-        status: "Active",
-      },
-      {
-        id: 2,
-        name: "Bradley Binod",
-        email: "bradleybinod@gmail.com",
-        progress: 100,
-        lastActivity: "1 day ago",
-        status: "Completed",
-      },
-      {
-        id: 3,
-        name: "Jackson James",
-        email: "jacksonjames@gmail.com",
-        progress: 45,
-        lastActivity: "3 days ago",
-        status: "Active",
-      },
-      {
-        id: 4,
-        name: "Kola Jola",
-        email: "kolajola@gmail.com",
-        progress: 90,
-        lastActivity: "5 hours ago",
-        status: "Active",
-      },
-      {
-        id: 5,
-        name: "Olivia Wye",
-        email: "oliviawye@gmail.com",
-        progress: 60,
-        lastActivity: "1 week ago",
-        status: "Inactive",
-      },
-    ],
-    modules: [
-      {
-        id: 1,
-        title: "Introduction to Digital Marketing",
-        videos: 4,
-        duration: "45 minutes",
-        completedBy: 120,
-      },
-      {
-        id: 2,
-        title: "Understanding Your Audience",
-        videos: 3,
-        duration: "35 minutes",
-        completedBy: 110,
-      },
-      {
-        id: 3,
-        title: "Social Media Marketing Fundamentals",
-        videos: 5,
-        duration: "60 minutes",
-        completedBy: 95,
-      },
-      {
-        id: 4,
-        title: "Content Creation Strategies",
-        videos: 4,
-        duration: "50 minutes",
-        completedBy: 85,
-      },
-      {
-        id: 5,
-        title: "Social Media Advertising",
-        videos: 6,
-        duration: "75 minutes",
-        completedBy: 70,
-      },
-    ],
+  useEffect(() => {
+    const fetchCourseDetails = async () => {
+      try {
+        setLoading(true);
+        const data = await getCourseDetailsForAdmin(id);
+        setCourseDetails(data);
+      } catch (error) {
+        console.error("Error fetching course details:", error);
+        setError("Failed to load course details");
+        showErrorToast("Failed to load course details");
+      } finally {
+        setLoading(false);
+      }
+    };
+
+    if (id) {
+      fetchCourseDetails();
+    }
+  }, [id]);
+
+  const handleEditCourse = () => {
+    // Route to create course page with course preloaded for editing
+    router.push(`/admin/courses/create?editCourse=${id}`);
   };
 
-  return (
-    <div className="space-y-6">
-      {/* Header */}
-      <div className="flex items-center justify-between">
-        <div className="flex items-center space-x-4">
+  const handleViewModule = (moduleId) => {
+    router.push(`/admin/modules/${moduleId}`);
+  };
+
+  const handleEditModule = (moduleId) => {
+    // Route to create course page with module preloaded
+    router.push(`/admin/courses/create?editModule=${moduleId}&courseId=${id}`);
+  };
+
+  const handleDeleteModule = async (moduleId) => {
+    if (window.confirm("Are you sure you want to delete this module?")) {
+      try {
+        // TODO: Implement delete module API call
+        console.log("Deleting module:", moduleId);
+        showErrorToast("Delete module functionality not implemented yet");
+      } catch (error) {
+        console.error("Error deleting module:", error);
+        showErrorToast("Failed to delete module");
+      }
+    }
+  };
+
+  const handleAddModule = () => {
+    router.push(`/admin/courses/${id}/modules/create`);
+  };
+
+  if (loading) {
+    return (
+      <div className="min-h-screen bg-gray-50 flex items-center justify-center">
+        <LoadingSpinner />
+      </div>
+    );
+  }
+
+  if (error || !courseDetails) {
+    return (
+      <div className="min-h-screen bg-gray-50 flex items-center justify-center">
+        <div className="text-center">
+          <p className="text-red-600 mb-4">{error || "Course not found"}</p>
           <button
-            onClick={() => router.back()}
-            className="p-2 hover:bg-gray-100 rounded-lg transition-colors"
+            onClick={() => window.location.reload()}
+            className="bg-[#13485B] text-white px-4 py-2 rounded-lg hover:bg-blue-700 transition-colors"
           >
-            <ArrowLeft className="w-5 h-5 text-gray-600" />
-          </button>
-          <h1 className="text-2xl font-bold text-gray-800">
-            {courseDetails.title}
-          </h1>
-        </div>
-        <div className="flex items-center space-x-2">
-          <button className="p-2 hover:bg-gray-100 rounded-lg transition-colors">
-            <Edit className="w-5 h-5 text-gray-600" />
-          </button>
-          <button className="p-2 hover:bg-gray-100 rounded-lg transition-colors">
-            <MoreVertical className="w-5 h-5 text-gray-600" />
+            Try Again
           </button>
         </div>
       </div>
+    );
+  }
 
-      {/* Course Overview Card */}
-      <div className="bg-white rounded-lg border border-gray-200 p-6">
-        <div className="flex flex-col lg:flex-row lg:items-center lg:justify-between">
-          <div className="flex-1">
-            <h2 className="text-xl font-semibold text-gray-800 mb-2">
-              {courseDetails.title}
-            </h2>
-            <p className="text-gray-600 mb-4">{courseDetails.description}</p>
-            <div className="flex items-center space-x-4 text-sm text-gray-600">
-              <div className="flex items-center space-x-1">
-                <Star className="w-4 h-4 text-yellow-400 fill-current" />
-                <span>{courseDetails.rating}</span>
-              </div>
-              <div className="flex items-center space-x-1">
-                <Clock className="w-4 h-4" />
-                <span>Updated {courseDetails.lastUpdated}</span>
-              </div>
-              <span
-                className={`px-2 py-1 rounded-full text-xs font-medium ${
-                  courseDetails.status === "Active"
-                    ? "bg-green-100 text-green-800"
-                    : "bg-red-100 text-red-800"
-                }`}
+  // Mock data for statistics - replace with actual API data
+  const stats = [
+    {
+      icon: GraduationCap,
+      label: "Total Learners",
+      value: courseDetails.total_learners || 140,
+      color: "bg-blue-100 text-blue-600",
+    },
+    {
+      icon: GraduationCap,
+      label: "Active Learners",
+      value: courseDetails.active_learners || 140,
+      color: "bg-blue-100 text-blue-600",
+    },
+    {
+      icon: GraduationCap,
+      label: "New Learners",
+      value: courseDetails.new_learners || 140,
+      color: "bg-blue-100 text-blue-600",
+    },
+    {
+      icon: Flag,
+      label: "Course Completion",
+      value: courseDetails.course_completion || 0,
+      color: "bg-blue-100 text-blue-600",
+    },
+  ];
+
+  return (
+    <div className="min-h-screen bg-gray-50">
+      {/* Header */}
+      <div className="border-b border-gray-200">
+        <div className="pb-5">
+          <div className="flex items-center justify-between">
+            <div className="flex items-center space-x-4">
+              <button
+                onClick={() => router.back()}
+                className="p-2 hover:bg-gray-100 rounded-lg transition-colors"
               >
-                {courseDetails.status}
-              </span>
+                <ArrowLeft className="w-5 h-5 text-gray-600" />
+              </button>
+              <h1 className="text-2xl font-bold text-gray-800">
+                {courseDetails.learners?.[0]?.course_title || "Course Title"}
+              </h1>
             </div>
+            <button
+              onClick={handleEditCourse}
+              className="bg-[#2FB3E3] text-white px-4 py-2 rounded-lg hover:bg-[#13485B]/80 transition-colors"
+            >
+              Edit Course
+            </button>
           </div>
         </div>
       </div>
 
-      {/* Metrics Cards */}
-      <div className="grid grid-cols-1 md:grid-cols-4 gap-6">
-        <div className="bg-white rounded-lg border border-gray-200 p-6">
-          <div className="flex items-center space-x-4">
-            <div className="w-12 h-12 bg-blue-100 rounded-lg flex items-center justify-center">
-              <Users className="w-6 h-6 text-[#13485B]" />
-            </div>
-            <div>
-              <h3 className="text-lg font-semibold text-gray-800">
-                Total Learners
-              </h3>
-              <p className="text-3xl font-bold text-gray-900">
-                {courseDetails.totalLearners}
-              </p>
-            </div>
-          </div>
-        </div>
-
-        <div className="bg-white rounded-lg border border-gray-200 p-6">
-          <div className="flex items-center space-x-4">
-            <div className="w-12 h-12 bg-green-100 rounded-lg flex items-center justify-center">
-              <Users className="w-6 h-6 text-green-600" />
-            </div>
-            <div>
-              <h3 className="text-lg font-semibold text-gray-800">
-                Active Learners
-              </h3>
-              <p className="text-3xl font-bold text-gray-900">
-                {courseDetails.activeLearners}
-              </p>
-            </div>
-          </div>
-        </div>
-
-        <div className="bg-white rounded-lg border border-gray-200 p-6">
-          <div className="flex items-center space-x-4">
-            <div className="w-12 h-12 bg-purple-100 rounded-lg flex items-center justify-center">
-              <BookOpen className="w-6 h-6 text-purple-600" />
-            </div>
-            <div>
-              <h3 className="text-lg font-semibold text-gray-800">
-                Completion Rate
-              </h3>
-              <p className="text-3xl font-bold text-gray-900">
-                {courseDetails.completionRate}%
-              </p>
-            </div>
-          </div>
-        </div>
-
-        <div className="bg-white rounded-lg border border-gray-200 p-6">
-          <div className="flex items-center space-x-4">
-            <div className="w-12 h-12 bg-orange-100 rounded-lg flex items-center justify-center">
-              <Clock className="w-6 h-6 text-orange-600" />
-            </div>
-            <div>
-              <h3 className="text-lg font-semibold text-gray-800">Duration</h3>
-              <p className="text-3xl font-bold text-gray-900">
-                {courseDetails.duration}
-              </p>
-            </div>
-          </div>
-        </div>
-      </div>
-
-      {/* Course Content and Learners */}
-      <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
-        {/* Modules */}
-        <div className="bg-white rounded-lg border border-gray-200">
-          <div className="p-6 border-b border-gray-200">
-            <h3 className="text-lg font-semibold text-gray-800">
-              Course Modules
-            </h3>
-          </div>
-          <div className="p-6">
-            <div className="space-y-4">
-              {courseDetails.modules.map((module) => (
-                <div
-                  key={module.id}
-                  className="flex items-center justify-between p-4 bg-gray-50 rounded-lg"
-                >
-                  <div className="flex-1">
-                    <h4 className="font-medium text-gray-800">
-                      {module.title}
-                    </h4>
-                    <div className="flex items-center space-x-4 text-sm text-gray-600 mt-1">
-                      <span>{module.videos} videos</span>
-                      <span>{module.duration}</span>
-                    </div>
-                  </div>
-                  <div className="text-right">
-                    <span className="text-sm font-medium text-gray-800">
-                      {module.completedBy} learners
-                    </span>
-                  </div>
+      <div className="">
+        {/* Statistics Section */}
+        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6 lg:gap-3 mb-8">
+          {stats.map((stat, index) => (
+            <div
+              key={index}
+              className="bg-white rounded-lg p-6 border border-gray-200"
+            >
+              <div className="flex items-center space-x-3">
+                <div className={`p-3 rounded-lg ${stat.color}`}>
+                  <stat.icon className="w-6 h-6" />
                 </div>
-              ))}
+                <div>
+                  <p className="text-sm font-medium text-gray-600">
+                    {stat.label}
+                  </p>
+                  <p className="text-2xl font-bold text-gray-900">
+                    {stat.value}
+                  </p>
+                </div>
+              </div>
+            </div>
+          ))}
+        </div>
+
+        {/* Modules Section */}
+        <div className="bg-white rounded-lg border border-gray-200">
+          <div className="px-6 py-4 border-b border-gray-200">
+            <div className="flex items-center justify-between">
+              <h2 className="text-xl font-bold text-gray-800">Modules</h2>
+              <button
+                onClick={handleAddModule}
+                className="bg-[#2FB3E3] text-white px-4 py-2 rounded-lg hover:bg-[#13485B]/80 transition-colors flex items-center space-x-2"
+              >
+                <Plus className="w-4 h-4" />
+                <span>Add Module</span>
+              </button>
             </div>
           </div>
-        </div>
 
-        {/* Enrolled Learners */}
-        <div className="bg-white rounded-lg border border-gray-200">
-          <div className="p-6 border-b border-gray-200">
-            <h3 className="text-lg font-semibold text-gray-800">
-              Enrolled Learners
-            </h3>
-          </div>
-          <div className="overflow-x-auto">
-            <table className="w-full">
-              <thead className="bg-gray-50">
-                <tr>
-                  <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
-                    Name
-                  </th>
-                  <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
-                    Progress
-                  </th>
-                  <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
-                    Status
-                  </th>
-                  <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
-                    Last Activity
-                  </th>
-                  <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
-                    Actions
-                  </th>
-                </tr>
-              </thead>
-              <tbody className="bg-white divide-y divide-gray-200">
-                {courseDetails.enrolledLearners.map((learner) => (
-                  <tr key={learner.id} className="hover:bg-gray-50">
-                    <td className="px-6 py-4 whitespace-nowrap">
-                      <div>
-                        <div className="text-sm font-medium text-gray-900">
-                          {learner.name}
-                        </div>
-                        <div className="text-sm text-gray-500">
-                          {learner.email}
-                        </div>
-                      </div>
-                    </td>
-                    <td className="px-6 py-4 whitespace-nowrap">
-                      <div className="flex items-center">
-                        <div className="w-16 bg-gray-200 rounded-full h-2 mr-2">
-                          <div
-                            className="bg-[#13485B] h-2 rounded-full"
-                            style={{ width: `${learner.progress}%` }}
-                          ></div>
-                        </div>
-                        <span className="text-sm text-gray-900">
-                          {learner.progress}%
-                        </span>
-                      </div>
-                    </td>
-                    <td className="px-6 py-4 whitespace-nowrap">
-                      <span
-                        className={`inline-flex px-2 py-1 text-xs font-semibold rounded-full ${
-                          learner.status === "Completed"
-                            ? "bg-green-100 text-green-800"
-                            : learner.status === "Active"
-                            ? "bg-blue-100 text-blue-800"
-                            : "bg-gray-100 text-gray-800"
-                        }`}
+          {/* Table Header */}
+
+          {/* Table Rows */}
+          <table className="min-w-full divide-y divide-gray-200">
+            <thead className="bg-[#EAF7FC]">
+              <tr>
+                <th className="px-6 py-4 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
+                  Module No
+                </th>
+                <th className="px-6 py-4 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
+                  Module Title
+                </th>
+                <th className="px-6 py-4 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
+                  Number of Video
+                </th>
+                <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
+                  Duration
+                </th>
+                <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
+                  Date
+                </th>
+                <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
+                  Actions
+                </th>
+              </tr>
+            </thead>
+            <tbody className="bg-white divide-y divide-gray-200">
+              {courseDetails.modules?.map((module, index) => (
+                <tr key={module.id} className="hover:bg-gray-50">
+                  <td className="px-6 py-4 whitespace-nowrap text-sm font-medium text-gray-900">
+                    Module {module.order || index + 1}
+                  </td>
+                  <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-900">
+                    {module.title}
+                  </td>
+                  <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-600">
+                    {module.video_count || module.videos?.length || 0}
+                  </td>
+                  <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-600">
+                    {module.duration || "30 mins"}
+                  </td>
+                  <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-600">
+                    {module.date_added
+                      ? new Date(module.date_added).toLocaleDateString(
+                          "en-US",
+                          {
+                            month: "short",
+                            day: "numeric",
+                            year: "numeric",
+                          }
+                        )
+                      : "Jun 24, 2022"}
+                  </td>
+                  <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-500">
+                    <div className="flex items-center space-x-2">
+                      <button
+                        onClick={() => handleViewModule(module.id)}
+                        className="p-2 text-gray-400 hover:text-blue-600 transition-colors"
+                        title="View Module"
                       >
-                        {learner.status}
-                      </span>
-                    </td>
-                    <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-900">
-                      {learner.lastActivity}
-                    </td>
-                    <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-500">
-                      <button className="text-gray-400 hover:text-gray-600">
-                        <MoreVertical className="w-4 h-4" />
+                        <Eye className="w-4 h-4" />
                       </button>
-                    </td>
-                  </tr>
-                ))}
-              </tbody>
-            </table>
-          </div>
+                      <button
+                        onClick={() => handleDeleteModule(module.id)}
+                        className="p-2 text-gray-400 hover:text-red-600 transition-colors"
+                        title="Delete Module"
+                      >
+                        <Trash2 className="w-4 h-4" />
+                      </button>
+                      <button
+                        onClick={() => handleEditModule(module.id)}
+                        className="p-2 text-gray-400 hover:text-green-600 transition-colors"
+                        title="Edit Module"
+                      >
+                        <Edit className="w-4 h-4" />
+                      </button>
+                    </div>
+                  </td>
+                </tr>
+              ))}
+            </tbody>
+          </table>
+
+          {/* Empty State */}
+          {(!courseDetails.modules || courseDetails.modules.length === 0) && (
+            <div className="px-6 py-12 text-center">
+              <div className="text-gray-400 mb-4">
+                <GraduationCap className="w-16 h-16 mx-auto" />
+              </div>
+              <h3 className="text-lg font-medium text-gray-900 mb-2">
+                No modules yet
+              </h3>
+              <p className="text-gray-500 mb-4">
+                Get started by creating your first module for this course.
+              </p>
+              <button
+                onClick={handleAddModule}
+                className="bg-[#2FB3E3] text-white px-4 py-2 rounded-lg hover:bg-[#13485B]/80 transition-colors"
+              >
+                Create First Module
+              </button>
+            </div>
+          )}
         </div>
-      </div>
-
-      {/* Action Buttons */}
-      <div className="flex space-x-4">
-        <button className="flex items-center space-x-2 px-4 py-2 bg-[#13485B] text-white rounded-lg hover:bg-blue-700 transition-colors">
-          <Edit className="w-4 h-4" />
-          <span>Edit Course</span>
-        </button>
-
-        <button className="flex items-center space-x-2 px-4 py-2 bg-green-600 text-white rounded-lg hover:bg-green-700 transition-colors">
-          <Users className="w-4 h-4" />
-          <span>View All Learners</span>
-        </button>
-
-        <button className="flex items-center space-x-2 px-4 py-2 bg-white text-gray-700 border border-gray-300 rounded-lg hover:bg-gray-50 transition-colors">
-          <BookOpen className="w-4 h-4" />
-          <span>Course Analytics</span>
-        </button>
-
-        <button className="flex items-center space-x-2 px-4 py-2 bg-red-600 text-white rounded-lg hover:bg-red-700 transition-colors">
-          <Trash2 className="w-4 h-4" />
-          <span>Delete Course</span>
-        </button>
       </div>
     </div>
   );
 };
 
-export default CourseDetailsPage;
+export default AdminCourseDetailsPage;

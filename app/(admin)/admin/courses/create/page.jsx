@@ -1,6 +1,6 @@
 "use client";
 
-import React, { useState, useCallback } from "react";
+import React, { useState, useCallback, useEffect } from "react";
 import Image from "next/image";
 import {
   ArrowLeft,
@@ -20,12 +20,16 @@ import {
   AlignRight,
   AlignJustify,
 } from "lucide-react";
-import { useRouter } from "next/navigation";
+import { useRouter, useSearchParams } from "next/navigation";
 import {
   createCourse,
   uploadFile,
   uploadCourseMedia,
   uploadBadgeMedia,
+  getModuleDetailsForAdmin,
+  editModules,
+  editCourse,
+  getCourseDetailsForEditing,
 } from "@/services/admin";
 import { showErrorToast, showSuccessToast } from "@/helpers/toastUtil";
 import LoadingSpinner from "@/components/reusables/LoadingSpinner";
@@ -91,6 +95,7 @@ RichTextEditor.displayName = "RichTextEditor";
 
 const CreateCoursePage = () => {
   const router = useRouter();
+  const searchParams = useSearchParams();
   const [currentStep, setCurrentStep] = useState(1); // Start from step 1
   const [isLoading, setIsLoading] = useState(false);
   const [uploadProgress, setUploadProgress] = useState(0);
@@ -309,6 +314,389 @@ const CreateCoursePage = () => {
   ]);
 
   const [currentModuleIndex, setCurrentModuleIndex] = useState(0);
+  const [isEditMode, setIsEditMode] = useState(false);
+  const [editingModuleId, setEditingModuleId] = useState(null);
+  const [editingCourseId, setEditingCourseId] = useState(null);
+  const [isCourseEditMode, setIsCourseEditMode] = useState(false);
+
+  // Check if we're in edit mode from URL params
+  useEffect(() => {
+    const editModule = searchParams.get("editModule");
+    const courseId = searchParams.get("courseId");
+    const editCourse = searchParams.get("editCourse");
+
+    if (editModule && courseId) {
+      setIsEditMode(true);
+      setEditingModuleId(editModule);
+      setEditingCourseId(courseId);
+      setCurrentStep(2); // Go directly to module setup step
+      fetchModuleData(editModule);
+    } else if (editCourse) {
+      setIsCourseEditMode(true);
+      setEditingCourseId(editCourse);
+      setCurrentStep(1); // Start from course basics
+      fetchCourseData(editCourse);
+    }
+  }, [searchParams]);
+
+  // Handle course update
+  const handleUpdateCourse = async () => {
+    try {
+      setIsLoading(true);
+
+      // Validate required fields
+      if (!formData.courseTitle.trim()) {
+        showErrorToast("Course title is required");
+        return;
+      }
+
+      if (!uploadedFiles.coverImage) {
+        showErrorToast("Cover image is required");
+        return;
+      }
+
+      // Validate modules
+      for (let i = 0; i < modules.length; i++) {
+        const currentModule = modules[i];
+
+        if (!currentModule.moduleTitle.trim()) {
+          showErrorToast(`Module ${i + 1} title is required`);
+          return;
+        }
+
+        if (!currentModule.summary.trim()) {
+          showErrorToast(`Module ${i + 1} summary is required`);
+          return;
+        }
+
+        // Validate quiz questions
+        for (let j = 0; j < currentModule.quizQuestions.length; j++) {
+          const quiz = currentModule.quizQuestions[j];
+
+          if (!quiz.question.trim()) {
+            showErrorToast(
+              `Module ${i + 1}, Question ${j + 1}: Question text is required`
+            );
+            return;
+          }
+
+          if (!quiz.options[0]?.trim() || !quiz.options[1]?.trim()) {
+            showErrorToast(
+              `Module ${i + 1}, Question ${
+                j + 1
+              }: At least 2 options are required`
+            );
+            return;
+          }
+
+          if (!quiz.correctOption.trim()) {
+            showErrorToast(
+              `Module ${i + 1}, Question ${j + 1}: Correct answer is required`
+            );
+            return;
+          }
+
+          // Validate that correct answer matches one of the options
+          const validOptions = ["A", "B", "C", "D"];
+          if (!validOptions.includes(quiz.correctOption.toUpperCase())) {
+            showErrorToast(
+              `Module ${i + 1}, Question ${
+                j + 1
+              }: Correct answer must be A, B, C, or D`
+            );
+            return;
+          }
+        }
+      }
+
+      // Prepare course data from all tabs
+      const courseData = {
+        title: formData.courseTitle,
+        short_description: formData.shortDescription,
+        description: formData.detailedDescription,
+        duration: `${formData.estimatedTime} hours`,
+        is_published: true,
+        is_paid: trainingFeeData.trainingType === "paid",
+        price:
+          trainingFeeData.trainingType === "paid"
+            ? parseFloat(trainingFeeData.amount)
+            : 0,
+        cover_image: uploadedFiles.coverImage,
+        tags: formData.tags
+          ? formData.tags
+              .split(",")
+              .map((tag) => tag.trim())
+              .filter((tag) => tag.length > 0)
+          : [],
+        modules: modules.map((module, index) => ({
+          title: module.moduleTitle,
+          description: module.shortDescription,
+          duration: "1 week",
+          order: parseInt(module.moduleNumber) || index + 1,
+          videos: module.videos.map((videoUrl, videoIndex) => ({
+            title: module.videoTitle || `Video ${videoIndex + 1}`,
+            description: module.shortDescription,
+            video_url: videoUrl,
+            duration: "10:00",
+          })),
+          summaries: [
+            {
+              text: module.summary || "Module summary",
+            },
+          ],
+          quizzes: module.quizQuestions.map((q) => ({
+            question: q.question,
+            option_a: q.options[0] || "",
+            option_b: q.options[1] || "",
+            option_c: q.options[2] || "",
+            option_d: q.options[3] || "",
+            correct_answer: q.correctOption.toUpperCase(),
+          })),
+        })),
+        badge: {
+          title: badgeData.badgeTitle,
+          description: badgeData.badgeDescription,
+          icon: uploadedFiles.badgeImage || "",
+        },
+        community_link: {
+          description: communityData.shortMessage,
+          link: communityData.communityLink,
+        },
+      };
+
+      console.log(
+        "Sending course update data:",
+        JSON.stringify(courseData, null, 2)
+      );
+
+      // Update the course
+      await editCourse(courseData, editingCourseId);
+      showSuccessToast("Course updated successfully!");
+
+      // Redirect back to course details
+      router.push(`/admin/courses/${editingCourseId}`);
+    } catch (error) {
+      console.error("Course update error:", error);
+      showErrorToast(`Failed to update course: ${error.message}`);
+    } finally {
+      setIsLoading(false);
+    }
+  };
+
+  // Handle module update
+  const handleUpdateModule = async () => {
+    try {
+      setIsLoading(true);
+
+      const currentModule = modules[currentModuleIndex];
+
+      // Validate required fields
+      if (!currentModule.moduleTitle.trim()) {
+        showErrorToast("Module title is required");
+        return;
+      }
+
+      if (!currentModule.summary.trim()) {
+        showErrorToast("Module summary is required");
+        return;
+      }
+
+      // Prepare module data for update
+      const moduleData = {
+        title: currentModule.moduleTitle,
+        description: currentModule.shortDescription,
+        order: parseInt(currentModule.moduleNumber) || 1,
+        videos: currentModule.videos.map((videoUrl, index) => ({
+          title: currentModule.videoTitle || `Video ${index + 1}`,
+          description: currentModule.shortDescription,
+          video_url: videoUrl,
+          duration: "10:00",
+        })),
+        summaries: [
+          {
+            text: currentModule.summary,
+          },
+        ],
+        quizzes: currentModule.quizQuestions.map((q) => ({
+          question: q.question,
+          option_a: q.options[0] || "",
+          option_b: q.options[1] || "",
+          option_c: q.options[2] || "",
+          option_d: q.options[3] || "",
+          correct_answer: q.correctOption.toUpperCase(),
+        })),
+      };
+
+      // Update the module
+      await editModules(moduleData, editingModuleId);
+      showSuccessToast("Module updated successfully!");
+
+      // Redirect back to course details
+      router.push(`/admin/courses/${editingCourseId}`);
+    } catch (error) {
+      console.error("Module update error:", error);
+      showErrorToast(`Failed to update module: ${error.message}`);
+    } finally {
+      setIsLoading(false);
+    }
+  };
+
+  // Fetch course data for editing
+  const fetchCourseData = async (courseId) => {
+    try {
+      setIsLoading(true);
+      const courseData = await getCourseDetailsForEditing(courseId);
+
+      // Transform API data to match our form structure
+      setFormData({
+        courseTitle: courseData.title || "",
+        shortDescription: courseData.short_description || "",
+        detailedDescription: courseData.description || "",
+        numberOfModules: courseData.modules?.length?.toString() || "",
+        estimatedTime: courseData.duration?.replace(" hours", "") || "",
+        tags: courseData.tags?.join(", ") || "",
+        trainingLevel: courseData.difficulty || "",
+        skills: courseData.skills?.join(", ") || "",
+      });
+
+      // Set uploaded files
+      if (courseData.cover_image) {
+        setUploadedFiles((prev) => ({
+          ...prev,
+          coverImage: courseData.cover_image,
+        }));
+      }
+
+      // Transform modules data
+      if (courseData.modules && courseData.modules.length > 0) {
+        const transformedModules = courseData.modules.map((module, index) => ({
+          id: index + 1,
+          moduleNumber: module.order || (index + 1).toString(),
+          moduleTitle: module.title || "",
+          shortDescription: module.description || "",
+          videoTitle: module.videos?.[0]?.title || "",
+          additionalResources: module.additional_resources || "",
+          summary: module.summaries?.[0]?.text || "",
+          videos: module.videos?.map((video) => video.video_url) || [],
+          quizQuestions: module.quizzes?.map((quiz, quizIndex) => ({
+            id: quizIndex + 1,
+            question: quiz.question || "",
+            options: [
+              quiz.option_a || "",
+              quiz.option_b || "",
+              quiz.option_c || "",
+              quiz.option_d || "",
+            ],
+            correctOption: quiz.correct_answer || "",
+          })) || [
+            {
+              id: 1,
+              question: "",
+              options: ["", "", "", ""],
+              correctOption: "",
+            },
+            {
+              id: 2,
+              question: "",
+              options: ["", "", "", ""],
+              correctOption: "",
+            },
+          ],
+        }));
+        setModules(transformedModules);
+      }
+
+      // Transform badge data
+      if (courseData.badge) {
+        setBadgeData({
+          badgeTitle: courseData.badge.title || "",
+          badgeDescription: courseData.badge.description || "",
+        });
+        if (courseData.badge.icon) {
+          setUploadedFiles((prev) => ({
+            ...prev,
+            badgeImage: courseData.badge.icon,
+          }));
+        }
+      }
+
+      // Transform community data
+      if (courseData.community_link) {
+        setCommunityData({
+          communityLink: courseData.community_link.link || "",
+          shortMessage: courseData.community_link.description || "",
+        });
+      }
+
+      // Transform training fee data
+      setTrainingFeeData({
+        trainingType: courseData.is_paid ? "paid" : "free",
+        amount: courseData.price?.toString() || "",
+      });
+
+      showSuccessToast("Course data loaded for editing");
+    } catch (error) {
+      console.error("Error fetching course data:", error);
+      showErrorToast("Failed to load course data for editing");
+    } finally {
+      setIsLoading(false);
+    }
+  };
+
+  // Fetch module data for editing
+  const fetchModuleData = async (moduleId) => {
+    try {
+      setIsLoading(true);
+      const moduleData = await getModuleDetailsForAdmin(moduleId);
+
+      // Transform API data to match our form structure
+      const transformedModule = {
+        id: moduleData.id,
+        moduleNumber: moduleData.order || "",
+        moduleTitle: moduleData.title || "",
+        shortDescription: moduleData.description || "",
+        videoTitle: moduleData.videos?.[0]?.title || "",
+        additionalResources: moduleData.additional_resources || "",
+        summary: moduleData.summaries?.[0]?.text || "",
+        videos: moduleData.videos?.map((video) => video.video_url) || [],
+        quizQuestions: moduleData.quizzes?.map((quiz, index) => ({
+          id: index + 1,
+          question: quiz.question || "",
+          options: [
+            quiz.option_a || "",
+            quiz.option_b || "",
+            quiz.option_c || "",
+            quiz.option_d || "",
+          ],
+          correctOption: quiz.correct_answer || "",
+        })) || [
+          {
+            id: 1,
+            question: "",
+            options: ["", "", "", ""],
+            correctOption: "",
+          },
+          {
+            id: 2,
+            question: "",
+            options: ["", "", "", ""],
+            correctOption: "",
+          },
+        ],
+      };
+
+      // Replace the first module with the fetched data
+      setModules([transformedModule]);
+      setCurrentModuleIndex(0);
+
+      showSuccessToast("Module data loaded for editing");
+    } catch (error) {
+      console.error("Error fetching module data:", error);
+      showErrorToast("Failed to load module data for editing");
+    } finally {
+      setIsLoading(false);
+    }
+  };
 
   // Auto-save functionality
   const saveToLocalStorage = useCallback((key, data) => {
@@ -464,13 +852,49 @@ const CreateCoursePage = () => {
     [saveToLocalStorage]
   );
 
-  const steps = [
-    { id: 1, name: "Course Basics", active: false },
-    { id: 2, name: "Module & Quiz Setup", active: false },
-    { id: 3, name: "Badge Setup", active: false },
-    { id: 4, name: "Community Setup", active: false },
-    { id: 5, name: "Training fee Setup", active: true },
-  ];
+  // Initialize steps with proper state management
+  const [steps, setSteps] = useState(() => {
+    if (typeof window !== "undefined") {
+      const savedSteps = localStorage.getItem("courseCreationSteps");
+      return savedSteps
+        ? JSON.parse(savedSteps)
+        : [
+            { id: 1, name: "Course Basics", active: true, completed: false },
+            {
+              id: 2,
+              name: "Module & Quiz Setup",
+              active: false,
+              completed: false,
+            },
+            { id: 3, name: "Badge Setup", active: false, completed: false },
+            { id: 4, name: "Community Setup", active: false, completed: false },
+            {
+              id: 5,
+              name: "Training fee Setup",
+              active: false,
+              completed: false,
+            },
+          ];
+    }
+    return [
+      { id: 1, name: "Course Basics", active: true, completed: false },
+      { id: 2, name: "Module & Quiz Setup", active: false, completed: false },
+      { id: 3, name: "Badge Setup", active: false, completed: false },
+      { id: 4, name: "Community Setup", active: false, completed: false },
+      { id: 5, name: "Training fee Setup", active: false, completed: false },
+    ];
+  });
+
+  // Handle step navigation
+  const handleStepClick = (stepId) => {
+    // Only allow navigation to completed steps or current step
+    if (
+      stepId <= currentStep ||
+      steps.find((s) => s.id === stepId)?.completed
+    ) {
+      setCurrentStep(stepId);
+    }
+  };
 
   // Clear all form data
   const clearFormData = () => {
@@ -480,6 +904,7 @@ const CreateCoursePage = () => {
       localStorage.removeItem("courseBadgeData");
       localStorage.removeItem("courseCommunityData");
       localStorage.removeItem("courseTrainingFeeData");
+      localStorage.removeItem("courseCreationSteps");
     }
 
     // Reset all state
@@ -610,6 +1035,25 @@ const CreateCoursePage = () => {
 
   const handleContinue = () => {
     if (currentStep < steps.length) {
+      // Mark current step as completed
+      setSteps((prevSteps) => {
+        const updatedSteps = prevSteps.map((step) => ({
+          ...step,
+          active: step.id === currentStep + 1,
+          completed: step.id <= currentStep,
+        }));
+
+        // Save to localStorage
+        if (typeof window !== "undefined") {
+          localStorage.setItem(
+            "courseCreationSteps",
+            JSON.stringify(updatedSteps)
+          );
+        }
+
+        return updatedSteps;
+      });
+
       setCurrentStep(currentStep + 1);
     }
   };
@@ -851,7 +1295,13 @@ const CreateCoursePage = () => {
         >
           <ArrowLeft className="w-5 h-5 text-gray-600" />
         </button>
-        <h1 className="text-2xl font-bold text-gray-800">Create Course</h1>
+        <h1 className="text-2xl font-bold text-gray-800">
+          {isEditMode
+            ? `Edit Module ${editingModuleId}`
+            : isCourseEditMode
+            ? `Edit Course`
+            : "Create Course"}
+        </h1>
         <button
           onClick={clearFormData}
           className="ml-auto px-4 py-2 text-sm bg-red-100 text-red-600 rounded-lg hover:bg-red-200 transition-colors"
@@ -861,21 +1311,31 @@ const CreateCoursePage = () => {
       </div>
 
       {/* Step Navigation */}
-      <div className="flex space-x-1 bg-gray-100 p-1 rounded-lg">
-        {steps.map((step) => (
-          <button
-            key={step.id}
-            className={`flex-1 px-4 py-2 text-sm font-medium rounded-md transition-colors ${
-              step.id === currentStep
-                ? "bg-[#13485B] text-white"
-                : "text-gray-600 hover:text-gray-800"
-            }`}
-            onClick={() => setCurrentStep(step.id)}
-          >
-            {step.name}
-          </button>
-        ))}
-      </div>
+      {!isEditMode && !isCourseEditMode && (
+        <div className="flex space-x-1 bg-gray-100 p-1 rounded-lg">
+          {steps.map((step) => (
+            <button
+              key={step.id}
+              className={`flex-1 px-4 py-2 text-sm font-medium rounded-md transition-colors ${
+                step.id === currentStep
+                  ? "bg-[#13485B] text-white"
+                  : step.completed
+                  ? "bg-green-100 text-green-700 hover:bg-green-200"
+                  : "text-gray-600 hover:text-gray-800"
+              }`}
+              onClick={() => handleStepClick(step.id)}
+              disabled={step.id > currentStep && !step.completed}
+            >
+              <div className="flex items-center justify-center space-x-2">
+                {step.completed && step.id < currentStep && (
+                  <span className="text-green-600">✓</span>
+                )}
+                <span>{step.name}</span>
+              </div>
+            </button>
+          ))}
+        </div>
+      )}
 
       {/* Course Basics Form */}
       {currentStep === 1 && (
@@ -1857,57 +2317,97 @@ const CreateCoursePage = () => {
       )}
 
       {/* Navigation Buttons */}
-      {currentStep === 1 && (
-        <div className="flex justify-end">
+      {!isEditMode && !isCourseEditMode && (
+        <>
+          {currentStep === 1 && (
+            <div className="flex justify-end">
+              <button
+                onClick={handleContinue}
+                className="bg-[#13485B] text-white px-6 py-2 rounded-lg hover:bg-blue-700 transition-colors"
+              >
+                Continue to module →
+              </button>
+            </div>
+          )}
+
+          {currentStep === 2 && (
+            <div className="flex justify-end">
+              <button
+                onClick={handleContinue}
+                className="bg-[#13485B] text-white px-6 py-2 rounded-lg hover:bg-blue-700 transition-colors"
+              >
+                Continue to Summary →
+              </button>
+            </div>
+          )}
+
+          {currentStep === 3 && (
+            <div className="flex justify-end">
+              <button
+                onClick={handleContinue}
+                className="bg-[#13485B] text-white px-6 py-2 rounded-lg hover:bg-blue-700 transition-colors"
+              >
+                Continue to Community →
+              </button>
+            </div>
+          )}
+
+          {currentStep === 4 && (
+            <div className="flex justify-end">
+              <button
+                onClick={handleContinue}
+                className="bg-[#13485B] text-white px-6 py-2 rounded-lg hover:bg-blue-700 transition-colors"
+              >
+                Continue to Training fee →
+              </button>
+            </div>
+          )}
+
+          {currentStep === 5 && (
+            <div className="flex justify-end">
+              <button
+                onClick={handlePublishCourse}
+                className="bg-[#13485B] text-white px-6 py-2 rounded-lg hover:bg-blue-700 transition-colors"
+              >
+                Publish Course →
+              </button>
+            </div>
+          )}
+        </>
+      )}
+
+      {/* Edit Mode Navigation */}
+      {isEditMode && currentStep === 2 && (
+        <div className="flex justify-between">
           <button
-            onClick={handleContinue}
+            onClick={() => router.back()}
+            className="bg-gray-500 text-white px-6 py-2 rounded-lg hover:bg-gray-600 transition-colors"
+          >
+            Cancel
+          </button>
+          <button
+            onClick={handleUpdateModule}
             className="bg-[#13485B] text-white px-6 py-2 rounded-lg hover:bg-blue-700 transition-colors"
           >
-            Continue to module →
+            Update Module
           </button>
         </div>
       )}
 
-      {currentStep === 2 && (
-        <div className="flex justify-end">
+      {/* Course Edit Mode Navigation */}
+      {isCourseEditMode && currentStep === 5 && (
+        <div className="flex justify-between">
           <button
-            onClick={handleContinue}
-            className="bg-[#13485B] text-white px-6 py-2 rounded-lg hover:bg-blue-700 transition-colors"
+            onClick={() => router.back()}
+            className="bg-gray-500 text-white px-6 py-2 rounded-lg hover:bg-gray-600 transition-colors"
           >
-            Continue to Summary →
+            Cancel
           </button>
-        </div>
-      )}
-
-      {currentStep === 3 && (
-        <div className="flex justify-end">
           <button
-            onClick={handleContinue}
+            onClick={handleUpdateCourse}
             className="bg-[#13485B] text-white px-6 py-2 rounded-lg hover:bg-blue-700 transition-colors"
           >
-            Continue to Community →
-          </button>
-        </div>
-      )}
-
-      {currentStep === 4 && (
-        <div className="flex justify-end">
-          <button
-            onClick={handleContinue}
-            className="bg-[#13485B] text-white px-6 py-2 rounded-lg hover:bg-blue-700 transition-colors"
-          >
-            Continue to Training fee →
-          </button>
-        </div>
-      )}
-
-      {currentStep === 5 && (
-        <div className="flex justify-end">
-          <button
-            onClick={handlePublishCourse}
-            className="bg-[#13485B] text-white px-6 py-2 rounded-lg hover:bg-blue-700 transition-colors"
-          >
-            Publish Course →
+            Update Course
           </button>
         </div>
       )}

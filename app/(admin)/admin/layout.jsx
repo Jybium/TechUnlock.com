@@ -90,7 +90,7 @@ const AdminLayout = ({ children }) => {
                 <NotificationDropdown isAdmin={true} />
 
                 <div className="flex items-center space-x-3">
-                  <div className="w-8 h-8 bg-[#13485B] rounded-full flex items-center justify-center">
+                  <div className="w-10 h-10 bg-[#13485B] rounded-full flex items-center justify-center">
                     <span className="text-white text-sm font-medium">
                       {auth?.first_name?.charAt(0)}
                       {auth?.last_name?.charAt(0)}

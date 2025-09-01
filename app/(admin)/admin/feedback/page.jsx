@@ -174,7 +174,7 @@ const AdminFeedbackPage = () => {
           </div>
         </div>
 
-        <div className="bg-white rounded-lg shadow p-6">
+        {/* <div className="bg-white rounded-lg shadow p-6">
           <div className="flex items-center">
             <div className="flex-shrink-0">
               <div className="w-8 h-8 bg-yellow-100 rounded-lg flex items-center justify-center">
@@ -236,7 +236,7 @@ const AdminFeedbackPage = () => {
               </p>
             </div>
           </div>
-        </div>
+        </div> */}
       </div>
 
       {/* Filters and Search */}
@@ -322,9 +322,9 @@ const AdminFeedbackPage = () => {
                       <p className="text-sm text-gray-500">
                         There are currently no feedback submissions to display.
                       </p>
-                      <p className="text-xs text-gray-400 mt-2">
+                      {/* <p className="text-xs text-gray-400 mt-2">
                         Feedback count: {feedbackData.length}
-                      </p>
+                      </p> */}
                     </div>
                   </td>
                 </tr>
@@ -427,7 +427,7 @@ const AdminFeedbackPage = () => {
       </div>
 
       {/* Debug Info - Only show when no feedback */}
-      {feedbackData.length === 0 && apiResponse && (
+      {/* {feedbackData.length === 0 && apiResponse && (
         <div className="bg-yellow-50 border border-yellow-200 rounded-lg p-4">
           <div className="flex">
             <div className="flex-shrink-0">
@@ -466,7 +466,7 @@ const AdminFeedbackPage = () => {
             </div>
           </div>
         </div>
-      )}
+      )} */}
 
       {/* Response Modal */}
       {selectedFeedback && (

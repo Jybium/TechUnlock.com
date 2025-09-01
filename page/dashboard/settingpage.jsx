@@ -191,8 +191,14 @@ const SettingsPage = () => {
       updateURL("profile", profileData);
       showSuccessToast("Profile updated successfully!");
     } catch (error) {
-      setErrors({ general: "Failed to update profile. Please try again." });
-      showErrorToast("Failed to update profile. Please try again.");
+      console.error("Profile update failed:", error);
+      const apiMessage =
+        error?.response?.data?.message ||
+        error?.response?.data?.detail ||
+        error?.message ||
+        "Failed to update profile. Please try again.";
+      setErrors({ general: apiMessage });
+      showErrorToast(apiMessage);
     } finally {
       setIsLoading(false);
     }
@@ -260,7 +266,7 @@ const SettingsPage = () => {
 
   return (
     <div className="min-h-screen bg-gray-50">
-      <div className=" bg-white">
+      <div className="">
         {/* Header */}
         <div className="flex items-center justify-between ">
           <div className="flex items-center gap-4">
