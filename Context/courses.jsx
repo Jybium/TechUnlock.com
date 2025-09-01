@@ -21,6 +21,7 @@ export const CoursesProvider = ({ children }) => {
     try {
       setLoading(true);
       const data = await getCourses();
+      console.log(data);
       setCourses(data);
       setLoading(false);
     } catch (error) {
@@ -34,6 +35,7 @@ export const CoursesProvider = ({ children }) => {
   const fetchEnrolledCourses = useCallback(async () => {
     try {
       const data = await getEnrolledCourses();
+      console.log(data);
       setEnrolledCourses(data.enrolled_courses);
       console.log(data.enrolled_courses);
     } catch (error) {
@@ -54,8 +56,9 @@ export const CoursesProvider = ({ children }) => {
       setEnrolledCourses,
       loading,
       setLoading,
+      fetchEnrolledCourses,
     }),
-    [courses, enrolledCourses, loading]
+    [courses, enrolledCourses, loading, fetchEnrolledCourses]
   );
 
   return (

@@ -14,6 +14,7 @@ import Image from "next/image";
 import { useCourses } from "@/Context/courses";
 
 const CourseCard = ({ item }) => {
+  console.log(item);
   const router = useRouter();
   const { courses } = useCourses();
   const [Courses, setCourses] = useState([]);
@@ -35,12 +36,8 @@ const CourseCard = ({ item }) => {
     <div className="bg-pri1 rounded-md shadow-md">
       <div className="bg-pri1 grid lg:flex gap-x-3 lg:items-center p-2 w-full rounded-md">
         <div className="lg:w-1/3">
-          <Image
-            src={
-              item?.cover_image?.includes("path-to-image")
-                ? ""
-                : item?.cover_image || ""
-            }
+          <img
+            src={item?.cover_image}
             alt={item?.title}
             className="w-full h-full rounded-md"
             width={300}
@@ -64,7 +61,8 @@ const CourseCard = ({ item }) => {
               <TimeIcon /> <span>Duration: {item?.duration}</span>
             </p>
             <p className="flex items-center gap-x-3">
-              <LevelIcon /> <span>Training level: {item?.difficulty}</span>
+              <LevelIcon />{" "}
+              <span>Training level: {item?.difficulty || "Beginner"}</span>
             </p>
             <p className="flex items-center gap-x-3">
               <ModuleIcon />{" "}
@@ -74,14 +72,14 @@ const CourseCard = ({ item }) => {
             </p>
             <p className="flex items-center gap-x-3">
               <CertificateIcon />{" "}
-              <span>{item?.is_certificate && "Certificate of completion"}</span>
+              <span>{item?.badge_detail && "Badge of completion"}</span>
             </p>
           </div>
 
           <div className="flex justify-center lg:justify-end lg:mr-4">
             <Button
               className="bg-primary text-white"
-              onClick={() => router.push(`/dashboard/courses/${item?.id}`)}
+              onClick={() => router.push(`/courses/${item?.id}`)}
             >
               {isEnrolled ? "Enrolled" : "More training details"}
             </Button>

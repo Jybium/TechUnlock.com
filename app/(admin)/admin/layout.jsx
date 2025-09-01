@@ -43,7 +43,7 @@ const AdminLayout = ({ children }) => {
             sidebarCollapsed ? "w-16" : "w-1/5"
           }`}
         >
-          <div className="w-5/6 mx-auto h-5/6 flex flex-col justify-between">
+          <div className="w-5/6 mx-auto  flex flex-col justify-between">
             <div className="grid gap-y-10">
               {/* Logo */}
               <div className="flex items-center justify-between w-full ">
@@ -108,7 +108,7 @@ const AdminLayout = ({ children }) => {
           </header>
 
           {/* Page Content */}
-          <div className="relative p-5 w-full h-[calc(100vh-80px)] bg-[#FCFCFD] overflow-auto">
+          <div className="relative p-6 w-full h-[calc(100vh-80px)] bg-[#FCFCFD] overflow-auto">
             {children}
           </div>
         </div>

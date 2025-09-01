@@ -61,7 +61,7 @@ const Banner = ({ course }) => {
             </h1>
 
             <p className="text-lg">
-              {course?.description === "UI/UX"
+              {/* {course?.description === "UI/UX"
                 ? "Learn how to design user friendly digital products that work, in this intensive course. Understand the fundamentals of design processes and how you can transform user experiences through functional product designs."
                 : course?.description === "WEB"
                 ? "Unleash your web development potential with our expert-led course. Master Python, HTML, & CSS through hands-on projects, gaining skills for a career in web design or enhancing your current abilities."
@@ -69,7 +69,8 @@ const Banner = ({ course }) => {
                 ? "Designed for individuals with little to no prior experience in the field, this course provides a solid foundation in cybersecurity essentials. Whether you're a curious enthusiast or considering a career switch, you'll gain practical knowledge and skills to navigate the digital landscape securely."
                 : course?.description === "DM"
                 ? "Explore the possibilities of building and growing a business and scaling using social media marketing channels, email marketing affiliate marketing, SMS marketing, content marketing and other social media channels."
-                : "Start your journey to becoming and AI Certified professional. From Beginner to intermediate level of proficiency. Our Applied Artificial Intelligence course module builds the foundation for you to excel in your career and professional pursuit."}
+                : "Start your journey to becoming and AI Certified professional. From Beginner to intermediate level of proficiency. Our Applied Artificial Intelligence course module builds the foundation for you to excel in your career and professional pursuit."} */}
+              {course?.short_description}
             </p>
 
             <div className="lg:w-2/4 bg-[#FFFFFF]/40 backdrop-blur-lg drop-shadow-md px-5 py-3 rounded-md text-sm space-y-4">
@@ -77,7 +78,7 @@ const Banner = ({ course }) => {
                 <p className="text-sm">
                   {course?.title}{" "}
                   <span>
-                    {!course?.price
+                    {!course?.is_paid
                       ? "(Free)"
                       : `(# ${Number(course?.price).toFixed(0)})`}
                   </span>
@@ -89,18 +90,19 @@ const Banner = ({ course }) => {
                   Rating: <span>{course?.rating || 5.0}</span>
                 </p>
                 <p className="">
-                  Total Enrolled: <span>{course?.enrolled || "1, 500"}</span>
+                  Total Enrolled:{" "}
+                  <span>{course?.enrolled_learners || "0"}</span>
                 </p>
               </div>
 
-              <div className="flex justify-between items-center">
+              {/* <div className="flex justify-between items-center">
                 <p className="">
                   Start Date: <span>{course?.start_date || ""}</span>
                 </p>
                 <p className="">
                   Start Time: <span>{course?.start_time || ""}</span>
                 </p>
-              </div>
+              </div> */}
             </div>
           </div>
 

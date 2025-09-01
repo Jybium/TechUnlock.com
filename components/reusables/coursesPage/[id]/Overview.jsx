@@ -22,7 +22,8 @@ const Overview = ({ course }) => {
         <div className="md:flex items-end md:justify-between md:w-1/2 md:pr-5">
           <h3 className="text-pri10 font-semibold text-2xl">{course?.title}</h3>
           <p className="cursor-pointer border border-pri10 rounded p-1 text-sm w-fit text-pri10 font-semibold whitespace-nowrap mt-2 lg:mt-0">
-            Training fee: #{Number(course?.price)?.toFixed(0)}
+            Training fee:{" "}
+            {course?.is_paid ? `#${Number(course?.price)?.toFixed(0)}` : "Free"}
           </p>
         </div>
 
@@ -39,7 +40,9 @@ const Overview = ({ course }) => {
                 </p>
                 <p className="flex items-center gap-x-3">
                   <LevelIcon />{" "}
-                  <span className="">Training level: {course?.difficulty}</span>
+                  <span className="">
+                    Training level: {course?.difficulty || "Beginner"}
+                  </span>
                 </p>
                 <p className="flex items-center gap-x-3">
                   <ModuleIcon />{" "}
@@ -51,7 +54,7 @@ const Overview = ({ course }) => {
                 <p className="flex items-center gap-x-3">
                   <CertificateIcon />{" "}
                   <span className="">
-                    {course?.is_certificate && "Certificate of completion"}
+                    {course?.badge_detail && "Badge of completion"}
                   </span>
                 </p>
               </div>

@@ -110,7 +110,10 @@ export async function registerForCourse(paymentData) {
       console.error("Error in setting up request:", error.message);
     }
     console.error("Config:", error.config);
-    return "An error occurred while initializing payment.";
+    return (
+      error.response?.data?.message ||
+      "An error occurred while initializing payment."
+    );
   }
 }
 
@@ -266,12 +269,12 @@ export const completeCourseModule = async (moduleId) => {
   }
 };
 
-export const submitQuiz = async () => {
+export const submitQuiz = async (quizData) => {
   const token = await fetchToken();
   try {
     const response = await apiClient.post(
       `${BASE_URL}/course/submit-quiz/`,
-      {},
+      quizData,
       {
         headers: {
           Authorization: `Bearer ${token}`,
@@ -340,11 +343,14 @@ export const getUserDashboard = async () => {
 
 // Enroll the authenticated user into a course
 export async function enrollInCourse(courseId) {
+  console.log("enrollInCourse called with courseId:", courseId);
   const token = await fetchToken();
   if (!token) {
+    console.log("No token found, throwing AUTH_REQUIRED error");
     // Signal to caller that authentication is required; UI can redirect or show login
     throw new Error("AUTH_REQUIRED");
   }
+  console.log("Token found, making API call...");
   try {
     const response = await axios.post(
       `${BASE_URL}/course/student-enroll/`,
@@ -356,12 +362,14 @@ export async function enrollInCourse(courseId) {
         timeout: 5000,
       }
     );
+    console.log("API response:", response);
     if (response.status === 200 || response.status === 201) {
       return response.data;
     }
     console.error(`Unexpected response status: ${response.status}`);
     return "An error occurred while enrolling in the course.";
   } catch (error) {
+    console.error("Error in enrollInCourse:", error);
     if (error.response) {
       throw new Error(error.response.data?.message || "An error occurred.");
     } else if (error.request) {

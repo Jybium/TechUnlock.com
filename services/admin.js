@@ -217,16 +217,6 @@ export const deleteAdminUser = async (id) => {
   return response.data;
 };
 
-export const getAdminUserDetails = async (id) => {
-  const token = await fetchToken();
-  const response = await apiClient.get(`${BASE_URL}/admin-app/admins/${id}/`, {
-    headers: {
-      Authorization: `Bearer ${token}`,
-    },
-  });
-  return response.data;
-};
-
 // ==================== COURSE MANAGEMENT (ENHANCED) ====================
 export const getAllCourses = async (params = {}) => {
   const token = await fetchToken();
@@ -589,5 +579,25 @@ export const deleteAdminNotification = async (notificationId) => {
   } catch (error) {
     console.error("Error deleting admin notification:", error);
     throw new Error("An unexpected error occurred.");
+  }
+};
+
+// Admin Password Management
+export const changeAdminPassword = async (adminId, passwordData) => {
+  const token = await fetchToken();
+  try {
+    const response = await apiClient.post(
+      `${BASE_URL}/admin-app/admins/${adminId}/change-password/`,
+      passwordData,
+      {
+        headers: {
+          Authorization: `Bearer ${token}`,
+        },
+      }
+    );
+    return response.data;
+  } catch (error) {
+    console.error("Error changing admin password:", error);
+    throw new Error("Failed to change password. Please try again.");
   }
 };

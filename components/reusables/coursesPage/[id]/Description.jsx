@@ -42,7 +42,7 @@ const Description = React.memo(({ course }) => {
 
             <div className="grid gap-y-4 mt-5">
               <h3 className="text-pri10 font-semibold text-lg">
-                {course?.category === "UI/UX"
+                {/* {course?.category === "UI/UX"
                   ? "Want to create digital products that are both beautiful and user-friendly?"
                   : course?.category === "WEB"
                   ? "Ready to transform your ideas into interactive, engaging websites?"
@@ -50,11 +50,12 @@ const Description = React.memo(({ course }) => {
                   ? "LEARN CYBER SECURITY FUNDAMENTALS"
                   : course?.category === "DM"
                   ? "Ready to take your business online and reach new heights?"
-                  : "Curious about the future of technology? "}
+                  : "Curious about the future of technology? "} */}
+                {course?.short_description}
               </h3>
 
               <p className="text-base">
-                {course?.category === "UI/UX"
+                {/* {course?.category === "UI/UX"
                   ? "This comprehensive UI/UX course will equip you with the skills and knowledge to design intuitive, engaging, and visually stunning user experiences that leave a lasting impression."
                   : course?.category === "WEB"
                   ? "This comprehensive web development course will guide you from novice to proficient developer, empowering you to create professional-grade websites and web applications."
@@ -62,7 +63,8 @@ const Description = React.memo(({ course }) => {
                   ? "Are you looking to learn the basics of cyber security? Are you an aspiring IT professional that needs to better understand how cybersecurity works? If so, this is the perfect course for you!"
                   : course?.category === "DM"
                   ? "This dynamic digital marketing course will equip you with the strategies, tools, and knowledge to create a powerful online presence, attract new customers, and drive business growth."
-                  : "This comprehensive AI course will introduce you to the fascinating world of Artificial Intelligence, empowering you to understand, explore, and even build AI applications. "}
+                  : "This comprehensive AI course will introduce you to the fascinating world of Artificial Intelligence, empowering you to understand, explore, and even build AI applications. "} */}
+                {course?.description}
               </p>
 
               <p className="text-sm">

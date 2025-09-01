@@ -65,7 +65,7 @@ const SelectPaymentGuide = () => {
               <span>
                 For your selected course and level{" "}
                 <span className="text-primary">
-                  {Courses?.title} {Courses?.difficulty} level
+                  {Courses?.title} {Courses?.difficulty || "beginner"} level
                 </span>
                 , your payment fee is{" "}
                 <span className="text-pri10 font-bold">

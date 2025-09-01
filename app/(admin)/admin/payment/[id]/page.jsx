@@ -1,27 +1,77 @@
 "use client";
 
-import React from "react";
+import React, { useState, useEffect } from "react";
 import { ArrowLeft } from "lucide-react";
 import { useRouter } from "next/navigation";
+import { getPaymentDetails } from "@/services/admin";
+import { showErrorToast } from "@/helpers/toastUtil";
 
 const PaymentDetailsPage = ({ params }) => {
   const router = useRouter();
-
-  // Mock data for payment details
-  const paymentDetails = {
-    transactionId: "123456789090011",
-    paymentMethod: "Paystack (Card)",
-    paymentStatus: "Success",
-    date: "22/09/2024",
-    amount: "#50,000",
-    courseTitle: "Digital Marketing(Intermediate)",
+  const [paymentDetails, setPaymentDetails] = useState({
+    transactionId: "",
+    paymentMethod: "",
+    paymentStatus: "",
+    date: "",
+    amount: "",
+    courseTitle: "",
     learner: {
-      firstName: "hamed",
-      lastName: "buba",
-      email: "hamedbuba@gmail.com",
-      phone: "0900008000",
+      firstName: "",
+      lastName: "",
+      email: "",
+      phone: "",
     },
+  });
+  const [isLoading, setIsLoading] = useState(true);
+
+  // Fetch payment details on component mount
+  useEffect(() => {
+    fetchPaymentDetails();
+  }, [params.id]);
+
+  const fetchPaymentDetails = async () => {
+    try {
+      setIsLoading(true);
+      const response = await getPaymentDetails(params.id);
+
+      // Transform the API response to match our UI structure
+      setPaymentDetails({
+        transactionId: response.transaction_id || response.id || "",
+        paymentMethod: response.payment_method || "Unknown",
+        paymentStatus: response.status || "Pending",
+        date: response.created_at
+          ? new Date(response.created_at).toLocaleDateString("en-US", {
+              year: "numeric",
+              month: "2-digit",
+              day: "2-digit",
+            })
+          : "",
+        amount: `₦${response.amount?.toLocaleString() || "0"}`,
+        courseTitle: response.course?.title || "Unknown Course",
+        learner: {
+          firstName: response.user?.first_name || "",
+          lastName: response.user?.last_name || "",
+          email: response.user?.email || "",
+          phone: response.user?.phone || response.user?.phone_number || "",
+        },
+      });
+    } catch (error) {
+      console.error("Error fetching payment details:", error);
+      showErrorToast("Failed to load payment details");
+    } finally {
+      setIsLoading(false);
+    }
   };
+
+  if (isLoading) {
+    return (
+      <div className="space-y-6 flex items-center justify-center min-h-screen">
+        <div className="text-center">
+          <p className="text-gray-500">Loading payment details...</p>
+        </div>
+      </div>
+    );
+  }
 
   return (
     <div className="space-y-6">
@@ -148,4 +198,3 @@ const PaymentDetailsPage = ({ params }) => {
 };
 
 export default PaymentDetailsPage;
-

@@ -130,7 +130,10 @@ export const BannerCard = ({ course }) => {
           <div className="flex items-center space-x-4">
             <RadioGroupItem value="pace" id="pace" />
             <Label htmlFor="pace" className={getLabelClass("pace")}>
-              <span className="capitalize">{course?.difficulty}</span> class
+              <span className="capitalize">
+                {course?.difficulty || "Beginner"}
+              </span>{" "}
+              class
             </Label>
           </div>
           <div className="flex items-center space-x-4">

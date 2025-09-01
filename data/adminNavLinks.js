@@ -55,7 +55,7 @@ const adminNavLinks = [
   {
     id: 7,
     name: "Admin",
-    to: "/admin/users",
+    to: "/admin/admin",
     iconActive: Users,
     iconInactive: Users,
   },

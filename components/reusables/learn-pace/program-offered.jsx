@@ -1,11 +1,16 @@
+"use client";
+
 import React from "react";
 import CourseCard from "../learn-pace/course-card";
 import courses from "@/data/courses";
 import line from "@/assets/landing-page/Line.svg";
 import sideImage from "@/assets/landing-page/ColoredAngle.svg";
 import Image from "next/image";
+import { useCourses } from "@/Context/courses";
 
 const ProgramsOffered = () => {
+  const { courses } = useCourses();
+  console.log(courses);
   return (
     <div className="relative my-[5rem] w-[90%] mx-auto">
       <div className="relative">
@@ -22,9 +27,9 @@ const ProgramsOffered = () => {
       </div>
 
       <div className="flex flex-wrap mt-8 mx-auto gap-y-3">
-        {courses.map((course, index) => (
+        {courses?.courses?.map((course, index) => (
           <div key={index} className="w-full p-2">
-            <CourseCard course={course} />
+            <CourseCard item={course} />
           </div>
         ))}
       </div>

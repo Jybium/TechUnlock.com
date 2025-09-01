@@ -1,9 +1,12 @@
 import { ArrowRight } from "lucide-react";
+import { useRouter } from "next/navigation";
 import Image from "next/image";
 import React from "react";
 
 const CourseOverviewCard = ({ title, count, image }) => {
   console.log(image);
+  const router = useRouter();
+
   return (
     <div className="bg-[#13485B] rounded-lg drop-shadow shadow text-white w-full">
       <div className="flex justify-between items-center px-5 pb-3 pt-4">
@@ -21,7 +24,10 @@ const CourseOverviewCard = ({ title, count, image }) => {
         <div className="w-1/3"></div>
       </div>
       <hr className="" />
-      <div className="flex items-center  px-5 py-3">
+      <div
+        className="flex items-center gap-5 justify-end px-5 py-3"
+        onClick={() => router.push("/dashboard/courses")}
+      >
         <p className="">View courses</p>
         <ArrowRight />
       </div>

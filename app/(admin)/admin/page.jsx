@@ -17,6 +17,7 @@ import {
   getPaymentStats,
 } from "@/services/admin";
 import { showErrorToast } from "@/helpers/toastUtil";
+import { useAuth } from "@/Context/auth";
 
 const AdminDashboardPage = () => {
   const [isLoading, setIsLoading] = useState(true);
@@ -27,6 +28,7 @@ const AdminDashboardPage = () => {
     topCourses: [],
     recentActivity: [],
   });
+  const { auth } = useAuth();
 
   useEffect(() => {
     const fetchDashboardData = async () => {
@@ -137,9 +139,11 @@ const AdminDashboardPage = () => {
       {/* Header */}
       <div className="flex justify-between items-center">
         <div className="flex items-center space-x-4">
-          <h1 className="text-2xl font-bold text-gray-800">Welcome, Johnson</h1>
+          <h1 className="text-2xl font-bold text-gray-800">
+            Welcome, {auth?.first_name} {auth?.last_name}
+          </h1>
           <div className="w-8 h-8 bg-gradient-to-r from-blue-400 to-purple-500 rounded-full flex items-center justify-center">
-            <span className="text-white text-xs">👨‍💻</span>
+            {" "}
           </div>
         </div>
       </div>

@@ -48,7 +48,7 @@ const CourseCard = React.memo(({ item }) => {
           </div>
 
           <p className="flex gap-x-3 font-semibold items-center text-pri10 text-sm">
-            <span>{item?.rating}.0</span> <Rating rating={5} />
+            <span>{item?.rating || 5}.0</span> <Rating rating={5} />
           </p>
 
           <div className="grid grid-cols-1 gap-3 text-pri10 font-semibold text-sm">
@@ -67,14 +67,14 @@ const CourseCard = React.memo(({ item }) => {
             <p className="flex items-center gap-x-3">
               <CertificateIcon />{" "}
               <span className="">
-                {item?.certificate && "Certificate of completion"}
+                {item?.badge_detail && "Badge of completion"}
               </span>
             </p>
           </div>
 
           <div className="flex justify-center mt-3">
             <Button
-              className="text-[#268FB6] hover:bg- bg-transparent flex items-center gap-x-3 hover:underline"
+              className="text-[#268FB6] hover:bg-[#268FB6]/50 hover:text-white bg-transparent flex items-center gap-x-3 hover:underline"
               onClick={handleLearnMore}
             >
               Learn More <ArrowRight size={20} />

@@ -14,9 +14,8 @@ const OurAlumni = dynamic(() =>
   import("@/components/reusables/landingPage/OurAlumni")
 );
 const Main = dynamic(() => import("@/components/reusables/landingPage/Main"));
-const FindConnect = dynamic(
-  () => import("@/components/reusables/landingPage/FindConnect"),
-  { ssr: false }
+const FindConnect = dynamic(() =>
+  import("@/components/reusables/landingPage/FindConnect")
 );
 const Metrics = dynamic(() =>
   import("@/components/reusables/landingPage/Metrics")

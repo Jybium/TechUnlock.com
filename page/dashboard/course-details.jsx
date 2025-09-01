@@ -20,7 +20,9 @@ import {
   completeCourseModule,
   submitQuiz as submitQuizApi,
 } from "@/services/course";
+import { addFeedback } from "@/services/feedback";
 import Link from "next/link";
+import { showErrorToast, showSuccessToast } from "@/helpers/toastUtil";
 
 const CourseDetailsPage = ({ courseId }) => {
   const [courseData, setCourseData] = useState(null);
@@ -38,15 +40,22 @@ const CourseDetailsPage = ({ courseId }) => {
   const [showCommunityModal, setShowCommunityModal] = useState(false);
   const [feedbackText, setFeedbackText] = useState("");
   const [experienceRating, setExperienceRating] = useState(0);
+  const [feedbackCategory, setFeedbackCategory] = useState("course");
+  const [courseCompleted, setCourseCompleted] = useState(false);
+  const [videoProgress, setVideoProgress] = useState({});
+  const [videoRef, setVideoRef] = useState(null);
+  const [completedVideos, setCompletedVideos] = useState(new Set());
+  const [selectedSummary, setSelectedSummary] = useState(null);
+  const [isRefreshingData, setIsRefreshingData] = useState(false);
   const router = useRouter();
 
   const fetchCourseData = async (id) => {
     try {
       const data = await getCourseDetails(id);
+      console.log("Course data fetched:", data);
       return data;
-
-      console.log(data);
     } catch (error) {
+      console.error("Error fetching course data:", error);
       return null;
     }
   };
@@ -68,7 +77,81 @@ const CourseDetailsPage = ({ courseId }) => {
             .map((id) => parseInt(id))
             .filter(Boolean)
         : [],
+      showFeedback: params.get("showFeedback") === "true",
+      showBadge: params.get("showBadge") === "true",
     };
+  };
+
+  // Load video progress from localStorage
+  const loadVideoProgress = () => {
+    if (typeof window !== "undefined") {
+      const saved = localStorage.getItem(`videoProgress_${courseId}`);
+      return saved ? JSON.parse(saved) : {};
+    }
+    return {};
+  };
+
+  // Save video progress to localStorage
+  const saveVideoProgress = (videoId, currentTime) => {
+    if (typeof window !== "undefined") {
+      const progress = loadVideoProgress();
+      progress[videoId] = currentTime;
+      localStorage.setItem(
+        `videoProgress_${courseId}`,
+        JSON.stringify(progress)
+      );
+    }
+  };
+
+  // Handle video time update
+  const handleVideoTimeUpdate = () => {
+    if (videoRef && selectedVideo) {
+      const currentTime = videoRef.currentTime;
+      const duration = videoRef.duration;
+
+      setVideoProgress((prev) => ({
+        ...prev,
+        [selectedVideo.id]: currentTime,
+      }));
+      saveVideoProgress(selectedVideo.id, currentTime);
+
+      // Check if video is completed (watched 90% or more)
+      if (duration && currentTime >= duration * 0.9) {
+        if (!completedVideos.has(selectedVideo.id)) {
+          setCompletedVideos((prev) => new Set([...prev, selectedVideo.id]));
+          markComplete(`video-${selectedVideo.id}`);
+
+          // Save completed videos to localStorage
+          if (typeof window !== "undefined") {
+            const savedCompletedVideos = localStorage.getItem(
+              `completedVideos_${courseId}`
+            );
+            const existingCompleted = savedCompletedVideos
+              ? JSON.parse(savedCompletedVideos)
+              : [];
+            const updatedCompleted = [...existingCompleted, selectedVideo.id];
+            localStorage.setItem(
+              `completedVideos_${courseId}`,
+              JSON.stringify(updatedCompleted)
+            );
+          }
+
+          // Refresh course data in background
+          refreshCourseData();
+        }
+      }
+    }
+  };
+
+  // Handle video load to restore progress
+  const handleVideoLoad = () => {
+    if (videoRef && selectedVideo) {
+      const progress = loadVideoProgress();
+      const savedTime = progress[selectedVideo.id];
+      if (savedTime && savedTime > 0) {
+        videoRef.currentTime = savedTime;
+      }
+    }
   };
 
   // Update URL with current state
@@ -100,6 +183,16 @@ const CourseDetailsPage = ({ courseId }) => {
       if (updates.expanded.length > 0)
         params.set("expanded", updates.expanded.join(","));
       else params.delete("expanded");
+    }
+
+    if (updates.showFeedback !== undefined) {
+      if (updates.showFeedback) params.set("showFeedback", "true");
+      else params.delete("showFeedback");
+    }
+
+    if (updates.showBadge !== undefined) {
+      if (updates.showBadge) params.set("showBadge", "true");
+      else params.delete("showBadge");
     }
 
     const newUrl = `${window.location.pathname}${
@@ -156,14 +249,39 @@ const CourseDetailsPage = ({ courseId }) => {
       const id = courseId || searchParams.get("id");
       if (!id) return;
 
+      console.log("Initializing course details for ID:", id);
+
       const urlParams = parseUrlParams();
       const data = await fetchCourseData(id);
-      if (!data) return;
+      if (!data) {
+        console.error("Failed to fetch course data");
+        return;
+      }
+
+      console.log("Course data loaded successfully:", {
+        title: data.title,
+        isEnrolled: data.is_enrolled,
+        modulesCount: data.modules?.length,
+      });
 
       const completedSet = new Set(urlParams.completed);
       const updatedData = checkAndUnlockNextModule(completedSet, data);
       setCourseData(updatedData);
       setCompletedItems(completedSet);
+
+      // Load video progress
+      const progress = loadVideoProgress();
+      setVideoProgress(progress);
+
+      // Load completed videos from localStorage
+      if (typeof window !== "undefined") {
+        const savedCompletedVideos = localStorage.getItem(
+          `completedVideos_${id}`
+        );
+        if (savedCompletedVideos) {
+          setCompletedVideos(new Set(JSON.parse(savedCompletedVideos)));
+        }
+      }
 
       const expandedObj = {};
       if (urlParams.expanded.length > 0) {
@@ -172,6 +290,11 @@ const CourseDetailsPage = ({ courseId }) => {
         expandedObj[updatedData.modules[0].id] = true;
       }
       setExpandedModules(expandedObj);
+
+      // Set modal states from URL
+      setShowCourseCompletion(urlParams.showFeedback);
+      setShowBadgeEarned(urlParams.showBadge);
+      setShowCommunityModal(urlParams.showCommunity);
 
       let targetModule = updatedData?.modules?.[0];
       let targetVideo = targetModule?.videos?.[0];
@@ -204,6 +327,8 @@ const CourseDetailsPage = ({ courseId }) => {
 
       setSelectedModule(targetModule || null);
       setSelectedVideo(targetVideo || null);
+
+      console.log("Course initialization completed");
     }
 
     init();
@@ -224,6 +349,8 @@ const CourseDetailsPage = ({ courseId }) => {
       quizId: currentQuiz?.id || null,
       completed: completedArray,
       expanded: expandedArray,
+      showFeedback: showCourseCompletion,
+      showBadge: showBadgeEarned,
     });
   }, [
     selectedModule,
@@ -231,9 +358,21 @@ const CourseDetailsPage = ({ courseId }) => {
     currentQuiz,
     completedItems,
     expandedModules,
+    showCourseCompletion,
+    showBadgeEarned,
     updateUrl,
     courseData,
   ]);
+
+  // Save completed videos to localStorage whenever completedVideos changes
+  useEffect(() => {
+    if (typeof window !== "undefined" && courseId && completedVideos.size > 0) {
+      localStorage.setItem(
+        `completedVideos_${courseId}`,
+        JSON.stringify(Array.from(completedVideos))
+      );
+    }
+  }, [completedVideos, courseId]);
 
   const toggleModule = (moduleId) => {
     setExpandedModules((prev) => ({
@@ -247,6 +386,7 @@ const CourseDetailsPage = ({ courseId }) => {
       setSelectedVideo(video);
       setSelectedModule(module);
       setCurrentQuiz(null);
+      setSelectedSummary(null);
     }
   };
 
@@ -254,8 +394,17 @@ const CourseDetailsPage = ({ courseId }) => {
     if (!module.is_locked) {
       setCurrentQuiz(quiz);
       setSelectedVideo(null);
+      setSelectedSummary(null);
       setQuizAnswers({});
       setShowQuizResults(false);
+    }
+  };
+
+  const selectSummary = (summary, module) => {
+    if (!module.is_locked) {
+      setSelectedSummary(summary);
+      setSelectedVideo(null);
+      setCurrentQuiz(null);
     }
   };
 
@@ -268,14 +417,41 @@ const CourseDetailsPage = ({ courseId }) => {
 
   const submitQuiz = async () => {
     if (!selectedModule || !currentQuiz) return;
+
+    // Check if all questions are answered
+    const unansweredQuestions = selectedModule.quizzes.filter(
+      (quiz) => !quizAnswers[quiz.id]
+    );
+
+    if (unansweredQuestions.length > 0) {
+      showErrorToast("Please answer all questions before submitting.");
+      return;
+    }
+
     try {
-      await submitQuizApi();
-    } catch {}
-    const score = selectedModule.quizzes.filter(
-      (quiz) => quizAnswers[quiz.id] === quiz.correct_answer
-    ).length;
-    setQuizScore(score);
-    setShowQuizResults(true);
+      // Format the answers according to the API requirements
+      const formattedAnswers = selectedModule.quizzes.map((quiz) => ({
+        question_id: quiz.id,
+        selected: quizAnswers[quiz.id]?.toLowerCase() || "",
+      }));
+
+      const quizData = {
+        module_id: selectedModule.id,
+        answers: formattedAnswers,
+      };
+
+      console.log("Submitting quiz data:", quizData);
+      await submitQuizApi(quizData);
+
+      const score = selectedModule.quizzes.filter(
+        (quiz) => quizAnswers[quiz.id] === quiz.correct_answer
+      ).length;
+      setQuizScore(score);
+      setShowQuizResults(true);
+    } catch (error) {
+      console.error("Error submitting quiz:", error);
+      showErrorToast("Failed to submit quiz. Please try again.");
+    }
   };
 
   const completeQuiz = async () => {
@@ -341,11 +517,46 @@ const CourseDetailsPage = ({ courseId }) => {
     }
   };
 
-  const submitCourseFeedback = () => {
+  const submitCourseFeedback = async () => {
+    try {
+      const feedbackData = {
+        rating: experienceRating,
+        feedback_category: feedbackCategory,
+        feedback: feedbackText,
+        course_id: courseId,
+      };
+
+      await addFeedback(feedbackData);
+      showSuccessToast("Feedback submitted successfully!");
+
+      setShowCourseCompletion(false);
+      setShowBadgeEarned(true);
+      setFeedbackText("");
+      setExperienceRating(0);
+      setFeedbackCategory("course");
+    } catch (error) {
+      console.error("Error submitting feedback:", error);
+      showErrorToast("Failed to submit feedback. Please try again.");
+    }
+  };
+
+  const skipCourseFeedback = () => {
     setShowCourseCompletion(false);
     setShowBadgeEarned(true);
     setFeedbackText("");
     setExperienceRating(0);
+    setFeedbackCategory("course");
+  };
+
+  const closeFeedbackModal = () => {
+    setShowCourseCompletion(false);
+    setFeedbackText("");
+    setExperienceRating(0);
+    setFeedbackCategory("course");
+  };
+
+  const closeBadgeModal = () => {
+    setShowBadgeEarned(false);
   };
 
   const handleJoinCommunity = () => {
@@ -379,21 +590,161 @@ const CourseDetailsPage = ({ courseId }) => {
     return Math.round((completedItems.size / totalItems) * 100);
   };
 
-  if (!courseData) return <div>Loading...</div>;
+  // Refresh course data without disrupting user view
+  const refreshCourseData = async () => {
+    if (isRefreshingData) return;
+
+    setIsRefreshingData(true);
+    try {
+      const searchParams = new URLSearchParams(window.location.search);
+      const id = courseId || searchParams.get("id");
+      if (!id) return;
+
+      const data = await fetchCourseData(id);
+      if (data) {
+        setCourseData(data);
+      }
+    } catch (error) {
+      console.error("Error refreshing course data:", error);
+    } finally {
+      setIsRefreshingData(false);
+    }
+  };
+
+  // Check if all videos in the current module are completed
+  const canCompleteModule = () => {
+    if (!selectedModule || selectedModule.is_locked) return false;
+
+    const allVideosCompleted = selectedModule.videos.every(
+      (video) =>
+        completedItems.has(`video-${video.id}`) || completedVideos.has(video.id)
+    );
+
+    // Check if quiz is completed with passing score (at least 2)
+    const quizCompleted =
+      selectedModule.quizzes.length === 0 ||
+      (selectedModule.quizzes.length > 0 && quizScore >= 2);
+
+    return allVideosCompleted && quizCompleted;
+  };
+
+  // Check if all modules are completed
+  const checkCourseCompletion = () => {
+    if (!courseData) return false;
+
+    const allModulesCompleted = courseData.modules.every((module) => {
+      const moduleVideosCompleted = module.videos.every(
+        (video) =>
+          completedItems.has(`video-${video.id}`) ||
+          completedVideos.has(video.id)
+      );
+      const moduleQuizzesCompleted =
+        module.quizzes.length === 0 ||
+        (module.quizzes.length > 0 && quizScore >= 2);
+      return moduleVideosCompleted && moduleQuizzesCompleted;
+    });
+
+    return allModulesCompleted;
+  };
+
+  // Handle module completion via API
+  const handleCompleteModule = async () => {
+    if (!selectedModule || !canCompleteModule()) return;
+
+    try {
+      console.log("Completing module:", selectedModule.id);
+      const result = await completeCourseModule(selectedModule.id);
+      console.log("Module completion result:", result);
+
+      // Show success message
+      showSuccessToast("Module completed successfully!");
+
+      // Refresh the course data to update progress
+      await refreshCourseData();
+
+      // Check if course is completed after module completion
+      if (checkCourseCompletion() && !courseCompleted) {
+        setCourseCompleted(true);
+        setShowCourseCompletion(true);
+      }
+    } catch (error) {
+      console.error("Error completing module:", error);
+      showErrorToast("Failed to complete module. Please try again.");
+    }
+  };
+
+  if (!courseData) {
+    return (
+      <div className="min-h-screen bg-gray-50 flex items-center justify-center">
+        <div className="text-center">
+          <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-[#268FB6] mx-auto mb-4"></div>
+          <p className="text-gray-600">Loading course content...</p>
+        </div>
+      </div>
+    );
+  }
 
   return (
     <div className="">
-      <button
-        className="flex items-center text-gray-600 hover:text-gray-800 mb-6"
-        onClick={() => router.back()}
-      >
-        <ChevronLeft className="w-4 h-4 mr-1" />
-        Back
-      </button>
+      <style jsx>{`
+        video::-webkit-media-controls {
+          display: flex !important;
+          opacity: 1 !important;
+          visibility: visible !important;
+        }
+        video::-webkit-media-controls-panel {
+          display: flex !important;
+          opacity: 1 !important;
+          visibility: visible !important;
+        }
+        video::-webkit-media-controls-play-button {
+          display: flex !important;
+          opacity: 1 !important;
+          visibility: visible !important;
+        }
+        video::-webkit-media-controls-timeline {
+          display: flex !important;
+          opacity: 1 !important;
+          visibility: visible !important;
+        }
+        video::-webkit-media-controls-volume-slider {
+          display: flex !important;
+          opacity: 1 !important;
+          visibility: visible !important;
+        }
+        video::-webkit-media-controls-mute-button {
+          display: flex !important;
+          opacity: 1 !important;
+          visibility: visible !important;
+        }
+        video::-webkit-media-controls-fullscreen-button {
+          display: flex !important;
+          opacity: 1 !important;
+          visibility: visible !important;
+        }
+      `}</style>
+
+      <div className="flex items-center justify-between mb-6">
+        <button
+          className="flex items-center text-gray-600 hover:text-gray-800"
+          onClick={() => router.back()}
+        >
+          <ChevronLeft className="w-4 h-4 mr-1" />
+          Back
+        </button>
+
+        {/* Loading indicator for API refresh */}
+        {isRefreshingData && (
+          <div className="flex items-center text-sm text-blue-600">
+            <div className="animate-spin rounded-full h-4 w-4 border-b-2 border-blue-600 mr-2"></div>
+            Updating progress...
+          </div>
+        )}
+      </div>
       <div className="flex h-screen bg-gray-50 gap-x-4">
         {/* Sidebar */}
 
-        <div className="w-80 bg-white border-r border-gray-200 flex flex-col">
+        <div className="w-80 flex flex-col">
           {/* Header */}
           <div className="p-">
             <div className="flex items-start justify-between">
@@ -407,18 +758,42 @@ const CourseDetailsPage = ({ courseId }) => {
               </div>
               {/* Progress */}
               <div className="flex flex-col items-center justify-center">
-                <div
-                  className="relative w-10 h-10 rounded-full"
-                  style={{
-                    background: `conic-gradient(#268FB6 ${Math.max(
-                      0,
-                      Math.min(
-                        100,
-                        Number(courseData?.progress_percentage ?? 0)
-                      )
-                    )}%, #e5e7eb 0 100%)`,
-                  }}
-                >
+                <div className="relative w-10 h-10 rounded-full flex items-center justify-center">
+                  <svg className="absolute top-0 left-0" width="40" height="40">
+                    <circle
+                      cx="20"
+                      cy="20"
+                      r="18"
+                      stroke="#e5e7eb"
+                      strokeWidth="4"
+                      fill="none"
+                    />
+                    <circle
+                      cx="20"
+                      cy="20"
+                      r="18"
+                      stroke="#268FB6"
+                      strokeWidth="4"
+                      fill="none"
+                      strokeDasharray={2 * Math.PI * 18}
+                      strokeDashoffset={
+                        2 *
+                        Math.PI *
+                        18 *
+                        (1 -
+                          Math.max(
+                            0,
+                            Math.min(
+                              100,
+                              Number(courseData?.progress_percentage ?? 0)
+                            )
+                          ) /
+                            100)
+                      }
+                      strokeLinecap="round"
+                      style={{ transition: "stroke-dashoffset 0.4s" }}
+                    />
+                  </svg>
                   <div className="absolute inset-1 rounded-full bg-white flex items-center justify-center text-[10px] font-semibold text-gray-700">
                     {`${Math.max(
                       0,
@@ -500,24 +875,50 @@ const CourseDetailsPage = ({ courseId }) => {
                             {video.duration}
                           </p>
                         </div>
-                        {completedItems.has(`video-${video.id}`) && (
+                        {(completedItems.has(`video-${video.id}`) ||
+                          completedVideos.has(video.id)) && (
                           <CheckCircle className="w-4 h-4 text-green-500 ml-2" />
                         )}
                       </button>
                     ))}
 
-                    {/* Module Summary */}
-                    {module.summaries.map((summary) => (
-                      <div
-                        key={summary.id}
-                        className="px-8 py-2 flex items-center"
-                      >
-                        <div className="w-4 h-4 bg-gray-300 rounded mr-3 flex items-center justify-center">
-                          <span className="text-xs text-gray-600">📝</span>
+                    {/* Module Summaries - Only show after all videos are completed */}
+                    {module.summaries &&
+                      module.summaries.length > 0 &&
+                      module.videos.every(
+                        (video) =>
+                          completedItems.has(`video-${video.id}`) ||
+                          completedVideos.has(video.id)
+                      ) && (
+                        <div className="border-t border-gray-200 pt-2">
+                          <h4 className="px-8 py-1 text-xs font-medium text-gray-700 uppercase tracking-wide">
+                            Summaries
+                          </h4>
+                          {module.summaries.map((summary) => (
+                            <button
+                              key={summary.id}
+                              onClick={() => selectSummary(summary, module)}
+                              className={`w-full px-8 py-2 flex items-center text-left hover:bg-gray-100 ${
+                                selectedSummary?.id === summary.id
+                                  ? "bg-blue-50 border-r-2 border-[#13485B]"
+                                  : ""
+                              }`}
+                            >
+                              <div className="w-4 h-4 bg-blue-500 rounded mr-3 flex items-center justify-center">
+                                <span className="text-xs text-white">📝</span>
+                              </div>
+                              <div className="flex-1">
+                                <p className="text-sm font-medium text-gray-800">
+                                  {summary.title || "Module Summary"}
+                                </p>
+                                <p className="text-xs text-gray-500">
+                                  Reading Material
+                                </p>
+                              </div>
+                            </button>
+                          ))}
                         </div>
-                        <p className="text-sm text-gray-600">Module Summary</p>
-                      </div>
-                    ))}
+                      )}
 
                     {/* Quizzes */}
                     {module.quizzes.map((quiz) => (
@@ -547,15 +948,15 @@ const CourseDetailsPage = ({ courseId }) => {
           </div>
 
           {/* Footer Actions */}
-          <div className="p-4 border-t border-gray-200 space-y-3">
-            <Link
-              href={courseData?.community_link_detail?.link}
-              className="w-full flex items-center text-[#13485B] hover:text-blue-700 text-sm"
+          <div className="p-4 border-t border-gray-200 space-y-5">
+            <button
+              onClick={handleJoinCommunity}
+              className="w-full flex items-center flex-1 px-4 py-2 bg-white text-[#2FB3E3] shadow rounded-lg hover:bg-[#2FB3E3] hover:text-white transition-colors"
             >
               <Users className="w-4 h-4 mr-2" />
-              Join {courseData?.community_link_detail?.description} Community
-            </Link>
-            <button className="w-full flex items-center text-[#13485B] hover:text-blue-700 text-sm">
+              {courseData?.community_link_detail?.description}
+            </button>
+            <button className="w-full flex items-center flex-1 px-4 py-2 bg-white text-[#2FB3E3] shadow rounded-lg hover:bg-[#2FB3E3] hover:text-white transition-colors">
               <MessageCircle className="w-4 h-4 mr-2" />
               Give Feedback
             </button>
@@ -564,42 +965,231 @@ const CourseDetailsPage = ({ courseId }) => {
 
         {/* Main Content */}
         <div className="flex-1 flex flex-col">
-          {selectedVideo && (
-            <>
-              {/* Video Player */}
-              <div className="relative bg-gradient-to-br from-blue-900 via-purple-900 to-blue-800 border border-gray-200 rounded-lg overflow-hidden">
-                <div className="absolute inset-0 bg-black bg-opacity-20"></div>
-                <div className="relative aspect-video h-48 flex items-center justify-center">
-                  <div className="text-center">
-                    <video
-                      src={`https://youtu.be/Uc8MCfbjcnE?si=6MceuAXVpaFr99pq`}
-                      controls
-                      autoPlay
-                      className="h-full w-full"
+          {showCourseCompletion && (
+            <div className="p-6 border border-[#2FB3E3] rounded-lg h-fit bg-white flex-1">
+              <div className="max-w-2xl mx-auto">
+                <div className="text-center mb-8">
+                  <h2 className="text-2xl font-bold text-gray-800 mb-2">
+                    Congratulations!
+                  </h2>
+                  <p className="text-gray-600">
+                    You have completed the course{" "}
+                    <span className="font-semibold">{courseData.title}</span>
+                  </p>
+                </div>
+
+                <div className="space-y-6">
+                  {/* Rating Section */}
+                  <div>
+                    <label className="block text-sm font-medium text-gray-700 mb-2">
+                      Rate your experience
+                    </label>
+                    <div className="flex space-x-1">
+                      {[1, 2, 3, 4, 5].map((star) => (
+                        <button
+                          key={star}
+                          onClick={() => setExperienceRating(star)}
+                          className={`text-2xl md:text-3xl ${
+                            star <= experienceRating
+                              ? "text-yellow-400"
+                              : "text-gray-300"
+                          } hover:text-yellow-400 transition-colors`}
+                        >
+                          ★
+                        </button>
+                      ))}
+                    </div>
+                  </div>
+
+                  {/* Feedback Category Section */}
+                  <div>
+                    <label className="block text-sm font-medium text-gray-700 mb-2">
+                      Feedback Category
+                    </label>
+                    <select
+                      value={feedbackCategory}
+                      onChange={(e) => setFeedbackCategory(e.target.value)}
+                      className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-[#2FB3E3] focus:border-transparent"
+                    >
+                      <option value="course">Course</option>
+                      <option value="technical">Technical</option>
+                      <option value="content">Content</option>
+                      <option value="instructor">Instructor</option>
+                      <option value="platform">Platform</option>
+                    </select>
+                  </div>
+
+                  {/* Feedback Detail Section */}
+                  <div>
+                    <label className="block text-sm font-medium text-gray-700 mb-2">
+                      Feedback detail
+                    </label>
+                    <textarea
+                      value={feedbackText}
+                      onChange={(e) => setFeedbackText(e.target.value)}
+                      placeholder="Write more description your feedback"
+                      className="w-full h-32 px-3 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-[#2FB3E3] focus:border-transparent resize-none"
                     />
                   </div>
 
-                  {/* Floating Elements */}
+                  {/* Action Buttons */}
+                  <div className="flex space-x-3">
+                    <button
+                      onClick={skipCourseFeedback}
+                      className="flex-1 px-4 py-2 text-gray-600 bg-gray-100  rounded-lg hover:bg-gray-200 transition-colors"
+                    >
+                      Skip
+                    </button>
+                    <button
+                      onClick={submitCourseFeedback}
+                      className="flex-1 px-4 py-2 bg-white text-[#2FB3E3] shadow rounded-lg hover:text-white hover:bg-[#2FB3E3] transition-colors"
+                    >
+                      Submit
+                    </button>
+                  </div>
+                </div>
+              </div>
+            </div>
+          )}
+
+          {showBadgeEarned && (
+            <div className="p-6 border border-[#2FB3E3] rounded-lg h-fit bg-white flex-1">
+              <div className="max-w-2xl mx-auto text-center">
+                <div className="mb-8">
+                  <h2 className="text-2xl font-bold text-sec10 mb-4">
+                    Congratulations! You have completed the course{" "}
+                    <span className="">{courseData.title}</span>
+                  </h2>
                 </div>
 
-                {/* Video Controls */}
-                <div className="absolute bottom-4 left-4 right-4 flex items-center justify-between text-white">
-                  <div className="flex items-center space-x-2">
-                    <Play className="w-5 h-5" />
-                    <span className="text-sm">00:00</span>
-                  </div>
-                  <div className="flex-1 mx-4">
-                    <div className="h-1 bg-white bg-opacity-30 rounded-full">
-                      <div className="h-1 bg-white rounded-full w-0"></div>
+                {/* Badge Icon */}
+                <div className="w-32 h-32 mx-auto mb-6">
+                  {courseData.badge_detail.icon ? (
+                    <img
+                      src={courseData.badge_detail.icon}
+                      alt="Course Badge"
+                      className="w-full h-full object-contain"
+                    />
+                  ) : (
+                    <div className="w-full h-full bg-gradient-to-br from-yellow-400 to-orange-500 rounded-full flex items-center justify-center">
+                      <Award className="w-16 h-16 text-white" />
                     </div>
-                  </div>
-                  <span className="text-sm">{selectedVideo.duration}</span>
+                  )}
                 </div>
+
+                <h3 className="text-xl font-bold text-sec10 mb-8">
+                  You have earned the{" "}
+                  {courseData.badge_detail.title || "BEGINNER'S"} Badge
+                </h3>
+
+                {/* Action Buttons */}
+                <div className="flex space-y-4 mx-auto">
+                  <button
+                    onClick={closeBadgeModal}
+                    className="px-3 py-2 shadow-md bg-white text-[#2FB3E3] rounded-lg hover:bg-gray-50 transition-colors"
+                  >
+                    Give Feedback
+                  </button>
+
+                  <button
+                    onClick={() => {
+                      closeBadgeModal();
+                      if (courseData.community_link_detail?.link) {
+                        window.open(
+                          courseData.community_link_detail.link,
+                          "_blank"
+                        );
+                      }
+                    }}
+                    className="px-3 py-2 bg-[#2FB3E3] text-white rounded-lg hover:text-[#2FB3E3] hover:bg-white transition-colors"
+                  >
+                    Join Community
+                  </button>
+
+                  <button
+                    onClick={() => {
+                      // Share badge on LinkedIn functionality
+                      const shareText = `I just completed the ${
+                        courseData.title
+                      } course and earned the ${
+                        courseData.badge_name || "BEGINNER'S"
+                      } Badge! 🎉`;
+                      const shareUrl = `https://www.linkedin.com/sharing/share-offsite/?url=${encodeURIComponent(
+                        window.location.origin
+                      )}&title=${encodeURIComponent(shareText)}`;
+                      window.open(shareUrl, "_blank");
+                    }}
+                    className="px-3 py-2 text-[#2FB3E3] hover:text-[#2FB3E3] hover:bg-white transition-colors"
+                  >
+                    Share Badge on LinkedIn
+                  </button>
+                </div>
+              </div>
+            </div>
+          )}
+
+          {!showCourseCompletion && !showBadgeEarned && selectedVideo && (
+            <>
+              {/* Video Player */}
+              <div className="relative bg-gradient-to-br from-blue-900 via-purple-900 to-blue-800 border border-gray-200 rounded-lg overflow-hidden">
+                <div className="relative aspect-video h-72 flex items-center justify-center">
+                  <div className="text-center w-full h-full relative">
+                    <video
+                      ref={setVideoRef}
+                      src={selectedVideo.video_url}
+                      controls
+                      autoPlay
+                      onTimeUpdate={handleVideoTimeUpdate}
+                      onLoadedData={handleVideoLoad}
+                      className="h-full w-full object-contain"
+                      style={{
+                        maxHeight: "100%",
+                        maxWidth: "100%",
+                        zIndex: 20,
+                        position: "relative",
+                      }}
+                    />
+                  </div>
+                </div>
+
+                {/* Video Progress Indicator - Only show when video is playing and not when controls are visible */}
+                {videoProgress[selectedVideo.id] &&
+                  videoRef &&
+                  !videoRef.paused && (
+                    <div className="absolute bottom-4 left-4 right-4 flex items-center justify-between text-white z-30">
+                      <div className="flex items-center space-x-2">
+                        <Play className="w-5 h-5" />
+                        <span className="text-sm">
+                          {Math.floor(videoProgress[selectedVideo.id] / 60)}:
+                          {Math.floor(videoProgress[selectedVideo.id] % 60)
+                            .toString()
+                            .padStart(2, "0")}
+                        </span>
+                      </div>
+                      <div className="flex-1 mx-4">
+                        <div className="h-1 bg-white bg-opacity-30 rounded-full">
+                          <div
+                            className="h-1 bg-white rounded-full transition-all duration-300"
+                            style={{
+                              width: `${
+                                (videoProgress[selectedVideo.id] /
+                                  (videoRef?.duration || 1)) *
+                                100
+                              }%`,
+                            }}
+                          ></div>
+                        </div>
+                      </div>
+                      <span className="text-sm">{selectedVideo.duration}</span>
+                    </div>
+                  )}
               </div>
 
               {/* Video Title */}
               <div className="px-6 py-4 bg-white border-b">
                 <h3 className="text-sm sm:text-base font-semibold text-gray-800">
+                  Video {selectedVideo.order || ""}
+                  {selectedVideo.order ? ". " : ""}
                   {selectedVideo.title}
                 </h3>
               </div>
@@ -615,10 +1205,6 @@ const CourseDetailsPage = ({ courseId }) => {
                       {selectedModule?.description && (
                         <p>{selectedModule.description}</p>
                       )}
-                      {Array.isArray(selectedModule?.summaries) &&
-                        selectedModule.summaries.map((s) => (
-                          <p key={s.id}>{s.text}</p>
-                        ))}
                       {!selectedModule?.description &&
                         selectedVideo?.description && (
                           <p>{selectedVideo.description}</p>
@@ -672,12 +1258,85 @@ const CourseDetailsPage = ({ courseId }) => {
                       ))}
                     </div>
                   </div>
+
+                  {/* Complete Module Button */}
+                  {selectedModule && !selectedModule.is_locked && (
+                    <div className="mt-6 pt-6 border-t border-gray-200">
+                      <div className="flex items-center justify-between">
+                        <div>
+                          <h4 className="font-semibold text-gray-800 mb-2">
+                            Module Progress
+                          </h4>
+                          <p className="text-sm text-gray-600">
+                            {selectedModule.quizzes.length > 0
+                              ? "Complete all videos and pass the quiz to finish this module"
+                              : "Complete all videos to finish this module"}
+                          </p>
+                        </div>
+                        <button
+                          onClick={handleCompleteModule}
+                          disabled={!canCompleteModule()}
+                          className={`px-6 py-3 rounded-lg font-medium transition-colors flex items-center space-x-2 ${
+                            canCompleteModule()
+                              ? "bg-green-600 text-white hover:bg-green-700"
+                              : "bg-gray-300 text-gray-500 cursor-not-allowed"
+                          }`}
+                        >
+                          <CheckCircle className="w-5 h-5" />
+                          <span>Complete Module</span>
+                        </button>
+                      </div>
+                    </div>
+                  )}
                 </div>
               </div>
             </>
           )}
 
-          {currentQuiz && (
+          {!showCourseCompletion && !showBadgeEarned && selectedSummary && (
+            <div className="p-6 bg-white flex-1">
+              <div className="max-w-4xl mx-auto">
+                <div className="mb-6">
+                  <h2 className="text-2xl font-bold text-gray-800 mb-2">
+                    {selectedSummary.title || "Module Summary"}
+                  </h2>
+                  <p className="text-gray-600">{selectedModule.title}</p>
+                </div>
+
+                <div
+                  className={`prose prose-lg max-w-none
+                     prose-headings:text-gray-900 prose-headings:font-semibold prose-headings:mb-4 prose-headings:mt-6
+                     prose-h1:text-2xl prose-h1:font-bold prose-h1:border-b prose-h1:border-gray-200 prose-h1:pb-2
+                     prose-h2:text-xl prose-h2:font-semibold prose-h2:mt-6 prose-h2:mb-3
+                     prose-h3:text-lg prose-h3:font-medium prose-h3:mt-4 prose-h3:mb-2
+                     prose-h4:text-base prose-h4:font-medium prose-h4:mt-3 prose-h4:mb-2
+                     prose-p:text-gray-700 prose-p:leading-relaxed prose-p:mb-4 prose-p:text-base
+                     prose-strong:text-gray-900 prose-strong:font-semibold
+                     prose-em:text-gray-600 prose-em:italic
+                     prose-a:text-blue-600 prose-a:font-medium hover:prose-a:text-blue-700 hover:prose-a:underline prose-a:transition-colors
+                     prose-ul:my-4 prose-ol:my-4 prose-li:my-1 prose-li:text-gray-700
+                     prose-li:marker:text-blue-500 prose-li:marker:font-semibold
+                     prose-blockquote:border-l-4 prose-blockquote:border-blue-500 prose-blockquote:bg-blue-50 prose-blockquote:pl-4 prose-blockquote:py-2 prose-blockquote:my-4 prose-blockquote:text-gray-700 prose-blockquote:italic
+                     prose-code:text-sm prose-code:bg-gray-100 prose-code:text-gray-800 prose-code:px-2 prose-code:py-1 prose-code:rounded prose-code:font-mono
+                     prose-pre:bg-gray-900 prose-pre:text-gray-100 prose-pre:p-4 prose-pre:rounded-lg prose-pre:overflow-x-auto prose-pre:my-4
+                     prose-img:rounded-lg prose-img:shadow-md prose-img:my-4 prose-img:max-w-full prose-img:h-auto
+                     prose-table:w-full prose-table:border-collapse prose-table:my-4
+                     prose-th:bg-gray-100 prose-th:text-gray-900 prose-th:font-semibold prose-th:p-3 prose-th:border prose-th:border-gray-300 prose-th:text-left
+                     prose-td:p-3 prose-td:border prose-td:border-gray-300 prose-td:text-gray-700
+                     prose-hr:my-8 prose-hr:border-gray-300
+                     prose-dl:my-4
+                     prose-dt:font-semibold prose-dt:text-gray-900 prose-dt:mb-1
+                     prose-dd:text-gray-700 prose-dd:ml-4 prose-dd:mb-3`}
+                  dangerouslySetInnerHTML={{
+                    __html:
+                      selectedSummary.text || selectedSummary.content || "",
+                  }}
+                />
+              </div>
+            </div>
+          )}
+
+          {!showCourseCompletion && !showBadgeEarned && currentQuiz && (
             <div className="p-6 bg-white flex-1">
               <div className="max-w-3xl mx-auto">
                 <div className="mb-6 flex justify-between items-center">
@@ -746,7 +1405,7 @@ const CourseDetailsPage = ({ courseId }) => {
                           Object.keys(quizAnswers).length !==
                           selectedModule.quizzes.length
                         }
-                        className="px-6 py-2 bg-pri10 text-white rounded-lg font-medium hover:bg-blue-700 disabled:opacity-50 disabled:cursor-not-allowed flex items-center"
+                        className="px-6 py-2 bg-pri10 text-white rounded-lg font-medium hover:bg-pri10/70 disabled:opacity-50 disabled:cursor-not-allowed flex items-center"
                       >
                         Submit Answers
                         <ChevronRight className="w-4 h-4 ml-2" />
@@ -810,34 +1469,36 @@ const CourseDetailsPage = ({ courseId }) => {
                       </div>
                     ))}
 
-                    <div className="text-center p-6 bg-gray-50 rounded-lg">
-                      <div className="w-16 h-16 bg-blue-100 rounded-full flex items-center justify-center mx-auto mb-4">
-                        <span className="text-2xl font-bold text-[#13485B]">
-                          {quizScore}/{selectedModule.quizzes.length}
-                        </span>
+                    {/* Complete Module Button - Show after quiz completion */}
+                    {selectedModule && !selectedModule.is_locked && (
+                      <div className="mt-6 pt-6 border-t border-gray-200">
+                        <div className="flex items-center gap-6 justify-between">
+                          <div>
+                            <h4 className="font-semibold text-gray-800 mb-2">
+                              Module Progress
+                            </h4>
+                            <p className="text-sm text-gray-600 break-words">
+                              {selectedModule.quizzes.length > 0
+                                ? "Complete all videos and pass the quiz to finish this module"
+                                : "Complete all videos to finish this module"}
+                            </p>
+                          </div>
+
+                          <button
+                            onClick={handleCompleteModule}
+                            disabled={!canCompleteModule()}
+                            className={`px-3 py-3 rounded-lg shadow-md whitespace-nowrap font-medium transition-colors flex items-center space-x-2 ${
+                              canCompleteModule()
+                                ? "bg-white text-primary hover:bg-white/70"
+                                : "bg-gray-300 text-gray-500 cursor-not-allowed"
+                            }`}
+                          >
+                            {/* <CheckCircle className="w-5 h-5" /> */}
+                            <span>Complete Module</span>
+                          </button>
+                        </div>
                       </div>
-                      <h3 className="text-xl font-bold text-gray-800 mb-2">
-                        Quiz Completed!
-                      </h3>
-                      <p className="text-gray-600 mb-4">
-                        You scored {quizScore} out of{" "}
-                        {selectedModule.quizzes.length}
-                      </p>
-                      <div className="flex justify-center space-x-4">
-                        <button
-                          onClick={completeQuiz}
-                          className="px-6 py-2 bg-green-600 text-white rounded-lg font-medium hover:bg-green-700"
-                        >
-                          Continue
-                        </button>
-                        <button
-                          onClick={() => setShowQuizResults(false)}
-                          className="px-6 py-2 bg-gray-600 text-white rounded-lg font-medium hover:bg-gray-700"
-                        >
-                          Review Answers
-                        </button>
-                      </div>
-                    </div>
+                    )}
                   </div>
                 )}
               </div>
@@ -845,6 +1506,48 @@ const CourseDetailsPage = ({ courseId }) => {
           )}
         </div>
       </div>
+
+      {/* Community Modal */}
+      {showCommunityModal && (
+        <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50">
+          <div className="bg-white rounded-lg p-6 max-w-md w-full mx-4">
+            <div className="text-center">
+              <div className="w-16 h-16 bg-blue-100 rounded-full flex items-center justify-center mx-auto mb-4">
+                <Users className="w-8 h-8 text-blue-600" />
+              </div>
+              <h2 className="text-xl font-bold text-gray-800 mb-2">
+                Join Our Community
+              </h2>
+              <p className="text-gray-600 mb-6">
+                Connect with other learners and share your experiences!
+              </p>
+
+              <div className="space-y-3">
+                <button
+                  onClick={() => {
+                    closeCommunityModal();
+                    if (courseData?.community_link_detail?.link) {
+                      window.open(
+                        courseData.community_link_detail.link,
+                        "_blank"
+                      );
+                    }
+                  }}
+                  className="w-full px-4 py-2 bg-blue-600 text-white rounded-lg hover:bg-blue-700 transition-colors"
+                >
+                  Join Community
+                </button>
+                <button
+                  onClick={closeCommunityModal}
+                  className="w-full px-4 py-2 text-gray-600 bg-gray-100 rounded-lg hover:bg-gray-200 transition-colors"
+                >
+                  Cancel
+                </button>
+              </div>
+            </div>
+          </div>
+        </div>
+      )}
     </div>
   );
 };
