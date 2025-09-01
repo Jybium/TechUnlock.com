@@ -131,7 +131,7 @@ const CourseForm = () => {
       category: "",
       difficulty: "",
       is_certificate: "",
-      instructor_name: "",
+      instructor: "",
       start_date: "",
       start_time: "",
       course_skills: [],
@@ -1097,11 +1097,16 @@ const CourseForm = () => {
                     render={({ field }) => (
                       <select {...field}>
                         <option value="">Select Category</option>
-                        <option value="AI">Artificial Intelligence</option>
-                        <option value="CYBER">Cyber Security</option>
-                        <option value="DM">Digital Marketing</option>
-                        <option value="WEB">Web Development</option>
-                        <option value="UI/UX">UI/UX Design</option>
+                        <option value="Web Development">Web Development</option>
+                        <option value="Cybersecurity">Cybersecurity</option>
+                        <option value="Digital Marketing">
+                          Digital Marketing
+                        </option>
+                        <option value="Data Analysis">Data Analysis</option>
+                        <option value="Artificial Intelligence">
+                          Artificial Intelligence
+                        </option>
+                        <option value="UI/UX Design">UI/UX Design</option>
                       </select>
                     )}
                   />
@@ -1121,9 +1126,9 @@ const CourseForm = () => {
                     render={({ field }) => (
                       <select {...field}>
                         <option value="">Select Difficulty</option>
-                        <option value="beginner">Beginner</option>
-                        <option value="intermediate">Intermediate</option>
-                        <option value="advanced">Advanced</option>
+                        <option value="Beginner">Beginner</option>
+                        <option value="Intermediate">Intermediate</option>
+                        <option value="Advanced">Advanced</option>
                       </select>
                     )}
                   />
@@ -1157,9 +1162,9 @@ const CourseForm = () => {
 
                 {/* Instructor Name */}
                 <div>
-                  <label htmlFor="instructor_name">Instructor Name</label>
+                  <label htmlFor="instructor">Instructor Name</label>
                   <Controller
-                    name="instructor_name"
+                    name="instructor"
                     control={control}
                     render={({ field }) => (
                       <input
@@ -1169,9 +1174,9 @@ const CourseForm = () => {
                       />
                     )}
                   />
-                  {errors.instructor_name && (
+                  {errors.instructor && (
                     <span className="text-red-500">
-                      {errors.instructor_name.message}
+                      {errors.instructor.message}
                     </span>
                   )}
                 </div>

@@ -78,10 +78,22 @@ const courseSchema = z.object({
   badge: badgeSchema.optional(),
   community_link: communityLinkSchema.optional(),
   // Legacy fields for backward compatibility
-  category: z.string().optional(),
-  difficulty: z.string().optional(),
+  category: z.enum(
+    [
+      "Web Development",
+      "Cybersecurity",
+      "Digital Marketing",
+      "Data Analysis",
+      "Artificial Intelligence",
+      "UI/UX Design",
+    ],
+    { message: "Please select a valid category" }
+  ),
+  difficulty: z.enum(["Beginner", "Intermediate", "Advanced"], {
+    message: "Please select a valid difficulty level",
+  }),
   is_certificate: z.string().optional(),
-  instructor_name: z.string().optional(),
+  instructor: z.string().nonempty({ message: "Instructor name is required" }),
   start_date: z.string().optional(),
   start_time: z.string().optional(),
   course_skills: z.array(z.object({ name: z.string() })).optional(),

@@ -47,12 +47,12 @@ const CourseDetailsPage = ({ params }) => {
   const isEnrolled = enrolledCourses?.some(
     (enrolledCourse) => enrolledCourse.id === parseInt(id)
   );
-  
+
   console.log("Enrollment check:", {
     id,
     enrolledCourses,
     isEnrolled,
-    courseDetails
+    courseDetails,
   });
 
   useEffect(() => {
@@ -149,7 +149,7 @@ const CourseDetailsPage = ({ params }) => {
   const handleEnroll = async () => {
     console.log("handleEnroll called with course ID:", id);
     console.log("Course details:", courseDetails);
-    
+
     try {
       if (courseDetails.price === 0) {
         // Free course - enroll directly
@@ -157,9 +157,9 @@ const CourseDetailsPage = ({ params }) => {
         const result = await enrollInCourse(id);
         console.log("Enrollment result:", result);
         showSuccessToast(result.message || "Successfully enrolled in course!");
-        
+
         // Refresh enrolled courses in context
-        if (typeof window !== 'undefined') {
+        if (typeof window !== "undefined") {
           // Force a page reload to update the context
           window.location.href = `/dashboard/courses/${id}/watch`;
         } else {
