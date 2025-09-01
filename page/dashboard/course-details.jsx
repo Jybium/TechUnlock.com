@@ -951,12 +951,12 @@ const CourseDetailsPage = ({ courseId }) => {
           <div className="p-4 border-t border-gray-200 space-y-5">
             <button
               onClick={handleJoinCommunity}
-              className="w-full flex items-center flex-1 px-4 py-2 bg-white text-[#2FB3E3] shadow rounded-lg hover:bg-[#2FB3E3] hover:text-white transition-colors"
+              className="w-full flex items-center flex-1 px-4 py-2 bg-white text-primary shadow rounded-lg hover:bg-primary hover:text-white transition-colors"
             >
               <Users className="w-4 h-4 mr-2" />
               {courseData?.community_link_detail?.description}
             </button>
-            <button className="w-full flex items-center flex-1 px-4 py-2 bg-white text-[#2FB3E3] shadow rounded-lg hover:bg-[#2FB3E3] hover:text-white transition-colors">
+            <button className="w-full flex items-center flex-1 px-4 py-2 bg-white text-primary shadow rounded-lg hover:bg-primary hover:text-white transition-colors">
               <MessageCircle className="w-4 h-4 mr-2" />
               Give Feedback
             </button>
@@ -966,7 +966,7 @@ const CourseDetailsPage = ({ courseId }) => {
         {/* Main Content */}
         <div className="flex-1 flex flex-col">
           {showCourseCompletion && (
-            <div className="p-6 border border-[#2FB3E3] rounded-lg h-fit bg-white flex-1">
+            <div className="p-6 border border-primary rounded-lg h-fit bg-white flex-1">
               <div className="max-w-2xl mx-auto">
                 <div className="text-center mb-8">
                   <h2 className="text-2xl font-bold text-gray-800 mb-2">
@@ -1009,7 +1009,7 @@ const CourseDetailsPage = ({ courseId }) => {
                     <select
                       value={feedbackCategory}
                       onChange={(e) => setFeedbackCategory(e.target.value)}
-                      className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-[#2FB3E3] focus:border-transparent"
+                      className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-primary focus:border-transparent"
                     >
                       <option value="course">Course</option>
                       <option value="technical">Technical</option>
@@ -1028,7 +1028,7 @@ const CourseDetailsPage = ({ courseId }) => {
                       value={feedbackText}
                       onChange={(e) => setFeedbackText(e.target.value)}
                       placeholder="Write more description your feedback"
-                      className="w-full h-32 px-3 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-[#2FB3E3] focus:border-transparent resize-none"
+                      className="w-full h-32 px-3 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-primary focus:border-transparent resize-none"
                     />
                   </div>
 
@@ -1042,7 +1042,7 @@ const CourseDetailsPage = ({ courseId }) => {
                     </button>
                     <button
                       onClick={submitCourseFeedback}
-                      className="flex-1 px-4 py-2 bg-white text-[#2FB3E3] shadow rounded-lg hover:text-white hover:bg-[#2FB3E3] transition-colors"
+                      className="flex-1 px-4 py-2 bg-white text-primary shadow rounded-lg hover:text-white hover:bg-primary transition-colors"
                     >
                       Submit
                     </button>
@@ -1053,7 +1053,7 @@ const CourseDetailsPage = ({ courseId }) => {
           )}
 
           {showBadgeEarned && (
-            <div className="p-6 border border-[#2FB3E3] rounded-lg h-fit bg-white flex-1">
+            <div className="p-6 border border-primary rounded-lg h-fit bg-white flex-1">
               <div className="max-w-2xl mx-auto text-center">
                 <div className="mb-8">
                   <h2 className="text-2xl font-bold text-sec10 mb-4">
@@ -1086,7 +1086,7 @@ const CourseDetailsPage = ({ courseId }) => {
                 <div className="flex space-y-4 mx-auto">
                   <button
                     onClick={closeBadgeModal}
-                    className="px-3 py-2 shadow-md bg-white text-[#2FB3E3] rounded-lg hover:bg-gray-50 transition-colors"
+                    className="px-3 py-2 shadow-md bg-white text-primary rounded-lg hover:bg-gray-50 transition-colors"
                   >
                     Give Feedback
                   </button>
@@ -1101,7 +1101,7 @@ const CourseDetailsPage = ({ courseId }) => {
                         );
                       }
                     }}
-                    className="px-3 py-2 bg-[#2FB3E3] text-white rounded-lg hover:text-[#2FB3E3] hover:bg-white transition-colors"
+                    className="px-3 py-2 bg-primary text-white rounded-lg hover:text-primary hover:bg-white transition-colors"
                   >
                     Join Community
                   </button>
@@ -1119,7 +1119,7 @@ const CourseDetailsPage = ({ courseId }) => {
                       )}&title=${encodeURIComponent(shareText)}`;
                       window.open(shareUrl, "_blank");
                     }}
-                    className="px-3 py-2 text-[#2FB3E3] hover:text-[#2FB3E3] hover:bg-white transition-colors"
+                    className="px-3 py-2 text-primary hover:text-primary hover:bg-white transition-colors"
                   >
                     Share Badge on LinkedIn
                   </button>
