@@ -65,7 +65,8 @@ const CourseCard = React.memo(({ item }) => {
               <TimeIcon /> <span>Duration: {item?.duration}</span>
             </p>
             <p className="flex items-center gap-x-3">
-              <LevelIcon /> <span>Training level: {item?.difficulty}</span>
+              <LevelIcon />{" "}
+              <span>Training level: {item?.difficulty || "Beginner"}</span>
             </p>
             <p className="flex items-center gap-x-3">
               <ModuleIcon />{" "}
@@ -75,9 +76,7 @@ const CourseCard = React.memo(({ item }) => {
             </p>
             <p className="flex items-center gap-x-3">
               <CertificateIcon />{" "}
-              <span>
-                {item?.is_certificate ? "Certificate of completion" : ""}
-              </span>
+              <span>{item?.badge_detail ? "Badge of completion" : ""}</span>
             </p>
           </div>
 

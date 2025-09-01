@@ -7,18 +7,23 @@ import line from "@/assets/landing-page/Line.svg";
 import sideImage from "@/assets/landing-page/ColoredAngle.svg";
 import Image from "next/image";
 import { useCourses } from "@/Context/courses";
+import LoadingSpinner from "../LoadingSpinner";
 
 const ProgramsOffered = () => {
-  const { courses } = useCourses();
-  console.log(courses);
+  const { courses, loading } = useCourses();
+
+  if (loading) {
+    return <LoadingSpinner />;
+  }
+
   return (
-    <div className="relative my-[5rem] w-[90%] mx-auto">
+    <div className="relative lg:my-[6rem] my-[4rem] w-[90%] mx-auto lg:mt-48">
       <div className="relative">
         <p className="relative g">
           <Image
             src={line}
             alt="line"
-            className="absolute top-9 w-[22%] mx-auto"
+            className="absolute top-9 lg:w-[22%] w-[70%] mx-auto"
           />
           <span className="text-center text-3xl font-semibold text-first-primary">
             Programs Offered

@@ -10,7 +10,7 @@ const features = [
     title: "Self-paced",
     description: "No deadlines. No pressure. Just results",
     color: "bg-blue-100 text-[#13485B]",
-    bgColor: "bg-blue-50",
+    // bgColor: "bg-blue-50",
   },
   {
     icon: Globe,
@@ -47,9 +47,9 @@ const LearnPacePage = () => {
         <HeroSection />
 
         {/* Features Section */}
-        <div className="relative z-20 w-[80%] mx-auto -mt-40">
-          <div className="bg-white border p-6 rounded-lg">
-            <div className="grid lg:flex gap-6">
+        <div className="lg:absolute lg:bottom-12 lg:left-1/2 lg:transform lg:-translate-x-1/2 lg:-translate-y-1/2 z-20 max-w-6xl w-full px-4">
+          <div className="bg-white border p-3 rounded-lg">
+            <div className="grid lg:flex lg:justify-between gap-6">
               {features.map((feature, index) => (
                 <div
                   key={index}

@@ -162,11 +162,12 @@ const Navbar = () => {
               } absolute top-12 z-40 cursor-pointer w-full text-red-500 px-4 py-2 bg-white rounded shadow drop-shadow font-medium`}
             >
               <Link
-                href="/dashboard"
+                href={accountDetails?.is_admin_user ? "/admin" : "/dashboard"}
                 className="cursor-pointer text-pri9 py-1 flex items-center gap-x-4"
                 onClick={toggleMenu}
               >
-                <LuLayoutDashboard size={20} /> Dashboard
+                <LuLayoutDashboard size={20} />{" "}
+                {accountDetails?.is_admin_user ? "Admin" : "Dashboard"}
               </Link>
 
               <Link
@@ -252,11 +253,12 @@ const Navbar = () => {
                 } absolute top-12 z-40 cursor-pointer w-full text-red-500 px-4 py-2 bg-white rounded shadow drop-shadow font-medium`}
               >
                 <Link
-                  href="/dashboard"
+                  href={accountDetails?.is_admin_user ? "/admin" : "/dashboard"}
                   className="cursor-pointer text-pri9 py-1 flex items-center gap-x-4"
                   onClick={toggleMenu}
                 >
-                  <LuLayoutDashboard size={20} /> Dashboard
+                  <LuLayoutDashboard size={20} />{" "}
+                  {accountDetails?.is_admin_user ? "Admin" : "Dashboard"}
                 </Link>
                 <Link
                   href="/profile"

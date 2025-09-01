@@ -8,7 +8,7 @@ const HeroSection = () => {
   return (
     <header className="w-full header-im bg-cover bg-center flex justify-around text-pri1 relative py-10">
       <div className="absolute inset-0 bg-[#EAF7FC] opacity-30 -z "></div>
-      <div className="grid gap-y-8 lg:gap-y-0 lg:flex lg:justify-between w-[90%] mx-auto my-6 lg:my-3 items-center header-content">
+      <div className="grid gap-y-8 lg:gap-y-0 lg:flex lg:justify-between w-[90%] mx-auto my-6 lg:my-3 lg:mb- items-center header-content">
         <section className="flex flex-col justify-center z-10 gap-7 lg:w-[60%]">
           <h1 className="text-[2rem] lg:text-[4rem] font-[600] text-[#13485B] leading-[1.2]">
             Start Learning In-Demand Tech Skill - For Free
@@ -20,7 +20,7 @@ const HeroSection = () => {
             </p>
           </div>
           <div className="flex items-center gap-5">
-            <Link href="/courses">
+            <Link href="/dashboard">
               <button className="px-6 py-3    rounded-xl bg-primary text-white font-medium header-button">
                 Start Learning
               </button>

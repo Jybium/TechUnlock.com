@@ -71,6 +71,14 @@ const Overview = ({ course }) => {
                       {item.name}
                     </span>
                   ))}
+                  {course?.tag_names?.map((item) => (
+                    <span
+                      className="border border-primary py-1 px-2 rounded text-primary font-medium cursor-pointer"
+                      key={item}
+                    >
+                      {item}
+                    </span>
+                  ))}
                 </div>
               </div>
             </div>
