@@ -52,7 +52,7 @@ const CourseCard = ({ course }) => {
               : "bg-red-50 text-red-600"
           }`}
         >
-          {isCompleted ? "Course Completed" : "Course Incomplete"}
+          {/* {isCompleted ? "Course Completed" : "Course Incomplete"} */}
         </span>
       </div>
 
@@ -152,6 +152,8 @@ const LearnerDetailsPage = () => {
     return learner?.enrolled_courses || learner?.courses || [];
   }, [learner]);
 
+  // console.log(learner.enrolled_courses)
+
   const handleDeleteLearner = async () => {
     if (!id) return;
     const ok = window.confirm("Delete learner? This cannot be undone.");
@@ -224,9 +226,9 @@ const LearnerDetailsPage = () => {
   }
 
   return (
-    <div className="min-h-screen bg-white">
+    <div className="min-h-screen">
       {/* Header */}
-      <div className="flex items-center justify-between border-b px-4 md:px-6 py-4">
+      <div className="flex items-center justify-between border-b py-4">
         <div className="flex items-center gap-3">
           <button
             onClick={() => router.back()}
@@ -305,7 +307,7 @@ const LearnerDetailsPage = () => {
         </div>
 
         {/* Actions */}
-        <div className="flex flex-wrap gap-3">
+        <div className="flex justify-between gap-3">
           <button
             onClick={handleDeleteLearner}
             disabled={saving}

@@ -253,7 +253,7 @@ const LearnersPage = () => {
                 <thead className="bg-gray-50">
                   <tr>
                     <th className="px-4 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
-                      Company
+                      Course
                     </th>
                     <th className="px-4 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
                       Enrolled Learners
@@ -337,7 +337,7 @@ const LearnersPage = () => {
               <tbody className="bg-white divide-y divide-gray-200">
                 {filteredLearners.length > 0 ? (
                   filteredLearners.map((learner, index) => (
-                    <tr key={learner.id || index} className="hover:bg-gray-50">
+                    <tr key={learner.id || index} className="hover:bg-gray-50" onClick={()=>router.push(`/admin/learners/${learner.id}`)}>
                       <td className="px-4 py-4 whitespace-nowrap">
                         <div className="flex items-center">
                           <div className="w-8 h-8 bg-blue-100 rounded-full flex items-center justify-center">
