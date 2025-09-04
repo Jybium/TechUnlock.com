@@ -78,11 +78,11 @@ const AdminPage = () => {
 
   const getRoleBadgeColor = (role) => {
     switch (role) {
-      case "Trainer":
+      case "TRAINER":
         return "bg-green-100 text-green-800";
-      case "Super Admin":
+      case "SUPER ADMIN":
         return "bg-red-100 text-red-800";
-      case "Unresolved":
+      case "ADMIN":
         return "bg-red-100 text-red-800";
       default:
         return "bg-gray-100 text-gray-800";
@@ -126,11 +126,8 @@ const AdminPage = () => {
   };
 
   const handleAddAdmin = () => {
-    // For now, we'll show a simple alert. You can create a modal or separate page for this
-    alert(
-      "Add Admin functionality - You can create a modal or separate page for adding new admins"
-    );
-    // router.push('/admin/admin/create');
+   
+    router.push('/admin/admin/add');
   };
 
   return (
@@ -161,7 +158,7 @@ const AdminPage = () => {
             <h1 className="text-xl font-semibold text-gray-900">Admin</h1>
             <Button
               onClick={handleAddAdmin}
-              className="bg-[#268FB6] hover:bg-[#268FB6]/80"
+              className="bg-[#268FB6] hover:bg-[#268FB6]/80 hover:text-white"
             >
               <Plus className="h-4 w-4 mr-2" />
               Add Admin
@@ -187,9 +184,11 @@ const AdminPage = () => {
                 className="appearance-none bg-white border border-gray-300 rounded-md px-4 py-2 pr-8 focus:outline-none focus:ring-2 focus:ring-[#268FB6] focus:border-transparent"
               >
                 <option value="all">All Roles</option>
-                <option value="Trainer">Trainer</option>
-                <option value="Super Admin">Super Admin</option>
-                <option value="Unresolved">Unresolved</option>
+              
+                <option value="TRAINER">Trainer</option>
+                <option value="USER">User</option>
+                <option value="SUPER ADMIN">Super Admin</option>
+                <option value="ADMIN">Admin</option>
               </select>
               <Filter className="absolute right-2 top-1/2 transform -translate-y-1/2 text-gray-400 h-4 w-4 pointer-events-none" />
             </div>

@@ -115,11 +115,11 @@ const CreateCoursePage = () => {
       types: ["image/jpeg", "image/png", "image/webp"],
     }, // 10MB
     video: {
-      maxSize: 30 * 1024 * 1024,
+      maxSize: 60 * 1024 * 1024,
       types: ["video/mp4", "video/webm", "video/avi", "video/mov"],
     }, // 30MB
     badge: {
-      maxSize: 5 * 1024 * 1024,
+      maxSize: 10 * 1024 * 1024,
       types: ["image/jpeg", "image/png", "image/webp"],
     }, // 5MB
   };
@@ -166,11 +166,13 @@ const CreateCoursePage = () => {
         : {
             courseTitle: "",
             shortDescription: "",
+            category: "",
+            instructor: "",
             detailedDescription: "",
             numberOfModules: "",
             estimatedTime: "",
             tags: "",
-            trainingLevel: "",
+            difficulty: "",
             skills: "",
           };
     }
@@ -178,10 +180,12 @@ const CreateCoursePage = () => {
       courseTitle: "",
       shortDescription: "",
       detailedDescription: "",
+      category:"",
+      instructor: "",
       numberOfModules: "",
       estimatedTime: "",
       tags: "",
-      trainingLevel: "",
+      difficulty: "",
       skills: "",
     };
   });
@@ -415,6 +419,8 @@ const CreateCoursePage = () => {
         short_description: formData.shortDescription,
         description: formData.detailedDescription,
         duration: `${formData.estimatedTime} hours`,
+        instructor: formData.instructor,
+        category: formData.category,
         is_published: true,
         is_paid: trainingFeeData.trainingType === "paid",
         price:
@@ -552,10 +558,12 @@ const CreateCoursePage = () => {
         courseTitle: courseData.title || "",
         shortDescription: courseData.short_description || "",
         detailedDescription: courseData.description || "",
+        instructor: courseData.instructor || "",
+        category: courseData.category || "",
         numberOfModules: courseData.modules?.length?.toString() || "",
         estimatedTime: courseData.duration?.replace(" hours", "") || "",
         tags: courseData.tags?.join(", ") || "",
-        trainingLevel: courseData.difficulty || "",
+        difficulty: courseData.difficulty || "",
         skills: courseData.skills?.join(", ") || "",
       });
 
@@ -913,9 +921,11 @@ const CreateCoursePage = () => {
       shortDescription: "",
       detailedDescription: "",
       numberOfModules: "",
+       instructor: "",
+        category: "",
       estimatedTime: "",
       tags: "",
-      trainingLevel: "",
+      difficulty: "",
       skills: "",
     });
 
@@ -1272,7 +1282,7 @@ const CreateCoursePage = () => {
 
       // Clear form data after successful creation
       clearFormData();
-
+localStorage.removeItem("courseCreationSteps")
       // Redirect to courses page
       router.push("/admin/courses");
     } catch (error) {
@@ -1302,12 +1312,7 @@ const CreateCoursePage = () => {
             ? `Edit Course`
             : "Create Course"}
         </h1>
-        <button
-          onClick={clearFormData}
-          className="ml-auto px-4 py-2 text-sm bg-red-100 text-red-600 rounded-lg hover:bg-red-200 transition-colors"
-        >
-          Clear Form
-        </button>
+       
       </div>
 
       {/* Step Navigation */}
@@ -1410,12 +1415,7 @@ const CreateCoursePage = () => {
               <h3 className="text-lg font-semibold text-gray-800">
                 Course Information
               </h3>
-              <button
-                onClick={checkBunnyConfig}
-                className="text-xs bg-gray-100 text-gray-600 px-2 py-1 rounded hover:bg-gray-200"
-              >
-                Debug Upload
-              </button>
+             
             </div>
 
             <div className="grid grid-cols-1 lg:grid-cols-1 gap-6">
@@ -1460,6 +1460,22 @@ const CreateCoursePage = () => {
                     value={formData.detailedDescription}
                     onChange={handleDetailedDescriptionChange}
                     placeholder="Enter a description..."
+                  />
+                </div>
+
+
+                <div>
+                  <label className="block text-sm font-medium text-gray-700 mb-2">
+                    *Instructor
+                  </label>
+                  <input
+                    type="text"
+                    value={formData.instructor}
+                    onChange={(e) =>
+                      handleInputChange("instructor", e.target.value)
+                    }
+                    placeholder="Enter Instructor N ame."
+                    className="w-full border border-gray-300 rounded-lg px-3 py-2 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent"
                   />
                 </div>
               </div>
@@ -1553,21 +1569,44 @@ const CreateCoursePage = () => {
 
                 <div>
                   <label className="block text-sm font-medium text-gray-700 mb-2">
-                    *Training level
+                    *Difficulty
                   </label>
                   <select
-                    value={formData.trainingLevel}
+                    value={formData.difficulty}
                     onChange={(e) =>
-                      handleInputChange("trainingLevel", e.target.value)
+                      handleInputChange("difficulty", e.target.value)
                     }
                     className="w-full border border-gray-300 rounded-lg px-3 py-2 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent"
                   >
                     <option value="">
-                      Select training level (Beginner, Intermediate)
+                      Select Difficulty (Beginner, Intermediate)
                     </option>
                     <option value="beginner">Beginner</option>
                     <option value="intermediate">Intermediate</option>
                     <option value="advanced">Advanced</option>
+                  </select>
+                </div>
+
+                <div>
+                  <label className="block text-sm font-medium text-gray-700 mb-2">
+                    *Category
+                  </label>
+                  <select
+                    value={formData.category}
+                    onChange={(e) =>
+                      handleInputChange("category", e.target.value)
+                    }
+                    className="w-full border border-gray-300 rounded-lg px-3 py-2 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent"
+                  >
+                    <option value="">
+                      Select Category
+                    </option>
+                    <option value="Cybersecurity">Cybersecurity</option>
+                    <option value="Digital Marketing">Digital Marketing</option>
+                    <option value="Web Development"> Web Development</option>
+                    <option value="Data Analysis">Data Analysis</option>
+                    <option value=" Artificial Intelligence">Artificial Intelligence</option>
+                    <option value=" UI/UX Design">UI/UX Design</option>
                   </select>
                 </div>
 
@@ -1889,7 +1928,7 @@ const CreateCoursePage = () => {
                     </label>
                     <p className="text-gray-600">Drag and drop video.</p>
                     <p className="text-sm text-gray-500">
-                      Max size for video is 30MB. Supported formats: MP4, WebM,
+                      Max size for video is 60MB. Supported formats: MP4, WebM,
                       AVI, MOV
                     </p>
                     {modules[currentModuleIndex]?.videos.length > 0 && (
@@ -1955,9 +1994,17 @@ const CreateCoursePage = () => {
               onChange={handleModuleAdditionalResourcesChange}
               placeholder="Enter a description..."
             />
-            <button className="mt-4 bg-blue-100 text-[#13485B] px-4 py-2 rounded-lg hover:bg-blue-200 transition-colors">
-              Add Video
-            </button>
+         <button 
+  onClick={() => {
+    const videoInput = document.getElementById('video-upload');
+    if (videoInput) {
+      videoInput.click();
+    }
+  }}
+  className="mt-4 bg-blue-100 text-[#13485B] px-4 py-2 rounded-lg hover:bg-blue-200 transition-colors"
+>
+  Add Video
+</button>
           </div>
 
           {/* Summary */}

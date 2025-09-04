@@ -126,7 +126,7 @@ const AddAdminPage = () => {
             <Button
               onClick={handleChangePhoto}
               variant="outline"
-              className="border-blue-300 text-[#268FB6] hover:bg-blue-50"
+              className="border-blue-300 text-[#268FB6] "
             >
               <Camera className="h-4 w-4 mr-2" />
               Change photo

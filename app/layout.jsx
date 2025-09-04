@@ -23,8 +23,10 @@ export default function RootLayout({ children }) {
             <ModalProvider>
               <ToastProvider>
                 {children}
-                <Analytics />
+               {/*
+                 <Analytics />
                 <SpeedInsights />
+                */}
               </ToastProvider>
             </ModalProvider>
           </CoursesProvider>
