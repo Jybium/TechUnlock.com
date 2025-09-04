@@ -1,9 +1,14 @@
+"use client"
+
+
 import React from "react";
 import { Button } from "@/components/ui/button";
 import Image from "next/image";
+import {UseRouter} from "next/navigation"
 import { ArrowRight } from "lucide-react";
 
 const RecentlyEnrolledCourseCard = ({
+  id,
   imageSrc,
   title,
   description,
@@ -13,6 +18,7 @@ const RecentlyEnrolledCourseCard = ({
   totalLessons,
 }) => {
   // const progressPercentage = (completedLessons / totalLessons) * 100;
+  const router = useRouter()
 
   return (
     <div className="max-w-sm rounded-md overflow-hidden bg-white shadow flex flex-col justify-between">
@@ -52,7 +58,7 @@ const RecentlyEnrolledCourseCard = ({
           </span>
         </div>
       </div>
-      <div className="mb-2 flex justify-end">
+      <div className="mb-2 flex justify-end" onClick={()=> router.push(`/dashboard/courses/${id}/watch`)}>
         <Button className="py-2 text-primary bg-transparent flex items-center gap-x-4">
           Continue learning <ArrowRight size={18} />
         </Button>

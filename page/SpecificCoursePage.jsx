@@ -46,7 +46,7 @@ const SpecificCoursePage = () => {
       <Curriculum course={course} />
       {/* <CourseAddOn course={course} /> */}
       <FeedbackContainer course={course} />
-      <PromotionBanner course={course} />
+      {/* <PromotionBanner course={course} /> */}
     </div>
   );
 };

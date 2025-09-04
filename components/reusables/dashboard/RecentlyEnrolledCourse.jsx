@@ -5,7 +5,7 @@ import { useCourses } from "@/Context/courses";
 
 const RecentlyEnrolledCourse = ({ isNotEnrolled }) => {
   const { enrolledCourses } = useCourses();
-  console.log(enrolledCourses);
+  console.log(isNotEnrolled);
 
   return (
     <div className="bg-pri1 py-4 px-5 rounded-md mb-6">
@@ -28,6 +28,7 @@ const RecentlyEnrolledCourse = ({ isNotEnrolled }) => {
             {enrolledCourses.map((item, index) => (
               <RecentlyEnrolledCourseCard
                 key={index}
+                id={item.id}
                 imageSrc={item.image_url}
                 title={item.title}
                 description={item.description || ""}
