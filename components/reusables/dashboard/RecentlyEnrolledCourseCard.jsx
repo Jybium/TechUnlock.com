@@ -4,7 +4,7 @@
 import React from "react";
 import { Button } from "@/components/ui/button";
 import Image from "next/image";
-import {UseRouter} from "next/navigation"
+import {useRouter} from "next/navigation"
 import { ArrowRight } from "lucide-react";
 
 const RecentlyEnrolledCourseCard = ({
